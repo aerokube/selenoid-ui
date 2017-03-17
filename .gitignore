@@ -1,22 +1,14 @@
 # IDEA Files
-.idea
+selenoidui/.idea
 *.iml
 *.ipr
 *.iws
 
-# Maven
-target
-
-.gradle
-build
-
-# PhantomJs
-phantomjsdriver.log
-
 node_modules
 node
 etc
-coverage
 
-owm.properties
-
+vendor/*/
+bindata_assetfs.go
+selenoid-ui
+data
