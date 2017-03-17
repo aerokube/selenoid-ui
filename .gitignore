@@ -1,0 +1,22 @@
+# IDEA Files
+.idea
+*.iml
+*.ipr
+*.iws
+
+# Maven
+target
+
+.gradle
+build
+
+# PhantomJs
+phantomjsdriver.log
+
+node_modules
+node
+etc
+coverage
+
+owm.properties
+

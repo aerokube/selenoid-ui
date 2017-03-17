@@ -1,0 +1,38 @@
+.browsers {
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.browser {
+  width: 400px;
+  min-width: 150px;
+  display: inline-flex;
+  line-height: 30px;
+  position: relative;
+}
+
+.browser-stats {
+  display: flex;
+
+  &__name {
+    overflow: hidden;
+  }
+
+  &__count {
+    font-size: 2em;
+    width: 80px;
+  }
+
+  &__percent {
+    font-size: 0.8em;
+    line-height: 20px;
+    width: 30px;
+  }
+}
+
+.browser-usage-bar {
+  position: absolute;
+  bottom: 0;
+  border-bottom: 1px dashed;
+}

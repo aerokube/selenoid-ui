@@ -1,0 +1,33 @@
+.quota {
+  width: 150px;
+  height: 80px;
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+
+  &-title {
+    width: 100%;
+    line-height: 20px;
+    height: 20px;
+  }
+
+  &-percents {
+    font-size: 4em;
+    font-weight: 100;
+    text-align: right;
+
+    &_small {
+      font-size: 0.6em;
+    }
+  }
+
+  &-numbers {
+    align-self: center;
+    padding-right: 10px;
+    text-align: center;
+
+    &__used {
+      border-bottom: 1px solid #fff;
+    }
+  }
+}
