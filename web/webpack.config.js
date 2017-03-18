@@ -139,6 +139,9 @@ module.exports = function (env) {
                 colors: {
                     green: '\u001b[32m'
                 }
+            },
+            proxy: {
+                '/events': 'http://localhost:8080/'
             }
         }
     };

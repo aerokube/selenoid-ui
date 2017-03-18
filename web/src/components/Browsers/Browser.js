@@ -41,7 +41,7 @@ export default class Browser extends Component {
     }
 
     render() {
-        const perc = (this.props.used / this.props.totalUsed * 100).toFixed();
+        const perc = this.props.totalUsed > 0 ? (this.props.used / this.props.totalUsed * 100).toFixed() : 0;
 
         return (
             <div className="browser">
