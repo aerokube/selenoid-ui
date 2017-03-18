@@ -1,5 +1,5 @@
 # IDEA Files
-selenoidui/.idea
+.idea
 *.iml
 *.ipr
 *.iws
