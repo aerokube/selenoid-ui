@@ -13,8 +13,8 @@ before_install:
   - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.8 bash)"
   - go get -u github.com/jteeuwen/go-bindata/...
   - go get -u github.com/elazarl/go-bindata-assetfs/...
-  - cd web && yarn build
-  - go generate
+  - npm install cross-env
+  - go generate ./web ./...
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
