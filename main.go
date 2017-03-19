@@ -24,7 +24,7 @@ func httpDo(ctx context.Context, req *http.Request, handle func(*http.Response, 
 	// Run the HTTP request in a goroutine and pass the response to handle function
 	errChan := make(chan error, 1)
 	go func() {
-		errChan <- handle(http.DefaultClient.Do(req.WithContext(ctx)))
+		errChan <- handle(http.DefaultClient.Do(req))
 	}()
 	select {
 	case <-ctx.Done():
@@ -45,8 +45,10 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 		return nil, err
 	}
 
+	timedCtx, _ := context.WithTimeout(ctx, 1 * time.Second)
+
 	var results []byte
-	err = httpDo(ctx, req, func(resp *http.Response, err error) error {
+	err = httpDo(ctx, req.WithContext(timedCtx), func(resp *http.Response, err error) error {
 		if err != nil {
 			return err
 		}
@@ -79,7 +81,7 @@ func main() {
 	go func() {
 		ticker := time.NewTicker(period)
 		for {
-			ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+			ctx, cancel := context.WithCancel(context.Background())
 			select {
 			case <-ticker.C:
 				{
