@@ -10,11 +10,8 @@ of [selenoid](https://github.com/aandryashin/selenoid) on small go backend.
 
 ## Building
 
-1) Download dependencies via [govendor](https://github.com/kardianos/govendor):
-```
-$ govendor sync
-```
-2) Generate static resources (assumed you have `yarn` installed):
+1) Ensure you have [yarn](https://github.com/yarnpkg/yarn) and [go-bindata-assetfs](https://github.com/elazarl/go-bindata-assetfs) installed
+2) Generate static resources:
 ```
 $ go generate ./web ./...
 ```
@@ -22,8 +19,7 @@ $ go generate ./web ./...
 ```
 $ go build
 ```
-
-To build Docker container type:
+4) To build Docker container type:
 ```
 $ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build
 $ docker build -t selenoid-ui:latest .
