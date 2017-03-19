@@ -59,10 +59,14 @@ func (sse *SseBroker) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	for {
 		select {
 		case <-rw.(http.CloseNotifier).CloseNotify():
-			return
+			{
+				return
+			}
 		default:
-			fmt.Fprintf(rw, "data: %s\n\n", <-messageChan)
-			flusher.Flush()
+			{
+				fmt.Fprintf(rw, "data: %s\n\n", <-messageChan)
+				flusher.Flush()
+			}
 		}
 	}
 
@@ -76,17 +80,23 @@ func (broker *SseBroker) listen() {
 	for {
 		select {
 		case s := <-broker.newClients:
-			broker.clients[s] = true
-			log.Printf("Client added. %d registered clients", len(broker.clients))
+			{
+				broker.clients[s] = true
+				log.Printf("Client added. %d registered clients", len(broker.clients))
+			}
 		case s := <-broker.closingClients:
-			delete(broker.clients, s)
-			log.Printf("Removed client. %d registered clients", len(broker.clients))
+			{
+				delete(broker.clients, s)
+				log.Printf("Removed client. %d registered clients", len(broker.clients))
+			}
 		case event := <-broker.Notifier:
-			for clientMessageChan := range broker.clients {
-				select {
-				case clientMessageChan <- event:
-				case <-time.After(patience):
-					log.Print("Skipping slow client")
+			{
+				for clientMessageChan := range broker.clients {
+					select {
+					case clientMessageChan <- event:
+					case <-time.After(patience):
+						log.Print("Skipping slow client")
+					}
 				}
 			}
 		}

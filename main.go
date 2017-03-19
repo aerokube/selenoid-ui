@@ -28,10 +28,14 @@ func httpDo(ctx context.Context, req *http.Request, handle func(*http.Response, 
 	}()
 	select {
 	case <-ctx.Done():
-		<-errChan // Wait for handle to return.
-		return ctx.Err()
+		{
+			<-errChan // Wait for handle to return.
+			return ctx.Err()
+		}
 	case err := <-errChan:
-		return err
+		{
+			return err
+		}
 	}
 }
 

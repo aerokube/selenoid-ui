@@ -25,3 +25,13 @@ $ go build
 $ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build
 $ docker build -t selenoid-ui:latest .
 ```
+
+## Using
+
+To get all actually available parameters just call with `--help` flag
+
+You can define:
+
+- `--listen` - host and port to listen
+- `--period` - data refresh period, e.g. 5s or 1m
+- `--selenoidUri` - selenoid uri to fetch data from
