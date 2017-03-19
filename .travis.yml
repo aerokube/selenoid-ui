@@ -1,0 +1,13 @@
+language: go
+
+go:
+  - 1.8
+script:
+  - go test -race -coverprofile=coverage.txt -covermode=atomic -coverpkg .
+
+before_install:
+  - go get -u github.com/kardianos/govendor
+  - govendor sync
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)

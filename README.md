@@ -1,4 +1,6 @@
 # Selenoid UI
+[![Build Status](https://travis-ci.org/lanwen/selenoid-ui.svg?branch=master)](https://travis-ci.org/lanwen/selenoid-ui)
+[![Coverage](https://codecov.io/github/lanwen/selenoid-ui/coverage.svg)](https://codecov.io/gh/lanwen/selenoid-ui)
 
 Simple status page with UI updates by SSE,
 backed by constant polling of status handle
