@@ -15,6 +15,7 @@ before_install:
   - export PATH="$PATH:$GOROOT/bin"
   - env
   - ls -la $GOROOT
+  - ls -la $HOME/go
   - go generate
 
 after_success:
