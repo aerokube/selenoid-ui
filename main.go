@@ -1,14 +1,24 @@
 package main
 
 import (
-	"net/http"
-	"log"
-	"time"
-	"io/ioutil"
 	"context"
+	"flag"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 //go:generate go-bindata-assetfs data/
+
+var (
+	listen      string
+	selenoidUri string
+	period      time.Duration
+)
 
 func httpDo(ctx context.Context, req *http.Request, handle func(*http.Response, error) error) error {
 	// Run the HTTP request in a goroutine and pass the response to handle function
@@ -50,23 +60,37 @@ func mux(sse *SseBroker) http.Handler {
 	return mux
 }
 
+func init() {
+	flag.StringVar(&listen, "listen", ":8080", "host and port to listen on")
+	flag.StringVar(&selenoidUri, "selenoidUri", "http://localhost:4444", "selenoid uri to fetch data from")
+	flag.DurationVar(&period, "period", 5*time.Second, "data refresh period, e.g. 5s or 1m")
+}
+
 func main() {
-	selenoidUri := "http://localhost:4444"
-	listen := ":8080"
-	period := 5
-
 	broker := NewSseBroker()
-	go func() {
-		for {
-			ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
+	stop := make(chan os.Signal)
+	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 
-			res, err := Status(ctx, selenoidUri)
-			if err != nil {
-				log.Printf("can't get status (%s)\n", err)
-				continue
+	go func() {
+		ticker := time.NewTicker(period)
+		for {
+			ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+			select {
+			case <-ticker.C:
+				{
+					res, err := Status(ctx, selenoidUri)
+					if err != nil {
+						log.Printf("can't get status (%s)\n", err)
+						continue
+					}
+					broker.Notifier <- res
+				}
+			case <-stop:
+				{
+					cancel()
+					ticker.Stop()
+				}
 			}
-			broker.Notifier <- res
-			time.Sleep(time.Second * time.Duration(period))
 		}
 	}()
 
