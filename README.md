@@ -1,6 +1,7 @@
 # Selenoid UI
 [![Build Status](https://travis-ci.org/lanwen/selenoid-ui.svg?branch=master)](https://travis-ci.org/lanwen/selenoid-ui)
 [![Coverage](https://codecov.io/github/lanwen/selenoid-ui/coverage.svg)](https://codecov.io/gh/lanwen/selenoid-ui)
+[![Docker](https://img.shields.io/badge/docker-lanwen%2Fselenoid--ui-blue.svg)](https://hub.docker.com/r/lanwen/selenoid-ui/)
 
 Simple status page with UI updates by SSE,
 backed by constant polling of status handle
@@ -35,3 +36,9 @@ You can define:
 - `--listen` - host and port to listen
 - `--period` - data refresh period, e.g. 5s or 1m
 - `--selenoidUri` - selenoid uri to fetch data from
+
+### With docker
+
+```
+docker run --rm lanwen/selenoid-ui --help
+```
