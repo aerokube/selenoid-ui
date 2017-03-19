@@ -6,8 +6,8 @@ script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic -coverpkg .
 
 before_install:
-  - go get -u github.com/kardianos/govendor
-  - govendor sync
+  - go get -u github.com/jteeuwen/go-bindata/...
+  - go get -u github.com/elazarl/go-bindata-assetfs/...
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
