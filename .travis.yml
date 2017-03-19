@@ -1,9 +1,14 @@
+sudo: required
 language: node_js
 node_js:
  - "7"
 
+services:
+  - docker
+
 script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic -coverpkg .
+  - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build
 
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -18,6 +23,11 @@ before_install:
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+- if [ "$TRAVIS_BRANCH" == "master" ]; then
+  docker build -t $TRAVIS_REPO_SLUG .
+  docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  docker push $TRAVIS_REPO_SLUG;
+  fi
 
 cache:
   yarn: true
