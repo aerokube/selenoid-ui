@@ -23,11 +23,18 @@ before_install:
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-- if [ "$TRAVIS_BRANCH" == "master" ]; then
-  docker build -t $TRAVIS_REPO_SLUG .;
-  docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-  docker push $TRAVIS_REPO_SLUG;
-  fi
+
+deploy:
+  - provider: script
+    script: travis/docker-push.sh latest
+    skip_cleanup: true
+    on:
+      branch: master
+  - provider: script
+    script: travis/docker-push.sh $TRAVIS_TAG
+    skip_cleanup: true
+    on:
+      tags: true
 
 cache:
   yarn: true
