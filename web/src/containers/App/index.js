@@ -3,21 +3,23 @@ import {serverSentEventConnect} from "react-server-sent-event-container";
 import "./style.scss";
 import Quota from "components/Quota";
 import Browsers from "components/Browsers";
-import {validate} from 'jsonschema'
+import Status from "components/Status";
+import {validate} from "jsonschema";
 
-const defaults =
-    {
+const defaults = {
+    status: 'unknown',
+    selenoid: {
         "total": 0,
         "used": 0,
         "queued": 0,
         "pending": 0,
-        "browsers": {
-        }
-    };
+        "browsers": {}
+    }
+};
 
 
 const schema = {
-    "id": "/status",
+    "id": "/selenoid",
     "type": "object",
     "properties": {
         "total": {
@@ -68,33 +70,54 @@ class App extends Component {
     }
 
     componentWillReceiveProps(props) {
-        const validation = validate(props, schema);
+        if (props.selenoid) {
+            const validation = validate(props.selenoid, schema);
 
-        if (validation.valid) {
-            this.setState(props);
+            if (validation.valid) {
+                this.setState(props);
+            } else {
+                this.setState({status: "error"});
+                console.error("Wrong data from backend", validation.errors);
+            }
         } else {
-            console.error("Wrong data from backend", validation.errors);
+            this.setState({status: props.status});
         }
     }
 
     render() {
         return (
             <div className="viewport">
-                <Quota total={this.state.total} used={this.state.used}/>
-                <Browsers browsers={this.state.browsers} totalUsed={this.state.used}/>
+                <Status status={this.state.status}/>
+                <Quota total={this.state.selenoid.total} used={this.state.selenoid.used}/>
+                <Browsers browsers={this.state.selenoid.browsers} totalUsed={this.state.selenoid.used}/>
             </div>
         );
     }
 }
+const onOpen = (props, source) => {
+    props.update({status: 'ok'});
+};
 
 const onMessage = (event, props, source) => {
     const item = JSON.parse(event.data);
-    props.update(item);
+
+    if (item.errors) {
+        props.update({
+            errors: item.errors,
+            status: 'error',
+        });
+    } else {
+        props.update({
+            status: 'ok',
+            selenoid: item,
+        });
+    }
 };
 
 const onError = (event, props, source) => {
     console.error('SSE Error', event);
+    props.update({status: 'error'});
     source.close();
 };
 
-export default serverSentEventConnect('/events', false, false, onMessage, onError)(App);
+export default serverSentEventConnect('/events', false, onOpen, onMessage, onError)(App);

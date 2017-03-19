@@ -89,6 +89,7 @@ func main() {
 						res, err := Status(ctx, selenoidUri)
 						if err != nil {
 							log.Printf("can't get status (%s)\n", err)
+							broker.Notifier <- []byte(`{ "errors": [{"msg": "can't get status"}] }`)
 							continue
 						}
 						broker.Notifier <- res
