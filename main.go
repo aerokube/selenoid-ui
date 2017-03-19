@@ -78,12 +78,14 @@ func main() {
 			select {
 			case <-ticker.C:
 				{
-					res, err := Status(ctx, selenoidUri)
-					if err != nil {
-						log.Printf("can't get status (%s)\n", err)
-						continue
+					if (broker.HasClients()) {
+						res, err := Status(ctx, selenoidUri)
+						if err != nil {
+							log.Printf("can't get status (%s)\n", err)
+							continue
+						}
+						broker.Notifier <- res
 					}
-					broker.Notifier <- res
 				}
 			case <-stop:
 				{

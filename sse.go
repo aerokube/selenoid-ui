@@ -68,6 +68,10 @@ func (sse *SseBroker) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 }
 
+func (sse *SseBroker) HasClients() bool {
+	return len(sse.clients) > 0
+}
+
 func (broker *SseBroker) listen() {
 	for {
 		select {
@@ -82,7 +86,7 @@ func (broker *SseBroker) listen() {
 				select {
 				case clientMessageChan <- event:
 				case <-time.After(patience):
-					log.Print("Skipping client")
+					log.Print("Skipping slow client")
 				}
 			}
 		}
