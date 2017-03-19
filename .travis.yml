@@ -19,3 +19,8 @@ cache:
   yarn: true
   directories:
     - web/node_modules
+
+addons:
+  apt:
+    packages:
+    - node_js
