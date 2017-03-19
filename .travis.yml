@@ -6,6 +6,8 @@ script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic -coverpkg .
 
 before_install:
+  # Repo for newer Node.js versions
+  - curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH=$HOME/.yarn/bin:$PATH
   - go get -u github.com/jteeuwen/go-bindata/...
@@ -20,7 +22,7 @@ cache:
   directories:
     - web/node_modules
 
-addons:
-  apt:
-    packages:
-    - node
+#addons:
+#  apt:
+#    packages:
+#    - node
