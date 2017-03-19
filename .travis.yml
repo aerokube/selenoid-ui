@@ -22,5 +22,4 @@ after_success:
 cache:
   yarn: true
   directories:
-    - $HOME/.yarn
     - web/node_modules
