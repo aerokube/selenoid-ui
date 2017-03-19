@@ -91,6 +91,7 @@ func main() {
 				{
 					cancel()
 					ticker.Stop()
+					return
 				}
 			}
 		}
