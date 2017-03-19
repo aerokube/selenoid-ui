@@ -11,6 +11,7 @@ of [selenoid](https://github.com/aandryashin/selenoid) on small go backend.
 ## Building
 
 1) Ensure you have [yarn](https://github.com/yarnpkg/yarn) and [go-bindata-assetfs](https://github.com/elazarl/go-bindata-assetfs) installed
+
 2) Generate static resources:
 ```
 $ go generate ./web ./...

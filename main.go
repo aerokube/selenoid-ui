@@ -92,7 +92,7 @@ func main() {
 				{
 					cancel()
 					ticker.Stop()
-					return
+					os.Exit(0)
 				}
 			}
 		}
