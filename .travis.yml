@@ -23,4 +23,4 @@ cache:
 addons:
   apt:
     packages:
-    - node_js
+    - node
