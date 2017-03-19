@@ -12,7 +12,9 @@ before_install:
   - which go
   - go get -u github.com/jteeuwen/go-bindata/...
   - go get -u github.com/elazarl/go-bindata-assetfs/...
+  - export PATH="$PATH:$GOROOT/bin"
   - env
+  - ls -la $GOROOT
   - go generate
 
 after_success:
