@@ -12,6 +12,7 @@ before_install:
   - which go
   - go get -u github.com/jteeuwen/go-bindata/...
   - go get -u github.com/elazarl/go-bindata-assetfs/...
+  - env
   - go generate
 
 after_success:
