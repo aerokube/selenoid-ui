@@ -4,14 +4,16 @@ import "./style.scss";
 
 export default class Quota extends Component {
     render() {
-        const perc = this.props.total > 0 ? (this.props.used / this.props.total * 100).toFixed() : 0;
+
+        const {used, pending, total} = this.props;
+        const perc = total > 0 ? ((used + pending) / total * 100).toFixed() : 0;
 
         return (
             <div className="quota">
                 <div className="quota-title">QUOTA</div>
                 <div className="quota-numbers">
-                    <div className="quota-numbers__used">{this.props.used}</div>
-                    <div className="quota-numbers__total">{this.props.total}</div>
+                    <div className="quota-numbers__used">{used} <span className="quota-numbers__pending">+ {pending}</span></div>
+                    <div className="quota-numbers__total">{total}</div>
                 </div>
                 <div className="quota-percents">
                     {perc}

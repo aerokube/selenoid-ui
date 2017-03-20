@@ -1,9 +1,10 @@
 .quota {
-  width: 150px;
+  width: 180px;
   height: 80px;
   color: #fff;
   display: flex;
   flex-wrap: wrap;
+  font-size: 1.2em;
 
   &-title {
     width: 100%;
@@ -28,6 +29,11 @@
 
     &__used {
       border-bottom: 1px solid #fff;
+    }
+
+    &__pending {
+      font-size: 0.7em;
+      color: #ccc;
     }
   }
 }

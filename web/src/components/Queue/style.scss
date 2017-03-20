@@ -1,0 +1,26 @@
+.queue {
+  width: 110px;
+  height: 80px;
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 1.2em;
+  margin-top: 20px;
+
+  &-title {
+    width: 100%;
+    line-height: 20px;
+    height: 20px;
+  }
+
+  &-queued {
+    width: 100%;
+    font-size: 3em;
+    font-weight: 100;
+    text-align: right;
+
+    &_small {
+      font-size: 0.6em;
+    }
+  }
+}

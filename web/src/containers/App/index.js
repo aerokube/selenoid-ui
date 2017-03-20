@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {serverSentEventConnect} from "react-server-sent-event-container";
 import "./style.scss";
 import Quota from "components/Quota";
+import Queue from "components/Queue";
 import Browsers from "components/Browsers";
 import Status from "components/Status";
 import {validate} from "jsonschema";
@@ -60,6 +61,8 @@ const schema = {
     "required": [
         "total",
         "used",
+        "pending",
+        "queued",
         "browsers"
     ]
 };
@@ -129,7 +132,10 @@ export default class App extends Component {
                     <Status status={sse} title="sse"/>
                     <Status status={status} title="selenoid"/>
                 </div>
-                <Quota total={selenoid.total} used={selenoid.used}/>
+                <div className="stats">
+                    <Quota total={selenoid.total} used={selenoid.used} pending={selenoid.pending}/>
+                    <Queue queued={selenoid.queued}/>
+                </div>
                 <Browsers browsers={selenoid.browsers} totalUsed={selenoid.used}/>
             </div>
         );
