@@ -1,16 +1,29 @@
 .status {
-  width: 10px;
-  height: 10px;
-  border: 1px solid #fff;
-  border-radius: 50%;
+  position: relative;
+  text-transform: uppercase;
+  color: #fff;
   margin-right: 50px;
+}
 
-  &_ok {
+.indicator {
+  line-height: 30px;
+  &:before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border: 1px solid #fff;
+    position: absolute;
+    border-radius: 50%;
+    left: -20px;
+    top: 8px;
+  }
+
+  &_ok:before {
     box-shadow: 0 0 10px #57ff76;
     border-color: #59a781;
   }
 
-  &_error {
+  &_error:before {
     box-shadow: 0 0 10px #fc4022;
     border-color: #cf3223;
   }

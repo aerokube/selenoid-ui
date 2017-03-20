@@ -7,6 +7,7 @@ import Status from "components/Status";
 import {validate} from "jsonschema";
 
 const defaults = {
+    sse: 'unknown',
     status: 'unknown',
     selenoid: {
         "total": 0,
@@ -65,7 +66,7 @@ const schema = {
 
 
 const onOpen = (props, source) => {
-    props.update({status: 'ok'});
+    props.update({sse: 'ok'});
 };
 
 const onMessage = (event, props, source) => {
@@ -86,7 +87,7 @@ const onMessage = (event, props, source) => {
 
 const onError = (event, props, source) => {
     console.error('SSE Error', event);
-    props.update({status: 'error'});
+    props.update({sse: 'error', status: 'unknown'});
     source.close();
 };
 
@@ -111,20 +112,25 @@ export default class App extends Component {
             if (validation.valid) {
                 this.setState(props);
             } else {
-                this.setState({status: "error"});
+                this.setState({status: "error", sse: "ok"});
                 console.error("Wrong data from backend", validation.errors);
             }
         } else {
-            this.setState({status: props.status});
+            this.setState({status: props.status, sse: props.sse});
         }
     }
 
     render() {
+        const {sse, status, selenoid} = this.state;
+
         return (
             <div className="viewport">
-                <Status status={this.state.status}/>
-                <Quota total={this.state.selenoid.total} used={this.state.selenoid.used}/>
-                <Browsers browsers={this.state.selenoid.browsers} totalUsed={this.state.selenoid.used}/>
+                <div>
+                    <Status status={sse} title="sse"/>
+                    <Status status={status} title="selenoid"/>
+                </div>
+                <Quota total={selenoid.total} used={selenoid.used}/>
+                <Browsers browsers={selenoid.browsers} totalUsed={selenoid.used}/>
             </div>
         );
     }
