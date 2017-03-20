@@ -63,7 +63,42 @@ const schema = {
     ]
 };
 
-class App extends Component {
+
+const onOpen = (props, source) => {
+    props.update({status: 'ok'});
+};
+
+const onMessage = (event, props, source) => {
+    const item = JSON.parse(event.data);
+
+    if (item.errors) {
+        props.update({
+            errors: item.errors,
+            status: 'error',
+        });
+    } else {
+        props.update({
+            status: 'ok',
+            selenoid: item,
+        });
+    }
+};
+
+const onError = (event, props, source) => {
+    console.error('SSE Error', event);
+    props.update({status: 'error'});
+    source.close();
+};
+
+
+@serverSentEventConnect(
+    '/events',
+    false,
+    onOpen,
+    onMessage,
+    onError
+)
+export default class App extends Component {
     constructor(props) {
         super(props);
         this.state = defaults
@@ -94,30 +129,3 @@ class App extends Component {
         );
     }
 }
-const onOpen = (props, source) => {
-    props.update({status: 'ok'});
-};
-
-const onMessage = (event, props, source) => {
-    const item = JSON.parse(event.data);
-
-    if (item.errors) {
-        props.update({
-            errors: item.errors,
-            status: 'error',
-        });
-    } else {
-        props.update({
-            status: 'ok',
-            selenoid: item,
-        });
-    }
-};
-
-const onError = (event, props, source) => {
-    console.error('SSE Error', event);
-    props.update({status: 'error'});
-    source.close();
-};
-
-export default serverSentEventConnect('/events', false, onOpen, onMessage, onError)(App);
