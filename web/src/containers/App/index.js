@@ -7,19 +7,6 @@ import Browsers from "components/Browsers";
 import Status from "components/Status";
 import {validate} from "jsonschema";
 
-const defaults = {
-    sse: 'unknown',
-    status: 'unknown',
-    selenoid: {
-        "total": 0,
-        "used": 0,
-        "queued": 0,
-        "pending": 0,
-        "browsers": {}
-    }
-};
-
-
 const schema = {
     "id": "/selenoid",
     "type": "object",
@@ -103,10 +90,17 @@ const onError = (event, props, source) => {
     onError
 )
 export default class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = defaults
-    }
+    state = {
+        sse: 'unknown',
+        status: 'unknown',
+        selenoid: {
+            "total": 0,
+            "used": 0,
+            "queued": 0,
+            "pending": 0,
+            "browsers": {}
+        }
+    };
 
     componentWillReceiveProps(props) {
         if (props.selenoid) {
