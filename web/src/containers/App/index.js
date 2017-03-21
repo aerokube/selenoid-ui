@@ -130,7 +130,7 @@ export default class App extends Component {
                     <Quota total={selenoid.total} used={selenoid.used} pending={selenoid.pending}/>
                     <Queue queued={selenoid.queued}/>
                 </div>
-                <Browsers browsers={selenoid.browsers} totalUsed={selenoid.used + selenoid.pending}/>
+                <Browsers browsers={selenoid.browsers} totalUsed={selenoid.used}/>
             </div>
         );
     }
