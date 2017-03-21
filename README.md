@@ -35,7 +35,7 @@ You can define:
 
 - `--listen` - host and port to listen
 - `--period` - data refresh period, e.g. 5s or 1m
-- `--selenoidUri` - selenoid uri to fetch data from
+- `--selenoid-uri` - selenoid uri to fetch data from
 
 ### With docker
 

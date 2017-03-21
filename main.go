@@ -68,7 +68,7 @@ func mux(sse *SseBroker) http.Handler {
 
 func init() {
 	flag.StringVar(&listen, "listen", ":8080", "host and port to listen on")
-	flag.StringVar(&selenoidUri, "selenoidUri", "http://localhost:4444", "selenoid uri to fetch data from")
+	flag.StringVar(&selenoidUri, "selenoid-uri", "http://localhost:4444", "selenoid uri to fetch data from")
 	flag.DurationVar(&period, "period", 5*time.Second, "data refresh period, e.g. 5s or 1m")
 	flag.Parse()
 }
