@@ -1,11 +1,13 @@
 import React, {Component} from "react";
-import {serverSentEventConnect} from "react-server-sent-event-container";
 import "./style.scss";
 import Quota from "components/Quota";
 import Queue from "components/Queue";
 import Browsers from "components/Browsers";
 import Status from "components/Status";
 import {validate} from "jsonschema";
+import {rxConnect} from "rx-connect";
+import Rx from "rx";
+import "rx-dom";
 
 const schema = {
     "id": "/selenoid",
@@ -54,45 +56,48 @@ const schema = {
     ]
 };
 
+@rxConnect(() => {
+    const open = new Rx.Subject();
+    return Rx.Observable.merge(
+        Rx.DOM.fromEventSource('/events', open)
+            .map(event => JSON.parse(event))
+            .map(event => {
+                if (event.errors) {
+                    return {
+                        status: "error",
+                        errors: event.errors
+                    };
+                }
 
-const onOpen = (props, source) => {
-    props.update({sse: 'ok'});
-};
-
-const onMessage = (event, props, source) => {
-    const item = JSON.parse(event.data);
-
-    if (item.errors) {
-        props.update({
-            errors: item.errors,
-            status: 'error',
-        });
-    } else {
-        props.update({
-            status: 'ok',
-            selenoid: item,
-        });
-    }
-};
-
-const onError = (event, props, source) => {
-    console.error('SSE Error', event);
-    props.update({sse: 'error', status: 'unknown'});
-    source.close();
-};
-
-
-@serverSentEventConnect(
-    '/events',
-    false,
-    onOpen,
-    onMessage,
-    onError
-)
-export default class App extends Component {
-    state = {
-        sse: 'unknown',
-        status: 'unknown',
+                const validation = validate(event, schema);
+                if (validation.valid) {
+                    return {
+                        status: "ok",
+                        selenoid: event
+                    };
+                } else {
+                    console.error("Wrong data from backend", validation.errors);
+                    return {
+                        status: "error",
+                        errors: validation.errors
+                    };
+                }
+            })
+            .catch(error => {
+                console.error('SSE Error', error);
+                return Rx.Observable.just(
+                    {
+                        sse: "error",
+                        status: "unknown"
+                    }
+                );
+            }),
+        open.map(event => ({
+            sse: "ok"
+        }))
+    ).startWith({
+        sse: "unknown",
+        status: "unknown",
         selenoid: {
             "total": 0,
             "used": 0,
@@ -100,25 +105,11 @@ export default class App extends Component {
             "pending": 0,
             "browsers": {}
         }
-    };
-
-    componentWillReceiveProps(props) {
-        if (props.selenoid) {
-            const validation = validate(props.selenoid, schema);
-
-            if (validation.valid) {
-                this.setState(props);
-            } else {
-                this.setState({status: "error", sse: "ok"});
-                console.error("Wrong data from backend", validation.errors);
-            }
-        } else {
-            this.setState({status: props.status, sse: props.sse});
-        }
-    }
-
+    });
+})
+export default class App extends Component {
     render() {
-        const {sse, status, selenoid} = this.state;
+        const {sse, status, selenoid} = this.props;
 
         return (
             <div className="viewport">
