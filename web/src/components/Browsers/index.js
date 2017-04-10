@@ -5,23 +5,25 @@ import Browser from "./Browser";
 
 export default class Browsers extends Component {
     render() {
-        const browsers = {};
-        Object.keys(this.props.browsers)
+        const {totalUsed, browsers} = this.props;
+        const browsersUsed = {};
+
+        Object.keys(browsers)
             .forEach(browser => {
-                browsers[browser] = 0;
-                Object.keys(this.props.browsers[browser]).forEach(version => {
-                    Object.keys(this.props.browsers[browser][version])
+                browsersUsed[browser] = 0;
+                Object.keys(browsers[browser]).forEach(version => {
+                    Object.keys(browsers[browser][version])
                         .forEach(quotaName => {
-                            browsers[browser] += this.props.browsers[browser][version][quotaName];
+                            browsersUsed[browser] += browsers[browser][version][quotaName];
                         })
                 })
             });
 
-        const values = Object.keys(browsers)
-            .sort((a, b) => browsers[b] - browsers[a])
+        const values = Object.keys(browsersUsed)
+            .sort((a, b) => browsersUsed[b] - browsersUsed[a])
             .map(browser => {
                 return (
-                    <Browser key={browser} name={browser} used={browsers[browser]} totalUsed={this.props.totalUsed}/>
+                    <Browser key={browser} name={browser} used={browsersUsed[browser]} totalUsed={totalUsed}/>
                 );
             });
 

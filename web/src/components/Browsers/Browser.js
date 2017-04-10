@@ -4,6 +4,11 @@ import "./style.scss";
 
 export default class Browser extends Component {
 
+    /**
+     * Color depending on percentage
+     * @param percentile unsigned integer
+     * @returns {string} HEX color
+     */
     countColor(percentile) {
         const pct = (percentile > 100 ? 100 : percentile) / 100;
         const percentColors = [
@@ -41,14 +46,16 @@ export default class Browser extends Component {
     }
 
     render() {
-        const perc = this.props.totalUsed > 0 ? (this.props.used / this.props.totalUsed * 100).toFixed() : 0;
+        const {name, used, totalUsed} = this.props;
+
+        const perc = totalUsed > 0 ? (used / totalUsed * 100).toFixed() : 0;
 
         return (
             <div className="browser">
                 <div className="browser-stats">
                     <div className="browser-stats__percent">{perc}%</div>
-                    <div className="browser-stats__count">{this.props.used}</div>
-                    <div className="browser-stats__name">{this.props.name}</div>
+                    <div className="browser-stats__count">{used}</div>
+                    <div className="browser-stats__name">{name}</div>
                 </div>
                 <div className="browser-usage-bar"
                      style={{width: `${perc}%`, borderBottomColor: this.countColor(perc)}}></div>
