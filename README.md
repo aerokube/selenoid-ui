@@ -40,5 +40,5 @@ You can define:
 ### With docker
 
 ```
-docker run --rm lanwen/selenoid-ui --help
+docker run --rm aerokube/selenoid-ui --help
 ```
