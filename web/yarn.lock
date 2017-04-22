@@ -2917,6 +2917,14 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
+"noVNC@https://github.com/novnc/noVNC.git#0613d18":
+  version "0.6.1"
+  resolved "https://github.com/novnc/noVNC.git#0613d18"
+
+"noVNC@https://github.com/novnc/noVNC.git#v0.6.2":
+  version "0.6.2"
+  resolved "https://github.com/novnc/noVNC.git#e8986fa0692705fa890aed02e08b6844e535eb06"
+
 node-fetch@^1.0.1:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.6.3.tgz#dc234edd6489982d58e8f0db4f695029abcd8c04"

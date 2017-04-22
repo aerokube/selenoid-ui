@@ -141,7 +141,11 @@ module.exports = function (env) {
                 }
             },
             proxy: {
-                '/events': 'http://localhost:8080/'
+                "/events": 'http://localhost:8080/',
+                "/vnc/": {
+                    target: "http://localhost:3000",
+                    pathRewrite: {"^/vnc/": ""}
+                }
             }
         }
     };

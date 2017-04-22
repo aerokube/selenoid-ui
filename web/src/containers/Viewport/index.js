@@ -5,6 +5,7 @@ import "./style.scss";
 
 import Navigation from "components/Navigation";
 import Stats from "containers/Stats";
+import Vnc from "containers/Vnc";
 
 export default class Viewport extends Component {
     render() {
@@ -21,6 +22,7 @@ export default class Viewport extends Component {
                     </div>
 
                     <Route exact={true} path="/" component={Stats}/>
+                    <Route path="/vnc/" component={Vnc}/>
                 </div>
             </Router>
         );
