@@ -42,6 +42,7 @@
     "jsonschema": "1.1.1",
     "react": "15.4.2",
     "react-dom": "15.4.2",
+    "react-router-dom": "next",
     "rx": "^4.1.0",
     "rx-connect": "^0.6.1",
     "rx-dom": "^7.0.3"

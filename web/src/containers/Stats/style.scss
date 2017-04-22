@@ -1,0 +1,13 @@
+.stats {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+
+  &__quota {
+    border-right: 1px dashed #3d444c;
+    margin-right: 10px;
+  }
+}

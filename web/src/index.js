@@ -1,11 +1,11 @@
-import ReactDOM from 'react-dom';
-import React from 'react';
+import ReactDOM from "react-dom";
+import React from "react";
 
-import App from 'containers/App';
+import Viewport from "containers/Viewport";
 
-import 'index.html';
+import "index.html";
 
 ReactDOM.render(
-    <App />,
-  document.getElementById('root')
+    <Viewport/>,
+    document.getElementById('root')
 );

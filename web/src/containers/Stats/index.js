@@ -1,13 +1,14 @@
 import React, {Component} from "react";
 import "./style.scss";
-import Quota from "components/Quota";
-import Queue from "components/Queue";
-import Browsers from "components/Browsers";
-import Status from "components/Status";
 import {validate} from "jsonschema";
 import {rxConnect} from "rx-connect";
 import Rx from "rx";
 import "rx-dom";
+
+import Quota from "components/Quota";
+import Queue from "components/Queue";
+import Browsers from "components/Browsers";
+import Status from "components/Status";
 
 const schema = {
     "id": "/selenoid",
@@ -107,17 +108,17 @@ const schema = {
         }
     });
 })
-export default class App extends Component {
+export default class Stats extends Component {
     render() {
         const {sse, status, selenoid} = this.props;
 
         return (
-            <div className="viewport">
-                <div>
+            <div className="stats">
+                <div className="stats__status">
                     <Status status={sse} title="sse"/>
                     <Status status={status} title="selenoid"/>
                 </div>
-                <div className="stats">
+                <div className="stats__quota">
                     <Quota total={selenoid.total} used={selenoid.used} pending={selenoid.pending}/>
                     <Queue queued={selenoid.queued}/>
                 </div>

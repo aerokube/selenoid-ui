@@ -15,7 +15,7 @@ body {
 
 #root {
   height: 100%;
-   width: 100%;
+  width: 100%;
 }
 
 .viewport {
@@ -27,7 +27,7 @@ body {
   align-items: center;
 }
 
-.stats {
-  border-right: 1px dashed #3d444c;
-  margin-right: 10px;
+.navigation-top {
+  position: absolute;
+  top: 20px;
 }
