@@ -141,7 +141,7 @@ module.exports = function (env) {
             stats: {
                 assets: true,
                 children: false,
-                chunks: true,
+                chunks: false,
                 hash: false,
                 modules: false,
                 publicPath: false,

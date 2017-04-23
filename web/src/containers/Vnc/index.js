@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import RFB from "noVNC/core/rfb";
+import {Link} from "react-router-dom";
 
 import "./style.scss";
 
@@ -7,6 +8,8 @@ import "./style.scss";
 export default class Vnc extends Component {
 
     componentDidMount() {
+        const {session} = this.props;
+
         try {
             this.rfb = new RFB({
                 encrypt: false,
@@ -36,19 +39,39 @@ export default class Vnc extends Component {
     }
 
     render() {
+        const {session = "", browser = {}} = this.props;
+
         return (
             <div className="vnc">
-                <div className="screen" ref={ screen => {
-                    const {offsetHeight = 0, offsetWidth = 0} = (screen || {});
-                    this.screen = {width: offsetWidth, height: offsetHeight};
-                }}>
-                    <canvas ref={
-                        canvas => {
-                            this.canvas = canvas;
-                        }
-                    } width="0" height="0">
-                        Canvas not supported.
-                    </canvas>
+                <div className="card">
+                    <div className="card__controls">
+                        <Link className="control" to="/vnc/">Back</Link>
+                    </div>
+
+                    <div className="card__content">
+                        <div className="header">
+                            <div className="browser">
+                                <span className="browser__name">{browser.name}</span>
+                                <span className="browser__version-separator">/</span>
+                                <span className="browser__version">{browser.version}</span>
+                            </div>
+                            <div className="session">
+                                <span className="session__id">{session.substring(0, 6)}</span>
+                            </div>
+                        </div>
+                        <div className="screen" ref={ screen => {
+                            const {offsetHeight = 1, offsetWidth = 1} = (screen || {});
+                            this.screen = {width: offsetWidth, height: offsetHeight};
+                        }}>
+                            <canvas ref={
+                                canvas => {
+                                    this.canvas = canvas;
+                                }
+                            } width="0" height="0">
+                                Canvas not supported.
+                            </canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

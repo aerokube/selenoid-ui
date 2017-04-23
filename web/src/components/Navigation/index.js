@@ -13,7 +13,7 @@ export default class Navigation extends Component {
                 {
                     links.map(link => {
                         return (
-                            <NavLink exact key={link.href} className="nav__element"
+                            <NavLink exact={link.exact} key={link.href} className="nav__element"
                                      activeClassName="nav__element_active"
                                      to={link.href}>
                                 {link.title}

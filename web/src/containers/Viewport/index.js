@@ -10,7 +10,7 @@ import Vnc from "containers/Vnc";
 export default class Viewport extends Component {
     render() {
         const links = [
-            {href: "/", title: "STATS"},
+            {href: "/", title: "STATS", exact: true},
             {href: "/vnc/", title: "VNC"}
         ];
 
@@ -22,7 +22,11 @@ export default class Viewport extends Component {
                     </div>
 
                     <Route exact={true} path="/" component={Stats}/>
-                    <Route path="/vnc/" component={Vnc}/>
+                    <Route exact={true} path="/vnc/" component={Vnc}/>
+                    <Route path="/vnc/:session" render={({match}) => (
+                        <Vnc session={match.params.session}
+                             browser={{name: "firefox", version: "55.0"}}/>
+                    )}/>
                 </div>
             </Router>
         );
