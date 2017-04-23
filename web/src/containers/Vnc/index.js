@@ -31,7 +31,7 @@ export default class Vnc extends Component {
             console.error("Unable to create RFB client", exc);
             return;
         }
-        this.rfb.connect("localhost", "5900", "selenoid", "/");
+        this.rfb.connect("localhost", "4444", "selenoid", `vnc/${session}`);
     }
 
     componentWillUnmount() {
@@ -56,7 +56,7 @@ export default class Vnc extends Component {
                                 <span className="browser__version">{browser.version}</span>
                             </div>
                             <div className="session">
-                                <span className="session__id">{session.substring(0, 6)}</span>
+                                <span className="session__id">{session.substring(0, 8)}</span>
                             </div>
                         </div>
                         <div className="screen" ref={ screen => {
