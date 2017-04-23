@@ -11,7 +11,10 @@ module.exports = function (env) {
     const plugins = [
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
-            minChunks: Infinity,
+            minChunks: function (module) {
+                // this assumes your vendor imports exist in the node_modules directory
+                return module.context && module.context.indexOf('node_modules') !== -1;
+            },
             filename: 'vendor.bundle.js'
         }),
         new webpack.EnvironmentPlugin({
@@ -24,7 +27,7 @@ module.exports = function (env) {
         plugins.push(
             new webpack.LoaderOptionsPlugin({
                 minimize: true,
-                debug: false
+                debug: true
             }),
             new webpack.optimize.UglifyJsPlugin({
                 compress: {
@@ -57,7 +60,8 @@ module.exports = function (env) {
         entry: {
             js: './index.js',
             vendor: [
-                'react'
+                'react',
+                'noVNC'
             ]
         },
         output: {
@@ -97,6 +101,14 @@ module.exports = function (env) {
                     use: [
                         'babel-loader'
                     ]
+                },
+                // explicit noVNC babel-loading
+                // more info: https://github.com/joeeames/WebpackFundamentalsCourse/issues/3
+                {
+                    test: /noVNC\/.*\.(js|jsx)$/,
+                    use: [
+                        'babel-loader'
+                    ]
                 }
             ]
         },
@@ -108,8 +120,8 @@ module.exports = function (env) {
             ]
         },
         performance: isProd && {
-            maxAssetSize: 100,
-            maxEntrypointSize: 300,
+            maxAssetSize: 1000000,
+            maxEntrypointSize: 700000,
             hints: 'warning'
         },
 
@@ -129,7 +141,7 @@ module.exports = function (env) {
             stats: {
                 assets: true,
                 children: false,
-                chunks: false,
+                chunks: true,
                 hash: false,
                 modules: false,
                 publicPath: false,
