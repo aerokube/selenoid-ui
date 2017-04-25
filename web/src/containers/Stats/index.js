@@ -11,11 +11,12 @@ export default class Stats extends Component {
     static propTypes = {
         sse: PropTypes.string,
         status: PropTypes.string,
-        selenoid: PropTypes.object
+        state: PropTypes.object,
+        browsers: PropTypes.object
     };
 
     render() {
-        const {sse, status, selenoid} = this.props;
+        const {sse, status, state, browsers} = this.props;
 
         return (
             <div className="stats">
@@ -24,10 +25,10 @@ export default class Stats extends Component {
                     <Status status={status} title="selenoid"/>
                 </div>
                 <div className="stats__quota">
-                    <Quota total={selenoid.total} used={selenoid.used} pending={selenoid.pending}/>
-                    <Queue queued={selenoid.queued}/>
+                    <Quota total={state.total} used={state.used} pending={state.pending}/>
+                    <Queue queued={state.queued}/>
                 </div>
-                <Browsers browsers={selenoid.browsers} totalUsed={selenoid.used}/>
+                <Browsers browsers={browsers} totalUsed={state.used}/>
             </div>
         );
     }

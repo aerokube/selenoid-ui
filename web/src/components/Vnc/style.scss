@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
 
-  .card {
+  .vnc-card {
     height: 450px;
     width: 800px;
     display: flex;
@@ -44,6 +44,7 @@
         padding-right: 30px;
         display: flex;
         align-items: center;
+        justify-content: space-between;
       }
 
       .screen {
@@ -54,8 +55,9 @@
     }
   }
 
-  .browser {
+  .vnc-browser {
     line-height: 40px;
+    display: inline-flex;
 
     &__name {
       text-transform: uppercase;
@@ -72,9 +74,14 @@
     &__version {
       font-size: 0.8em;
     }
+
+    &__quota {
+      font-size: 0.8em;
+      color: #999;
+    }
   }
 
-  .session {
+  .vnc-resolution, .vnc-session {
     line-height: 40px;
     font-size: 0.8em;
     color: #999;

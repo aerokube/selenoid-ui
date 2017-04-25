@@ -92,25 +92,25 @@ const schema = {
     const open = new Rx.Subject();
     return Rx.Observable.merge(
         Rx.DOM.fromEventSource('/events', open)
-            // .doOnNext(event => console.log(event))
             .map(event => JSON.parse(event))
             .map(event => {
-                if (event.errors) {
+                if (event.errors && event.errors.length) {
                     return {
+                        ...event,
                         status: "error",
-                        errors: event.errors
                     };
                 }
 
-                const validation = validate(event, schema);
+                const validation = validate(event.state, schema);
                 if (validation.valid) {
                     return {
+                        ...event,
                         status: "ok",
-                        selenoid: event
                     };
                 } else {
                     console.error("Wrong data from backend", validation.errors);
                     return {
+                        ...event,
                         status: "error",
                         errors: validation.errors
                     };
@@ -131,7 +131,7 @@ const schema = {
     ).startWith({
         sse: "unknown",
         status: "unknown",
-        selenoid: {
+        state: {
             "total": 0,
             "used": 0,
             "queued": 0,
@@ -147,6 +147,8 @@ export default class Viewport extends Component {
             {href: "/vnc/", title: "VNC"}
         ];
 
+        const {sse, status, state, browsers = {}, sessions = {}} = this.props;
+
         return (
             <Router>
                 <div className="viewport">
@@ -155,13 +157,18 @@ export default class Viewport extends Component {
                     </div>
 
                     <Route exact={true} path="/" render={() => (
-                        <Stats {...this.props}/>
+                        <Stats {...{
+                            sse: sse,
+                            status: status,
+                            state: state,
+                            browsers: browsers
+                        }}/>
                     )}/>
 
                     <Route exact={true} path="/vnc/" component={Vnc}/>
                     <Route path="/vnc/:session" render={({match}) => (
                         <Vnc session={match.params.session}
-                             browser={{name: "firefox", version: "55.0"}}/>
+                             browser={sessions[match.params.session]}/>
                     )}/>
                 </div>
             </Router>

@@ -5,39 +5,26 @@ import Browser from "./Browser";
 
 @rxConnect(props$ => {
     return props$.map(({totalUsed, browsers}) => {
-        const browsersUsed = {};
-
-        Object.keys(browsers)
-            .forEach(browser => {
-                browsersUsed[browser] = 0;
-                Object.keys(browsers[browser]).forEach(version => {
-                    Object.keys(browsers[browser][version])
-                        .forEach(quotaName => {
-                            browsersUsed[browser] += browsers[browser][version][quotaName].count;
-                        })
-                })
-            });
-
         return {
-            browsers: Object.keys(browsersUsed)
-                .sort((a, b) => browsersUsed[b] - browsersUsed[a])
+            totalUsed: totalUsed,
+            browsers: Object.keys(browsers)
+                .sort((a, b) => browsers[b] - browsers[a])
                 .map(browser => ({
-                    totalUsed: totalUsed,
                     name: browser,
-                    used: browsersUsed[browser]
+                    used: browsers[browser]
                 }))
         };
     });
 })
 export default class Browsers extends Component {
     render() {
-        const {browsers} = this.props;
+        const {browsers, totalUsed} = this.props;
 
         return (
             <div className="browsers">
                 {browsers.map(browser =>
                     (
-                        <Browser key={name} {...browser}/>
+                        <Browser key={name} totalUsed={totalUsed} {...browser}/>
                     )
                 )}
             </div>

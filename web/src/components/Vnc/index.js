@@ -43,20 +43,25 @@ export default class Vnc extends Component {
 
         return (
             <div className="vnc">
-                <div className="card">
-                    <div className="card__controls">
+                <div className="vnc-card">
+                    <div className="vnc-card__controls">
                         <Link className="control" to="/vnc/">Back</Link>
                     </div>
 
-                    <div className="card__content">
+                    <div className="vnc-card__content">
                         <div className="header">
-                            <div className="browser">
-                                <span className="browser__name">{browser.name}</span>
-                                <span className="browser__version-separator">/</span>
-                                <span className="browser__version">{browser.version}</span>
+                            <div className="vnc-browser">
+                                <span className="vnc-browser__quota">{browser.quota}</span>
+                                {browser.quota && (<span className="vnc-browser__version-separator">/</span>)}
+                                <span className="vnc-browser__name">{browser.browser}</span>
+                                {browser.browser && (<span className="vnc-browser__version-separator">/</span>)}
+                                <span className="vnc-browser__version">{browser.version}</span>
                             </div>
-                            <div className="session">
-                                <span className="session__id">{session.substring(0, 8)}</span>
+
+                            <div className="vnc-resolution">{browser.screen}</div>
+
+                            <div className="vnc-session">
+                                <span className="vnc-session__id">{session.substring(0, 8)}</span>
                             </div>
                         </div>
                         <div className="screen" ref={ screen => {
