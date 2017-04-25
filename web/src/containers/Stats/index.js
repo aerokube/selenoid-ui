@@ -39,7 +39,36 @@ const schema = {
                             "type": "object",
                             "patternProperties": {
                                 ".*": {
-                                    "type": "number",
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "number"
+                                        },
+                                        "sessions": {
+                                            "type": "array",
+                                            "items": {
+                                                "id": "/session",
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "vnc": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "screen": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "id"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "count"
+                                    ]
                                 },
                             },
                         },

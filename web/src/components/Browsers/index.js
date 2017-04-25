@@ -14,7 +14,7 @@ export default class Browsers extends Component {
                 Object.keys(browsers[browser]).forEach(version => {
                     Object.keys(browsers[browser][version])
                         .forEach(quotaName => {
-                            browsersUsed[browser] += browsers[browser][version][quotaName];
+                            browsersUsed[browser] += browsers[browser][version][quotaName].count;
                         })
                 })
             });
