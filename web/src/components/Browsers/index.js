@@ -1,11 +1,10 @@
 import React, {Component} from "react";
+import {rxConnect} from "rx-connect";
 import "./style.scss";
 import Browser from "./Browser";
 
-
-export default class Browsers extends Component {
-    render() {
-        const {totalUsed, browsers} = this.props;
+@rxConnect(props$ => {
+    return props$.map(({totalUsed, browsers}) => {
         const browsersUsed = {};
 
         Object.keys(browsers)
@@ -19,17 +18,28 @@ export default class Browsers extends Component {
                 })
             });
 
-        const values = Object.keys(browsersUsed)
-            .sort((a, b) => browsersUsed[b] - browsersUsed[a])
-            .map(browser => {
-                return (
-                    <Browser key={browser} name={browser} used={browsersUsed[browser]} totalUsed={totalUsed}/>
-                );
-            });
+        return {
+            browsers: Object.keys(browsersUsed)
+                .sort((a, b) => browsersUsed[b] - browsersUsed[a])
+                .map(browser => ({
+                    totalUsed: totalUsed,
+                    name: browser,
+                    used: browsersUsed[browser]
+                }))
+        };
+    });
+})
+export default class Browsers extends Component {
+    render() {
+        const {browsers} = this.props;
 
         return (
             <div className="browsers">
-                {values}
+                {browsers.map(browser =>
+                    (
+                        <Browser key={name} {...browser}/>
+                    )
+                )}
             </div>
         );
     }
