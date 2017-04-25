@@ -10,6 +10,7 @@ import "./style.scss";
 import Navigation from "components/Navigation";
 import Stats from "containers/Stats";
 import Vnc from "components/Vnc";
+import VncList from "components/VncList";
 
 
 const schema = {
@@ -147,7 +148,7 @@ export default class Viewport extends Component {
             {href: "/vnc/", title: "VNC"}
         ];
 
-        const {sse, status, state, browsers = {}, sessions = {}} = this.props;
+        const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
 
         return (
             <Router>
@@ -165,9 +166,12 @@ export default class Viewport extends Component {
                         }}/>
                     )}/>
 
-                    <Route exact={true} path="/vnc/" component={Vnc}/>
+                    <Route exact={true} path="/vnc/" render={() => (
+                        <VncList sessions={sessions}/>
+                    )}/>
                     <Route path="/vnc/:session" render={({match}) => (
                         <Vnc session={match.params.session}
+                             origin={origin}
                              browser={sessions[match.params.session]}/>
                     )}/>
                 </div>

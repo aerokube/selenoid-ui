@@ -1,0 +1,40 @@
+.vnc-list {
+
+  .vnc-session-link {
+    display: flex;
+    line-height: 60px;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
+
+    &_no-any {
+      color: #fff;
+    }
+
+    &__browser {
+      background-color: #222;
+      padding-left: 20px;
+      padding-right: 20px;
+      text-transform: uppercase;
+      font-weight: 200;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      line-height: 20px;
+
+      &_secondary {
+        font-weight: 100;
+        text-transform: lowercase;
+        font-size: 0.6em;
+        color: #999999;
+      }
+    }
+
+    &__version {
+      background-color: #59a781;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+}

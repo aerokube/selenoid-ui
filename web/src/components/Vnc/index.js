@@ -8,7 +8,10 @@ import "./style.scss";
 export default class Vnc extends Component {
 
     componentDidMount() {
-        const {session} = this.props;
+        const {session, origin} = this.props;
+
+        let link = document.createElement('a');
+        link.setAttribute('href', origin);
 
         try {
             this.rfb = new RFB({
@@ -31,7 +34,7 @@ export default class Vnc extends Component {
             console.error("Unable to create RFB client", exc);
             return;
         }
-        this.rfb.connect("localhost", "4444", "selenoid", `vnc/${session}`);
+        this.rfb.connect(link.hostname, link.port, "selenoid", `vnc/${session}`);
     }
 
     componentWillUnmount() {
