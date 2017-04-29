@@ -23,7 +23,13 @@ var (
 
 func mux(sse *sse.SseBroker) http.Handler {
 	mux := http.NewServeMux()
-	mux.Handle("/", http.FileServer(assetFS()))
+	static := http.FileServer(assetFS())
+
+	mux.Handle("/", static)
+	mux.HandleFunc("/vnc/", func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = "/"
+		static.ServeHTTP(w, r)
+	})
 	mux.Handle("/events", sse)
 	return mux
 }
