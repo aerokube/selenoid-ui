@@ -7,7 +7,7 @@ Simple status page with UI updates by SSE,
 backed by constant polling of status handle
 of [selenoid](https://github.com/aerokube/selenoid) on small go backend.
 
-![ui](docs/img/ui.png)
+![ui](docs/img/ui.gif)
 
 
 ## Usage
@@ -25,6 +25,27 @@ The following flags are supported:
 - ```--listen``` - host and port to listen (e.g. ```:1234```)
 - ```--period``` - data refresh period (e.g. ```5s``` or ```1m```)
 - ```--selenoid-uri``` - selenoid uri to fetch data from (e.g. ```http://localhost:4444/```)
+
+## Features
+
+### Stats
+
+Shows current quota usage, pending browsers and queue.
+
+![ui](docs/img/ui.png)
+
+### VNC
+
+If you get browser from selenoid with `enableVNC=true` capability, you can see list of available screens:
+
+![ui](docs/img/vnc-list.png)
+
+And interact with this browser:
+
+![ui](docs/img/vnc.png)
+
+Please refer to selenoid documentation about VNC usage.
+
 
 ## Development
 
