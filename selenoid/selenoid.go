@@ -90,7 +90,8 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 		return nil, err
 	}
 
-	timedCtx, _ := context.WithTimeout(ctx, 1*time.Second)
+	timedCtx, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
 
 	var state State
 	if err = httpDo(ctx, req.WithContext(timedCtx), func(resp *http.Response, err error) error {
