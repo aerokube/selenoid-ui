@@ -15,7 +15,7 @@ before_install:
   - export PATH=$HOME/.yarn/bin:$PATH
   - export GOPATH=$HOME/gopath
   - export PATH=$HOME/gopath/bin:$PATH
-  - mkdir -p $HOME/gopath/src/github.com/aerokube/selenoid-ui
+  - mkdir -p $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
   - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}/
   - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
   - cd $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
