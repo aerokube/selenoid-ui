@@ -1,4 +1,6 @@
 .vnc-list {
+  display: flex;
+  flex-wrap: wrap;
 
   .vnc-session-link {
     display: flex;
@@ -6,6 +8,7 @@
     color: #fff;
     text-decoration: none;
     box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
+    margin: 5px;
 
     &_no-any {
       color: #fff;

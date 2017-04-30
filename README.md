@@ -9,6 +9,8 @@ of [selenoid](https://github.com/aerokube/selenoid) on small go backend.
 
 ![ui](docs/img/ui.png)
 
+![ui](docs/img/ui.gif)
+
 
 ## Usage
 
