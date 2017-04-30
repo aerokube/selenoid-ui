@@ -3,16 +3,17 @@ package main
 import (
 	"context"
 	"flag"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+	"github.com/aerokube/selenoid-ui/selenoid"
+	"github.com/aerokube/selenoid-ui/sse"
 )
 
-//go:generate go-bindata-assetfs data/
+//go:generate go-bindata-assetfs data/...
 
 var (
 	listen      string
@@ -20,48 +21,15 @@ var (
 	period      time.Duration
 )
 
-func httpDo(ctx context.Context, req *http.Request, handle func(*http.Response, error) error) error {
-	// Run the HTTP request in a goroutine and pass the response to handle function
-	errChan := make(chan error, 1)
-	go func() {
-		errChan <- handle(http.DefaultClient.Do(req))
-	}()
-	select {
-	case <-ctx.Done():
-		{
-			<-errChan // Wait for handle to return.
-			return ctx.Err()
-		}
-	case err := <-errChan:
-		{
-			return err
-		}
-	}
-}
-
-func Status(ctx context.Context, baseUrl string) ([]byte, error) {
-	req, err := http.NewRequest("GET", baseUrl+"/status", nil)
-	if err != nil {
-		return nil, err
-	}
-
-	timedCtx, _ := context.WithTimeout(ctx, 1 * time.Second)
-
-	var results []byte
-	err = httpDo(ctx, req.WithContext(timedCtx), func(resp *http.Response, err error) error {
-		if err != nil {
-			return err
-		}
-		defer resp.Body.Close()
-		results, err = ioutil.ReadAll(resp.Body)
-		return err
-	})
-	return results, err
-}
-
-func mux(sse *SseBroker) http.Handler {
+func mux(sse *sse.SseBroker) http.Handler {
 	mux := http.NewServeMux()
-	mux.Handle("/", http.FileServer(assetFS()))
+	static := http.FileServer(assetFS())
+
+	mux.Handle("/", static)
+	mux.HandleFunc("/vnc/", func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = "/"
+		static.ServeHTTP(w, r)
+	})
 	mux.Handle("/events", sse)
 	return mux
 }
@@ -74,7 +42,7 @@ func init() {
 }
 
 func main() {
-	broker := NewSseBroker()
+	broker := sse.NewSseBroker()
 	stop := make(chan os.Signal)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 
@@ -85,8 +53,8 @@ func main() {
 			select {
 			case <-ticker.C:
 				{
-					if (broker.HasClients()) {
-						res, err := Status(ctx, selenoidUri)
+					if broker.HasClients() {
+						res, err := selenoid.Status(ctx, selenoidUri)
 						if err != nil {
 							log.Printf("can't get status (%s)\n", err)
 							broker.Notifier <- []byte(`{ "errors": [{"msg": "can't get status"}] }`)

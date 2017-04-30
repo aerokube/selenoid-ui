@@ -1,35 +1,32 @@
 import React, {Component} from "react";
+import {rxConnect} from "rx-connect";
 import "./style.scss";
 import Browser from "./Browser";
 
-
+@rxConnect(props$ => {
+    return props$.map(({totalUsed, browsers}) => {
+        return {
+            totalUsed: totalUsed,
+            browsers: Object.keys(browsers)
+                .sort((a, b) => browsers[b] - browsers[a])
+                .map(browser => ({
+                    name: browser,
+                    used: browsers[browser]
+                }))
+        };
+    });
+})
 export default class Browsers extends Component {
     render() {
-        const {totalUsed, browsers} = this.props;
-        const browsersUsed = {};
-
-        Object.keys(browsers)
-            .forEach(browser => {
-                browsersUsed[browser] = 0;
-                Object.keys(browsers[browser]).forEach(version => {
-                    Object.keys(browsers[browser][version])
-                        .forEach(quotaName => {
-                            browsersUsed[browser] += browsers[browser][version][quotaName];
-                        })
-                })
-            });
-
-        const values = Object.keys(browsersUsed)
-            .sort((a, b) => browsersUsed[b] - browsersUsed[a])
-            .map(browser => {
-                return (
-                    <Browser key={browser} name={browser} used={browsersUsed[browser]} totalUsed={totalUsed}/>
-                );
-            });
+        const {browsers, totalUsed} = this.props;
 
         return (
             <div className="browsers">
-                {values}
+                {browsers.map(browser =>
+                    (
+                        <Browser key={name} totalUsed={totalUsed} {...browser}/>
+                    )
+                )}
             </div>
         );
     }
