@@ -6,6 +6,7 @@ import "./style.scss";
 
 
 export default class Vnc extends Component {
+    state = {connection: 'disconnected'};
 
     componentDidMount() {
         const {session, origin} = this.props;
@@ -17,38 +18,83 @@ export default class Vnc extends Component {
             this.rfb = new RFB({
                 encrypt: false,
                 target: this.canvas,
-                onFBUComplete: () => {
+                onFBUComplete: (rfb) => {
+                    // set right size of canvas, based on enclosing element
                     const {width, height} = this.screen;
 
-                    if (screen && this.rfb.get_display()) {
-                        let display = this.rfb.get_display();
+                    if (screen && rfb.get_display()) {
+                        let display = rfb.get_display();
                         display.set_scale(1);
                         display.autoscale(width, height, false);
                     }
 
-                    this.rfb.set_onFBUComplete(() => {
+                    rfb.set_onFBUComplete(() => {
                     })
+                },
+                onUpdateState: (rfb, state) => {
+                    this.connection(state);
+                },
+                onDisconnected: (rfb, reason) => {
                 }
             });
         } catch (exc) {
             console.error("Unable to create RFB client", exc);
             return;
         }
-        this.rfb.connect(link.hostname, link.port, "selenoid", `vnc/${session}`);
+        if (origin) {
+            this.rfb.connect(link.hostname, link.port, "selenoid", `vnc/${session}`);
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.origin !== this.props.origin) {
+            const {session, origin} = this.props;
+
+            let link = document.createElement('a');
+            link.setAttribute('href', origin);
+
+            this.rfb.connect(link.hostname, link.port, "selenoid", `vnc/${session}`);
+        }
     }
 
     componentWillUnmount() {
+        this.rfb.set_onUpdateState(() => {});
+        this.rfb.set_onDisconnected(() => {});
         this.rfb.disconnect();
+    }
+
+    connection(connection) {
+        this.setState({connection: connection});
+    }
+
+    icon(connection) {
+        switch (connection) {
+            case 'disconnected': {
+                return 'dripicons-document-delete';
+            }
+            case 'disconnecting':
+            case 'connecting': {
+                return 'dripicons-dots-3';
+            }
+        }
     }
 
     render() {
         const {session = "", browser = {}} = this.props;
+        const {connection} = this.state;
 
         return (
             <div className="vnc">
                 <div className="vnc-card">
                     <div className="vnc-card__controls">
-                        <Link className="control" to="/vnc/">Back</Link>
+                        <Link className="control" to="/vnc/">
+                            <span title="Back" className="icon dripicons-arrow-thin-left"/>
+                        </Link>
+
+                        <div className={`control control_${connection}`}>
+                            <span title={connection} className={`icon ${this.icon(connection)}`}/>
+                        </div>
+
                     </div>
 
                     <div className="vnc-card__content">

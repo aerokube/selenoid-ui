@@ -13,7 +13,7 @@ import (
 	"github.com/aerokube/selenoid-ui/sse"
 )
 
-//go:generate go-bindata-assetfs data/
+//go:generate go-bindata-assetfs data/...
 
 var (
 	listen      string

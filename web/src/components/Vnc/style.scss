@@ -20,11 +20,29 @@
 
       .control {
         width: 100%;
-        line-height: 80px;
+        line-height: 70px;
+        padding-top: 10px;
+        font-size: 2em;
         background-color: #59a781;
         text-align: center;
         text-decoration: none;
         color: #fff;
+
+        &_disconnected {
+          background-color: #ff6e59;
+        }
+
+        &_connecting {
+          background-color: #6883d3;
+        }
+
+        &_connected {
+          display: none;
+        }
+
+        &_disconnecting {
+          background-color: #ca9eff;
+        }
       }
     }
 

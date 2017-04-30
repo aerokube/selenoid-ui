@@ -108,8 +108,15 @@ module.exports = function (env) {
                     test: /noVNC\/.*\.(js|jsx)$/,
                     use: [
                         'babel-loader'
+                    ],
+                    exclude: [
+                        'karma.conf.js'
                     ]
-                }
+                },
+                {
+                    test: /\.(eot|svg|ttf|woff|woff2)$/,
+                    use: 'file-loader?name=/static/fonts/[name].[ext]'
+                },
             ]
         },
         resolve: {
