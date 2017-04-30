@@ -15,6 +15,10 @@ before_install:
   - export PATH=$HOME/.yarn/bin:$PATH
   - export GOPATH=$HOME/gopath
   - export PATH=$HOME/gopath/bin:$PATH
+  - mkdir -p $HOME/gopath/src/github.com/aerokube/selenoid-ui
+  - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}/
+  - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
+  - cd $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
   - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.8 bash)"
   - go get -u github.com/jteeuwen/go-bindata/...
   - go get -u github.com/elazarl/go-bindata-assetfs/...
