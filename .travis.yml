@@ -31,6 +31,7 @@ install:
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+- cp dist/selenoid-ui_linux_amd64 ./selenoid-ui
 
 deploy:
   - provider: releases
