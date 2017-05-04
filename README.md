@@ -50,7 +50,7 @@ Please refer to selenoid documentation about VNC usage.
 
 1) Ensure you have [yarn](https://github.com/yarnpkg/yarn) and [go-bindata-assetfs](https://github.com/elazarl/go-bindata-assetfs) installed
 
-1.1) For tests install `go get -u github.com/aandryashin/matchers`
+1.1) For tests deps install `go test -i ./...`
 
 2) Generate static resources:
 ```

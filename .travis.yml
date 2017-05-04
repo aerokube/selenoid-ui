@@ -7,7 +7,7 @@ services:
   - docker
 
 script:
-  - go test -race -coverprofile=coverage.txt -covermode=atomic -coverpkg ./...
+  - ./travis/coverage.sh
   - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build
 
 before_install:
@@ -22,7 +22,7 @@ before_install:
   - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.8 bash)"
   - go get -u github.com/jteeuwen/go-bindata/...
   - go get -u github.com/elazarl/go-bindata-assetfs/...
-  - go get -u github.com/aandryashin/matchers
+  - go test -i ./...
   - npm install cross-env
   - go generate ./web ./...
 

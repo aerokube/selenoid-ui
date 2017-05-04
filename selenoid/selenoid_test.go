@@ -48,7 +48,6 @@ func TestToUI(t *testing.T) {
     }
   }
 }`), &state)
-
 	ui := toUI(state, "http://localhost")
 	res, _ := json.MarshalIndent(ui, "", " ")
 	log.Println(string(res))
