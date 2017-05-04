@@ -24,7 +24,7 @@ export default class Browsers extends Component {
             <div className="browsers">
                 {browsers.map(browser =>
                     (
-                        <Browser key={name} totalUsed={totalUsed} {...browser}/>
+                        <Browser key={browser.name} totalUsed={totalUsed} {...browser}/>
                     )
                 )}
             </div>
