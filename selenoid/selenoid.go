@@ -62,7 +62,7 @@ type result struct {
 	Origin   string                    `json:"origin"`
 	Browsers map[string]int            `json:"browsers"`
 	Sessions map[string]sessionInfo    `json:"sessions"`
-	Errors []interface{}    	   `json:"errors"`
+	Errors   []interface{}             `json:"errors"`
 }
 
 func httpDo(ctx context.Context, req *http.Request, handle func(*http.Response, error) error) error {
@@ -104,6 +104,10 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 		return nil, err
 	}
 
+	return json.Marshal(toUI(state, baseUrl))
+}
+
+func toUI(state State, baseUrl string) result {
 	browsers := make(map[string]int)
 	sessions := make(map[string]sessionInfo)
 
@@ -127,11 +131,11 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 		browsers[browser] = count
 	}
 
-	return json.Marshal(result{
+	return result{
 		State:    state,
 		Origin:   baseUrl,
 		Browsers: browsers,
 		Sessions: sessions,
-		Errors: make([]interface{}, 0),
-	})
+		Errors:   make([]interface{}, 0),
+	}
 }

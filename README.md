@@ -9,7 +9,6 @@ of [selenoid](https://github.com/aerokube/selenoid) on small go backend.
 
 ![ui](docs/img/ui.gif)
 
-
 ## Usage
 
 We distribute UI as a lightweight [Docker](http://docker.com/) container. To run it type:
@@ -50,6 +49,8 @@ Please refer to selenoid documentation about VNC usage.
 ## Development
 
 1) Ensure you have [yarn](https://github.com/yarnpkg/yarn) and [go-bindata-assetfs](https://github.com/elazarl/go-bindata-assetfs) installed
+
+1.1) For tests install `go get -u github.com/aandryashin/matchers`
 
 2) Generate static resources:
 ```
