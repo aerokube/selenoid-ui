@@ -10,6 +10,7 @@ script:
   - go generate ./web ./...
   - ./travis/coverage.sh
   - gox -os "linux darwin windows" -arch "amd64" -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}"
+  - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build # for docker
 
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -31,7 +32,6 @@ install:
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-- cp dist/selenoid-ui_linux_amd64 ./selenoid-ui
 
 deploy:
   - provider: releases
