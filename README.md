@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/aerokube/selenoid-ui.svg?branch=master)](https://travis-ci.org/aerokube/selenoid-ui)
 [![Coverage](https://codecov.io/github/aerokube/selenoid-ui/coverage.svg)](https://codecov.io/gh/aerokube/selenoid-ui)
 [![Docker](https://img.shields.io/badge/docker-aerokube%2Fselenoid--ui-blue.svg)](https://hub.docker.com/r/aerokube/selenoid-ui/)
+[![Release](https://img.shields.io/github/release/aerokube/selenoid-ui.svg)](https://github.com/aerokube/selenoid-ui/releases/latest)
 
 Simple status page with UI updates by SSE,
 backed by constant polling of status handle
@@ -50,7 +51,7 @@ Please refer to selenoid documentation about VNC usage.
 
 1) Ensure you have [yarn](https://github.com/yarnpkg/yarn) and [go-bindata-assetfs](https://github.com/elazarl/go-bindata-assetfs) installed
 
-1.1) For tests deps install `go get -u github.com/aandryashin/matchers`
+ 1.1) For tests deps install `go get -u github.com/aandryashin/matchers`
 
 2) Generate static resources:
 ```
