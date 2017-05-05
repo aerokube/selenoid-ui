@@ -51,18 +51,23 @@ Please refer to selenoid documentation about VNC usage.
 
 1) Ensure you have [yarn](https://github.com/yarnpkg/yarn) and [go-bindata-assetfs](https://github.com/elazarl/go-bindata-assetfs) installed
 
- 1.1) For tests deps install `go get -u github.com/aandryashin/matchers`
+ - For tests deps install `go get -u github.com/aandryashin/matchers`
 
 2) Generate static resources:
-```
+
+```bash
 $ go generate ./web ./...
 ```
+
 3) Build:
-```
+
+```bash
 $ go build
 ```
+
 4) To build Docker container type:
-```
+
+```bash
 $ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build
 $ docker build -t selenoid-ui:latest .
 ```
