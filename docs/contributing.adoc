@@ -1,0 +1,27 @@
+== Contributing & Development
+
+1) Ensure you have https://github.com/yarnpkg/yarn[yarn] and https://github.com/elazarl/go-bindata-assetfs[go-bindata-assetfs] installed
+
+ - For tests deps install `go get -u github.com/aandryashin/matchers`
+
+2) Generate static resources:
+
+[source,bash]
+----
+$ go generate ./web ./...
+----
+
+3) Build:
+
+[source,bash]
+----
+$ go build
+----
+
+4) To build Docker container type:
+
+[source,bash]
+----
+$ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build
+$ docker build -t selenoid-ui:latest .
+----

@@ -51,6 +51,17 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
+  - provider: script
+    script: travis/docs.sh latest
+    skip_cleanup: true
+    on:
+      branch: master
+  - provider: script
+    script: travis/docs.sh $TRAVIS_TAG
+    skip_cleanup: true
+    on:
+      tags: true
+
 
 cache:
   yarn: true
