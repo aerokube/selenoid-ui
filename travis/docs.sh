@@ -5,6 +5,10 @@ TAGNAME=$1
 GH_REF=github.com/${TRAVIS_REPO_SLUG}
 git config user.name "${TRAVIS_REPO_SLUG}"
 git config user.email "aerokube@aerokube.github.com"
+git remote add upstream "https://${GITHUB_TOKEN}@${GH_REF}"
+git fetch upstream
+
+git branch -r
 
 echo "Deleting old output"
 rm -rf ${TRAVIS_BUILD_DIR}/docs/output
@@ -13,7 +17,7 @@ git worktree prune
 rm -rf ${TRAVIS_BUILD_DIR}/.git/worktrees/docs/output/
 
 echo "Checking out gh-pages branch into docs/output"
-git worktree add -B gh-pages ${TRAVIS_BUILD_DIR}/docs/output origin/gh-pages
+git worktree add -B gh-pages ${TRAVIS_BUILD_DIR}/docs/output upstream/gh-pages
 
 echo "Removing existing files"
 mkdir -p ${TRAVIS_BUILD_DIR}/docs/output/${TAGNAME}
@@ -29,4 +33,4 @@ echo "Updating gh-pages branch"
 cd ${TRAVIS_BUILD_DIR}/docs/output && git add --all && git commit -m "Publishing to gh-pages"
 
 
-git push "https://${GITHUB_TOKEN}@${GH_REF}" HEAD:gh-pages
+git push upstream HEAD:gh-pages
