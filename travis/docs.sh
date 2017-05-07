@@ -4,11 +4,11 @@ set -e
 TAGNAME=$1
 GH_REF=github.com/${TRAVIS_REPO_SLUG}
 
-rm -rf ${TAGNAME} ;
+cd docs ; mkdir -p output/${TAGNAME}; cp -R img output/${TAGNAME}/img
 
 docker run -v ${TRAVIS_BUILD_DIR}/docs/:/documents/ --name asciidoc-to-html asciidoctor/docker-asciidoctor asciidoctor -a revnumber=${TAGNAME} -D /documents/output/${TAGNAME} index.adoc
 
-cd docs/output ; cp -R ../img ${TAGNAME}/img
+cd output
 git init
 git config user.name "${TRAVIS_REPO_SLUG}"
 git config user.email "aerokube@aerokube.github.com"
