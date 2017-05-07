@@ -1,0 +1,28 @@
+= Selenoid UI. Reference Guide
+:revdate: {docdate}
+:toc: left
+:sectanchors:
+:Author: Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community
+:revnumber: latest
+
+This reference for version: _{revnumber}_
+
+== Features list:
+
+=== Stats
+
+Shows current quota usage, pending browsers and queue.
+
+=== VNC
+
+If you get browser from selenoid with `enableVNC=true` capability, you can see list of available screens:
+
+image:img/vnc-list.png[ui]
+
+VNC allows to see and interact with browser:
+
+image:img/vnc.png[ui]
+
+Please refer to selenoid documentation about VNC usage.
+
+include::contributing.adoc[]
