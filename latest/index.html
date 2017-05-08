@@ -5,8 +5,8 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="author" content="Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community">
-<title>Selenoid UI. Reference Guide</title>
+<meta name="author" content="Alexander Andryashin, Ivan Krutov, Kirill Merkushev and the Aerokube community">
+<title>Selenoid</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -421,22 +421,40 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Selenoid UI. Reference Guide</h1>
+<h1>Selenoid</h1>
 <div class="details">
-<span id="author" class="author">Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community</span><br>
+<span id="author" class="author">Alexander Andryashin, Ivan Krutov, Kirill Merkushev and the Aerokube community</span><br>
 <span id="revnumber">version latest,</span>
-<span id="revdate">2017-05-07</span>
+<span id="revdate">2017-05-08</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_features_list">Features list:</a>
+<li><a href="#_getting_started">Getting Started</a>
 <ul class="sectlevel2">
-<li><a href="#_stats">Stats</a></li>
-<li><a href="#_vnc">VNC</a></li>
+<li><a href="#_quick_start_guide">Quick Start Guide</a></li>
+<li><a href="#_user_interface">User Interface</a></li>
+<li><a href="#_browser_images">Browser Images</a></li>
 </ul>
 </li>
-<li><a href="#_contributing_development">Contributing &amp; Development</a></li>
+<li><a href="#_advanced_features">Advanced Features</a>
+<ul class="sectlevel2">
+<li><a href="#_live_browser_screen">Live Browser Screen</a></li>
+<li><a href="#_custom_screen_resolution">Custom Screen Resolution</a></li>
+<li><a href="#_using_selenoid_without_docker">Using Selenoid without Docker</a></li>
+<li><a href="#_usage_statistics">Usage Statistics</a></li>
+</ul>
+</li>
+<li><a href="#_configuration">Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#_recommended_docker_settings">Recommended Docker Settings</a></li>
+<li><a href="#_browsers_configuration_file">Browsers Configuration File</a></li>
+<li><a href="#_logging_configuration_file">Logging Configuration File</a></li>
+<li><a href="#_setting_timezone">Setting Timezone</a></li>
+<li><a href="#_reloading_configuration">Reloading Configuration</a></li>
+<li><a href="#_selenoid_flags">Selenoid Flags</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -446,73 +464,1011 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>This reference for version: <em>latest</em></p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_features_list"><a class="anchor" href="#_features_list"></a>Features list:</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_stats"><a class="anchor" href="#_stats"></a>Stats</h3>
 <div class="paragraph">
-<p>Shows current quota usage, pending browsers and queue.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_vnc"><a class="anchor" href="#_vnc"></a>VNC</h3>
-<div class="paragraph">
-<p>If you get browser from selenoid with <code>enableVNC=true</code> capability, you can see list of available screens:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/vnc-list.png" alt="ui"></span></p>
-</div>
-<div class="paragraph">
-<p>VNC allows to see and interact with browser:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/vnc.png" alt="ui"></span></p>
-</div>
-<div class="paragraph">
-<p>Please refer to selenoid documentation about VNC usage.</p>
-</div>
+<p>Selenoid is a powerful <a href="http://golang.org/">Go</a> implementation of original <a href="http://github.com/SeleniumHQ/selenium">Selenium</a> hub code. It is using Docker to launch browsers.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_contributing_development"><a class="anchor" href="#_contributing_development"></a>Contributing &amp; Development</h2>
+<h2 id="_getting_started"><a class="anchor" href="#_getting_started"></a>Getting Started</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_quick_start_guide"><a class="anchor" href="#_quick_start_guide"></a>Quick Start Guide</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Make sure you have <a href="https://docs.docker.com/engine/installation/">Docker</a> installed</p>
+</li>
+<li>
+<p>Download browser images and generate configuration file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ mkdir -p /etc/selenoid
+$ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aerokube/cm:1.0.0 selenoid --last-versions 2 --tmpfs 128 --pull &gt; /etc/selenoid/browsers.json</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Start Selenoid:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># docker run -d --name selenoid -p 4444:4444 -v /etc/selenoid:/etc/selenoid:ro -v /var/run/docker.sock:/var/run/docker.sock aerokube/selenoid:1.1.1</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run your tests against Selenoid like you do with regular Selenium hub:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>http://localhost:4444/wd/hub</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Selenoid was created to be run in big Selenium clusters and thus has no built-in user interface. This is why trying to open an URL above in browser returns <strong>404</strong> and this is the expected behavior. The good news are - there is a standalone user interface. Refer to <a href="#_user_interface">User Interface</a> section for more details.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_interface"><a class="anchor" href="#_user_interface"></a>User Interface</h3>
 <div class="paragraph">
-<p>1) Ensure you have <a href="https://github.com/yarnpkg/yarn">yarn</a> and <a href="https://github.com/elazarl/go-bindata-assetfs">go-bindata-assetfs</a> installed</p>
+<p>Selenoid has standalone UI to show current quota, queue and browser usage: <a href="https://github.com/aerokube/selenoid-ui" class="bare">https://github.com/aerokube/selenoid-ui</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_browser_images"><a class="anchor" href="#_browser_images"></a>Browser Images</h3>
+<div class="paragraph">
+<p>We maintain a set of prebuilt Docker container images for different browsers including:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>For tests deps install <code>go get -u github.com/aandryashin/matchers</code></p>
+<p><a href="https://hub.docker.com/r/selenoid/firefox/">Firefox</a></p>
+</li>
+<li>
+<p><a href="https://hub.docker.com/r/selenoid/chrome/">Google Chrome</a></p>
+</li>
+<li>
+<p><a href="https://hub.docker.com/r/selenoid/opera/">Opera</a></p>
+</li>
+<li>
+<p><a href="https://hub.docker.com/r/selenoid/phantomjs/">PhantomJS</a></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>2) Generate static resources:</p>
+<p>All these images are free to use. See image tags for a list of supported versions. Build files are stored in <a href="http://github.com/aerokube/selenoid-images">this</a> repository. Feel free to create issues or request images for new versions.</p>
+</div>
+<div class="sect3">
+<h4 id="_image_information"><a class="anchor" href="#_image_information"></a>Image information</h4>
+<div class="sect4">
+<h5 id="_firefox"><a class="anchor" href="#_firefox"></a>Firefox</h5>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Firefox Images</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Image</th>
+<th class="tableblock halign-left valign-top">Selenium version</th>
+<th class="tableblock halign-left valign-top">Firefox version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:3.6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.20.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.6.16 i386 (dialogs may not work)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.20.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0.1 i386</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:5.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.20.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.0.1 i386</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:6.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.20.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.0.2 i386</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:7.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.20.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7.0.1 i386</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:8.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.20.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8.0.1 i386</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:9.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.20.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:10.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.0.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:11.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:12.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:13.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">13.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:14.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:15.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:16.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16.0.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:17.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">17.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:18.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">18.0.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:19.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">19.0.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:20.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">20.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:21.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">21.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:22.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">22.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:23.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.35.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">23.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:24.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.39.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">24.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:25.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.39.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">25.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:26.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.39.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">26.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:27.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.40.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">27.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:28.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.41.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">28.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:29.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.43.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">29.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:30.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.43.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:31.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.44.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">31.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:32.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.44.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">32.0.3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:33.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.44.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">33.0.3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:34.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.45.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">34.0.5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:35.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.45.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">35.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:36.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.45.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">36.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:37.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.45.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">37.0.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:38.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.45.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">38.0.5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:39.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.45.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">39.0.3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:40.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.45.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">40.0.3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:41.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.45.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">41.0.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:42.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.47.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">42.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:43.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.47.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">43.0.4</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:44.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.53.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">44.0.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:45.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.53.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">45.0.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:46.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.53.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">46.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:47.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.53.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">47.0.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:48.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.0 + GD 0.13.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">48.0.2 (native events and proxies don&#8217;t work)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:49.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.0 + GD 0.13.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">49.0.2 (native events and switching between windows don&#8217;t work)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:50.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.0 + GD 0.13.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50.0.2 (native events, switching windows and proxies don&#8217;t work)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:51.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.2.0 + GD 0.14.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">51.0.1 (native events, switching windows and proxies don&#8217;t work)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:52.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.3.1 + GD 0.15.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">52.0.2 (native events, switching windows don&#8217;t work; proxy capability format could change)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/firefox:53.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.3.1 + GD 0.15.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">53.0 (switching windows don&#8217;t work; proxy capability format could change)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_chrome"><a class="anchor" href="#_chrome"></a>Chrome</h5>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Chrome Images</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Image</th>
+<th class="tableblock halign-left valign-top">Chromedriver version</th>
+<th class="tableblock halign-left valign-top">Chrome version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:48.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.21</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">48.0.2564.116</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:49.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.22</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">49.0.2623.112</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:50.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.22</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50.0.2661.102</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:51.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.23</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">51.0.2704.106</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:52.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.24</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">52.0.2743.116</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:53.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.26</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">53.0.2785.143</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:54.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">54.0.2840.100</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:55.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.28</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">55.0.2883.87</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:56.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.29</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">56.0.2924.87</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:57.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.29</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">57.0.2987.110</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/chrome:58.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.29</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">57.0.2987.110</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Note:</strong> images for older Chrome versions were not built because we have no Debian packages. If you have such packages - we could create more images.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_opera"><a class="anchor" href="#_opera"></a>Opera</h5>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. Opera Presto Images</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Image</th>
+<th class="tableblock halign-left valign-top">Selenium version</th>
+<th class="tableblock halign-left valign-top">Opera version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:12.16</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.37.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12.16.1860 (dialogs and probably async JS don&#8217;t work)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Due to bug in Operadriver to work with Opera Blink images you need to pass additional capability:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ go generate ./web ./...</code></pre>
+<pre class="highlight"><code>{"browserName": "operablink", "operaOptions": {"binary": "/usr/bin/opera"}}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>3) Build:</p>
+<p>We do not consider these images really stable. Many of base operations like working with proxies may not work.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 4. Opera Blink Images</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Image</th>
+<th class="tableblock halign-left valign-top">Operadriver version</th>
+<th class="tableblock halign-left valign-top">Opera version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:33.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.2.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">33.0.1990.115</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:34.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.2.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">34.0.2036.50</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:35.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.2.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">35.0.2066.92</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:36.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.2.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">36.0.2130.65</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:37.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.2.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">37.0.2178.54</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:38.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.2.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">38.0.2220.41</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:39.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.2.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">39.0.2256.71</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:40.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.2.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">40.0.2308.90</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:41.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">41.0.2353.69</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:42.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">42.0.2393.94</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:43.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">43.0.2442.991</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selenoid/opera:44.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">44.0.2510.857</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Note:</strong> images for older Opera versions were not built because we have no Debian packages. If you have such packages - we could create more images.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_advanced_features"><a class="anchor" href="#_advanced_features"></a>Advanced Features</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_live_browser_screen"><a class="anchor" href="#_live_browser_screen"></a>Live Browser Screen</h3>
+<div class="paragraph">
+<p>Selenoid supports showing browser screen during test execution. This works with containers having <a href="https://en.wikipedia.org/wiki/Virtual_Network_Computing">VNC</a> server installed. To see browser screen:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Pass <code><code>enableVNC</code></code> capability in tests:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>enableVNC = true</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Launch <a href="http://github.com/aerokube/selenoid-ui">Selenoid UI</a> to see the screen.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This works by proxying VNC port from started container to <code><code><a href="http://localhost:4444/vnc/&lt;session-id&gt" class="bare">http://localhost:4444/vnc/&lt;session-id&gt</a>;</code></code> where <code><code>&lt;session-id&gt;</code></code> is Selenium session ID.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_custom_screen_resolution"><a class="anchor" href="#_custom_screen_resolution"></a>Custom Screen Resolution</h3>
+<div class="paragraph">
+<p>Selenoid allows you to set custom screen resolution in containers being run. To do that simply pass <code><code>screenResolution</code></code> capability in your tests in form <code><code>width x height x color-depth</code></code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ go build</code></pre>
+<pre class="highlight"><code>screenResolution: 1280x1024x24</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_selenoid_without_docker"><a class="anchor" href="#_using_selenoid_without_docker"></a>Using Selenoid without Docker</h3>
+<div class="paragraph">
+<p>Selenoid is using containers to start browsers. However cases exist when running browser in container is not possible. For example on Windows you have Internet Explorer which can not be run inside container. Selenoid can be used as a lightweight Selenium server replacement to run IE, Firefox or Chrome on Windows. For example to use Selenoid with IE:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Download latest <a href="http://www.seleniumhq.org/download/">IEDriverServer</a> archive and unpack it to some directory (<code><code>C:\</code></code> in this example).</p>
+</li>
+<li>
+<p>Download latest <a href="https://github.com/aerokube/selenoid/releases/latest">Selenoid</a> binary.</p>
+</li>
+<li>
+<p>Create <code><code>browsers.json</code></code> configuration file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "internet explorer": {
+    "default": "11",
+    "versions": {
+      "11": {
+        "image": ["C:\\IEDriverServer.exe", "--log-level=DEBUG"]
+      }
+    }
+  }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>4) To build Docker container type:</p>
+<p>Notice that backslashes in Windows paths should be escaped as <code><code>\\</code></code>.
+In this example we define a browser with name <code><code>internet explorer</code></code>  and version <code><code>11</code></code>.</p>
+</div>
+</li>
+<li>
+<p>Start Selenoid:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>./selenoid_win_amd64.exe -conf ./browsers.json -disable-docker</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run your tests against ...</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>http://localhost:4444/wd/hub</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>... with the following capabilities:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build
-$ docker build -t selenoid-ui:latest .</code></pre>
+<pre class="highlight"><code>browserName = internet explorer
+version = 11</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To start <a href="https://www.google.com/chrome/">Chrome</a> instead just download <a href="https://sites.google.com/a/chromium.org/chromedriver/">Chromedriver</a> binary and modify <code><code>browsers.json</code></code> accordingly.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_usage_statistics"><a class="anchor" href="#_usage_statistics"></a>Usage Statistics</h3>
+<div class="paragraph">
+<p>Selenoid calculates usage statistics that can be accessed with HTTP request:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl http://localhost:4444/status
+{
+    "total": 80,
+    "used": 10,
+    "queued": 0,
+    "pending": 1,
+    "browsers": {
+      "firefox": {
+        "46.0": {
+          "user1": {"count":1, "sessions":[
+            {"id":"a7a2b801-21db-4dae-a99b-4cbc0b81de96","vnc":false,"screen":"1920x1080x24"}
+          ]},
+          "user2": {"count":6, "sessions":[
+            ...
+          ]},
+        },
+        "48.0": {
+          "user2": {"count":3, "sessions":[
+                ...
+          ]}
+        }
+      }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Users are extracted from basic HTTP authentication headers.</p>
+</div>
+<div class="sect3">
+<h4 id="_sending_statistics_to_external_systems"><a class="anchor" href="#_sending_statistics_to_external_systems"></a>Sending Statistics to External Systems</h4>
+<div class="paragraph">
+<p>To send Selenoid statistics described in previous section you can use <a href="https://github.com/influxdata/telegraf">Telegraf</a>. For example to send status to <a href="https://github.com/graphite-project">Graphite</a>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Pull latest Telegraf Docker container:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># docker pull telegraf:alpine</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Generate configuration file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># mkdir -p /etc/telegraf
+# docker run --rm telegraf:alpine --input-filter httpjson --output-filter graphite config &gt; /etc/telegraf/telegraf.conf</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Edit file like the following (three dots mean some not shown lines):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-go" data-lang="go">...
+[agent]
+interval = "10s" # &lt;- adjust this if needed
+...
+[[outputs.graphite]]
+...
+servers = ["my-graphite-host.example.com:2024"] # &lt;- adjust host and port
+...
+prefix = "one_min" # &lt;- something before hostname, can be blank
+...
+template = "host.measurement.field"
+...
+[[inputs.httpjson]]
+...
+name = "selenoid"
+...
+servers = [
+"http://localhost:4444/status" # &lt;- this is localhost only if Telegraf is run on Selenoid host
+]</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Start Telegraf container:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># docker run --net host -d --name telegraf -v /etc/telegraf:/etc telegraf:alpine --config /etc/telegraf.conf</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Metrics will be sent to my-graphite-host.example.com:2024. Metric names will be like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>one_min.selenoid_example_com.httpjson_selenoid.pending
+one_min.selenoid_example_com.httpjson_selenoid.queued
+one_min.selenoid_example_com.httpjson_selenoid.total
+...</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_recommended_docker_settings"><a class="anchor" href="#_recommended_docker_settings"></a>Recommended Docker Settings</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>We recommend to use modern Docker storage drivers like <a href="https://en.wikipedia.org/wiki/Aufs">AUFS</a> or <a href="https://en.wikipedia.org/wiki/OverlayFS">OverfayFS</a>. Never use <a href="https://en.wikipedia.org/wiki/Device_mapper">Device Mapper</a> - it is very slow. See <a href="https://docs.docker.com/engine/userguide/storagedriver/selectadriver/">this</a> page on how to adjust Docker storage driver. To check your currently used driver type:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># docker info | grep Storage</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Total number of simultaneously running containers (adjusted via <code><code>-limit</code></code> flag) depends on your host machine hardware. Our experience shows that depending on your tests the recommended limit is something like: <code><code>1.5-2.0 x numCores</code></code>, where <code><code>numCores</code></code> is total number of cores on your host machine.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_browsers_configuration_file"><a class="anchor" href="#_browsers_configuration_file"></a>Browsers Configuration File</h3>
+<div class="paragraph">
+<p>Selenoid uses simple JSON configuration files of the following format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">{
+    "firefox": {                            // Browser name
+      "default": "46.0",                    // Default browser version
+      "versions": {                         // A list of available browser versions
+        "46.0": {                           // Version name
+          "image": "selenoid/firefox:46.0", // Image name or driver binary command
+          "port": "4444",                   // Port to proxy connections to, see below
+          "tmpfs": {"/tmp": "size=512m"},   // Optional. Add in memory filesystem (tmpfs) to container, see below
+          "path" : "/wd/hub"                // Optional. Path relative to / where we request a new session, see below
+        },
+        "50.0" :{
+            // ...
+        }
+      }
+    },
+    "chrome": {
+        // ...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This file represents a mapping between a list of supported browser versions and Docker container images or driver binaries.</p>
+</div>
+<div class="sect3">
+<h4 id="_browser_name_and_version"><a class="anchor" href="#_browser_name_and_version"></a>Browser Name and Version</h4>
+<div class="paragraph">
+<p>Browser name and version are just strings that are matched against Selenium desired capabilities: <code><code>browserName</code></code> and <code><code>version</code></code>. If no version capability is present default version is used. When there is no exact version match we also try to match by prefix. That means version string in JSON should start with version string from capabilities. The following request matches&#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>versionFromConfig = 46.0
+versionFromCapabilities = 46 # 46.0 starts with 46</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>... and the following does not:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>versionFromConfig = 46.0
+versionFromCapabilities = 46.1 # 46.0 does not start with 46.1</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_image"><a class="anchor" href="#_image"></a>Image</h4>
+<div class="paragraph">
+<p>Image by default is a string with container specification in Docker format (<code><code>hub.example.com/project/image:tag</code></code>). The following image names are valid:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>my-internal-docker-hub.example.com/selenoid/firefox:46.0 # This comes from internal Docker hub
+selenoid/firefox:46.0 # This is downloaded from hub.docker.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you wish to use a standalone binary instead of Docker container, then image field should contain command specification in square brackets:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">"46.0": { // Version name
+    "image": ["/usr/bin/mybinary", "-arg1", "foo", "-arg2", "bar", "-arg3"],
+    "port": ...
+    "tmpfs": ...
+    "path" : ...
+},</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Selenoid proxies connections to either Selenium server or standalone driver binary. Depending on operating system both can be packaged inside Docker container.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_port_tmpfs_and_path"><a class="anchor" href="#_port_tmpfs_and_path"></a>Port, Tmpfs and Path</h4>
+<div class="paragraph">
+<p>You should use <code><code>port</code></code> field to specify the real port that Selenium server or driver will listen on. For Docker containers this is a port inside container. <code><code>tmpfs</code></code> and <code><code>path</code></code> fields are optional. You may probably know that moving browser cache to in-memory filesystem (<a href="https://en.wikipedia.org/wiki/Tmpfs)">Tmpfs</a> can dramatically improve its performance. Selenoid can automatically attach one or more in-memory filesystems as volumes to Docker container being run. To achieve this define one or more mount points and their respective sizes in optional <code><code>tmpfs</code></code> field:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">"46.0": { // Version name
+    "image": ...
+    "port": ...
+    "tmpfs": {"/tmp": "size=512m", "/var": "size=128m"},
+    "path" : ...
+},</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The last field - <code><code>path</code></code> is needed to specify relative path to the URL where a new session is created (default is <code><code>/</code></code>). Which value to specify in this field depends on container contents. For example most of Firefox containers have <a href="http://seleniumhq.org/">Selenium server</a> inside - thus you need to specify <code><code>/wd/hub</code></code>. Chrome and Opera containers use web driver binary as entrypoint application which is accepting requests at <code><code>/</code></code>. We recommend to use our <a href="https://github.com/aerokube/cm">configuration tool</a> to avoid errors with this field.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logging_configuration_file"><a class="anchor" href="#_logging_configuration_file"></a>Logging Configuration File</h3>
+<div class="paragraph">
+<p>By default Docker container logs are saved to host machine hard drive. When using Selenoid for local development that&#8217;s ok. But in big Selenium cluster you may want to send logs to some centralized storage like <a href="https://www.elastic.co/products/logstash">Logstash</a> or <a href="https://www.graylog.org/">Graylog</a>. Docker provides such functionality by so-called <a href="https://docs.docker.com/engine/admin/logging/overview/">logging drivers</a>. Selenoid logging configuration file allows to specify which logging driver to use globally for all started Docker containers with browsers. Configuration file has the following format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">{
+    "Type" : "&lt;driver-type&gt;",
+    "Config" : {
+      "key1" : "value1",
+      "key2" : "value2"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here <code><code>&lt;driver-type&gt;</code></code> - is a supported Docker logging driver type like <code><code>syslog</code></code>, <code><code>journald</code></code> or <code><code>awslogs</code></code>. <code><code>Config</code></code> is a list of key-value pairs used to configure selected driver. For example these Docker logging parameters&#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>--log-driver=syslog --log-opt syslog-address=tcp://192.168.0.42:123 --log-opt syslog-facility=daemon</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>... are equivalent to the following Selenoid logging configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">{
+    "Type" : "syslog",
+    "Config" : {
+      "syslog-address" : "tcp://192.168.0.42:123",
+      "syslog-facility" : "daemon"
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setting_timezone"><a class="anchor" href="#_setting_timezone"></a>Setting Timezone</h3>
+<div class="paragraph">
+<p>When used in Docker container Selenoid will have timezone set to UTC. To set custom timezone pass TZ environment variable to Docker:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ docker run -d --name selenoid -p 4444:4444 -e TZ=Europe/Moscow -v /etc/selenoid:/etc/selenoid:ro -v /var/run/docker.sock:/var/run/docker.sock aerokube/selenoid:1.1.1</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_reloading_configuration"><a class="anchor" href="#_reloading_configuration"></a>Reloading Configuration</h3>
+<div class="paragraph">
+<p>To reload configuration without restart send SIGHUP:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># kill -HUP &lt;pid&gt;
+# docker kill -s HUP &lt;container-id-or-name&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Use only one of these commands.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_selenoid_flags"><a class="anchor" href="#_selenoid_flags"></a>Selenoid Flags</h3>
+<div class="paragraph">
+<p>The following flags are supported by <code><code>selenoid</code></code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>-conf string
+    Browsers configuration file (default "config/browsers.json")
+-disable-docker
+    Disable docker support
+-limit int
+    Simultaneous container runs (default 5)
+-listen string
+    Network address to accept connections (default ":4444")
+-log-conf string
+    Container logging configuration file (default "config/container-logs.json")
+-timeout duration
+    Session idle timeout in time.Duration format (default 1m0s)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ ./selenoid -conf /my/custom/browsers.json -limit 10</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When using Selenoid inside Docker container these flags are passed like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># docker run -d --name selenoid -p 4444:4444 -v /etc/selenoid:/etc/selenoid:ro -v /var/run/docker.sock:/var/run/docker.sock aerokube/selenoid:1.1.1 -conf /my/custom/browsers.json -limit 10</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -521,7 +1477,7 @@ $ docker build -t selenoid-ui:latest .</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2017-05-07 23:51:27 UTC
+Last updated 2017-05-08 18:00:23 UTC
 </div>
 </div>
 </body>
