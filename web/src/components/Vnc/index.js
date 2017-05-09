@@ -79,13 +79,27 @@ export default class Vnc extends Component {
         }
     }
 
+    handleFullscreen = () => {
+        this.setState({ fullscreen: !this.state.fullscreen});
+    }
+
+    resizeVnc() {
+        const {width, height} = this.screen || {};
+
+        if (screen && this.rfb && this.rfb.get_display()) {
+            let display = this.rfb.get_display();
+            display.set_scale(1);
+            display.autoscale(width, height, false);
+        }
+    }
+
     render() {
         const {session = "", browser = {}} = this.props;
-        const {connection} = this.state;
+        const {connection, fullscreen} = this.state;
 
         return (
             <div className="vnc">
-                <div className="vnc-card">
+                <div className={`vnc-card ${fullscreen && "vnc-card_fullscreen"}`}>
                     <div className="vnc-card__controls">
                         <Link className="control" to="/vnc/">
                             <span title="Back" className="icon dripicons-arrow-thin-left"/>
@@ -93,6 +107,10 @@ export default class Vnc extends Component {
 
                         <div className={`control control_${connection}`}>
                             <span title={connection} className={`icon ${this.icon(connection)}`}/>
+                        </div>
+
+                        <div className="control control_fullscreen" onClick={this.handleFullscreen}>
+                            <span title="Fullscreen" className={'icon dripicons-' + (fullscreen ? 'contract' : 'expand')}/>
                         </div>
 
                     </div>
@@ -116,6 +134,7 @@ export default class Vnc extends Component {
                         <div className="screen" ref={ screen => {
                             const {offsetHeight = 1, offsetWidth = 1} = (screen || {});
                             this.screen = {width: offsetWidth, height: offsetHeight};
+                            this.resizeVnc();
                         }}>
                             <canvas ref={
                                 canvas => {

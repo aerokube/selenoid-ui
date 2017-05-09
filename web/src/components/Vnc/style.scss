@@ -3,6 +3,9 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  width: 100%;
+
 
   .vnc-card {
     height: 450px;
@@ -11,8 +14,14 @@
     flex-wrap: wrap;
     box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
 
+    &_fullscreen {
+      height: 100%;
+      width: 100%;
+      z-index: 2;
+    }
+
     &__controls {
-      width: 10%;
+      width: 80px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -27,6 +36,11 @@
         text-align: center;
         text-decoration: none;
         color: #fff;
+
+        &_fullscreen {
+          cursor: pointer;
+          background-color: #5aa791;
+        }
 
         &_disconnected {
           background-color: #ff6e59;
@@ -47,11 +61,10 @@
     }
 
     &__content {
-      width: 90%;
+      width: calc(100% - 80px);
       height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       background-color: #000;
 
       .header {
@@ -66,7 +79,7 @@
       }
 
       .screen {
-        height: 80%;
+        height: calc(100% - 80px);
         display: flex;
         justify-content: center;
       }
