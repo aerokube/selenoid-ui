@@ -1,28 +1,46 @@
 = Selenoid UI. Reference Guide
 :revdate: {docdate}
 :toc: left
+:toclevels: 3
+:sectnums:
 :sectanchors:
 :Author: Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community
 :revnumber: latest
+:icons: font
+:source-highlighter: coderay
 
 This reference for version: _{revnumber}_
+
+Simple status page with UI updates by SSE,
+backed by constant polling of status handle
+of https://github.com/aerokube/selenoid[selenoid] on small go backend.
+Source code available at https://github.com/aerokube/selenoid-ui[aerokube/selenoid-ui GitHub repository].
 
 == Features list:
 
 === Stats
 
 Shows current quota usage, pending browsers and queue.
+Gets updates via SSE, so no need to refresh browser to see what happens.
+
+.Stats
+image:img/ui.png[ui]
 
 === VNC
 
 If you get browser from selenoid with `enableVNC=true` capability, you can see list of available screens:
 
+.VNC list
 image:img/vnc-list.png[ui]
 
 VNC allows to see and interact with browser:
 
+.Exact VNC session
 image:img/vnc.png[ui]
 
-Please refer to selenoid documentation about VNC usage.
+.Fullscreen mode
+image:img/vnc-fs.png[ui]
+
+Please refer to http://aerokube.com/selenoid/latest/#_live_browser_screen[selenoid documentation] about VNC usage.
 
 include::contributing.adoc[]

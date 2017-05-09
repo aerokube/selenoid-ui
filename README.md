@@ -26,46 +26,6 @@ The following flags are supported:
 - ```--period``` - data refresh period (e.g. ```5s``` or ```1m```)
 - ```--selenoid-uri``` - selenoid uri to fetch data from (e.g. ```http://localhost:4444/```)
 
-## Features
+## Features, Screenshots and Complete Guide
 
-### Stats
-
-Shows current quota usage, pending browsers and queue.
-
-### VNC
-
-If you get browser from selenoid with `enableVNC=true` capability, you can see list of available screens:
-
-![ui](docs/img/vnc-list.png)
-
-And interact with this browser:
-
-![ui](docs/img/vnc.png)
-
-Please refer to selenoid documentation about VNC usage.
-
-
-## Development
-
-1) Ensure you have [yarn](https://github.com/yarnpkg/yarn) and [go-bindata-assetfs](https://github.com/elazarl/go-bindata-assetfs) installed
-
- - For tests deps install `go get -u github.com/aandryashin/matchers`
-
-2) Generate static resources:
-
-```bash
-$ go generate ./web ./...
-```
-
-3) Build:
-
-```bash
-$ go build
-```
-
-4) To build Docker container type:
-
-```bash
-$ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build
-$ docker build -t selenoid-ui:latest .
-```
+Can be found at http://aerokube.com/selenoid-ui/latest/
