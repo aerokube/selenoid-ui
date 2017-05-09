@@ -9,6 +9,7 @@ export default class VncList extends Component {
         const {sessions = {}} = this.props;
         const vnc = Object.keys(sessions)
             .filter(session => sessions[session].vnc);
+        const novncCount = Object.keys(sessions).length - vnc.length;
 
         return (
             <div className="vnc-list">
@@ -23,7 +24,13 @@ export default class VncList extends Component {
                             <div className="vnc-session-link__version">{sessions[session].version}</div>
                         </Link>
                     );
-                }) || (<div className="vnc-session-link_no-any">NO ANY YET :'(</div>)}
+                }) || (
+
+                    <div className="vnc-list__no-any">
+                        <div className="novnc-any-text">NO ANY VNC YET :'(</div>
+                        <div className="novnc-count">Sessions without VNC: {novncCount}</div>
+                    </div>
+                )}
             </div>
         );
     }
