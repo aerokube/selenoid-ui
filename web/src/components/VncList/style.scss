@@ -2,6 +2,24 @@
   display: flex;
   flex-wrap: wrap;
 
+  &__no-any {
+    color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.2em;
+
+    .novnc-any-text {
+       margin: 5px;
+    }
+
+    .novnc-count {
+      font-size: 0.8em;
+      color:  #999;
+    }
+  }
+
   .vnc-session-link {
     display: flex;
     line-height: 60px;
@@ -9,10 +27,6 @@
     text-decoration: none;
     box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
     margin: 5px;
-
-    &_no-any {
-      color: #fff;
-    }
 
     &__browser {
       background-color: #222;
@@ -30,7 +44,7 @@
         font-weight: 100;
         text-transform: lowercase;
         font-size: 0.6em;
-        color: #999999;
+        color: #999;
       }
     }
 
