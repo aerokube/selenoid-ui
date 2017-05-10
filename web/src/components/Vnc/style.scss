@@ -67,7 +67,7 @@
       flex-direction: column;
       background-color: #000;
 
-      .header {
+      .vnc-info {
         height: 80px;
         color: #fff;
         border-bottom: 1px dashed #3d444c;
@@ -78,10 +78,8 @@
         justify-content: space-between;
       }
 
-      .screen {
+      .vnc-screen {
         height: calc(100% - 80px);
-        display: flex;
-        justify-content: center;
       }
     }
   }
