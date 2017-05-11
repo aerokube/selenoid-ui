@@ -1,3 +1,10 @@
+$color-disconnected: #ff6e59;
+$color-connecting: #6883d3;
+$color-disconnecting: #ca9eff;
+$color-fullscreen: #555f6a;
+$color-base-control: #59a781;
+$background-color-lighter: #3d444c;
+
 .vnc {
   display: flex;
   flex-wrap: wrap;
@@ -6,6 +13,37 @@
   height: 100%;
   width: 100%;
 
+  .vnc-connection-status {
+    color: #fff;
+    text-transform: uppercase;
+    margin-left: 55px;
+    transition: color 0.5s ease-out 0s;
+    line-height: 20px;
+
+    &:before {
+      content: '';
+      display: block;
+      width: 35px;
+      margin-left: -45px;
+      border-bottom: 1px solid #fff;
+      position: relative;
+      top: 11px;
+    }
+
+    &_disconnected {
+      color: $color-disconnected;
+      &:before {
+        border-bottom-color: $color-disconnected;
+      }
+    }
+
+    &_connecting {
+      color: $color-connecting;
+      &:before {
+        border-bottom-color: $color-connecting;
+      }
+    }
+  }
 
   .vnc-card {
     height: 450px;
@@ -20,34 +58,41 @@
       z-index: 2;
     }
 
+    &_small {
+      height: 160px;
+      width: 80px;
+    }
+
     &__controls {
       width: 80px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-color: #3d444c;
+      background-color: $background-color-lighter;
 
       .control {
         width: 100%;
         line-height: 70px;
         padding-top: 10px;
         font-size: 2em;
-        background-color: #59a781;
+        background-color: $color-base-control;
         text-align: center;
         text-decoration: none;
         color: #fff;
+        transition: background-color 0.5s ease-out 0s;
 
         &_fullscreen {
           cursor: pointer;
-          background-color: #5aa791;
+          background-color: $color-fullscreen;
+          color: #ccc;
         }
 
         &_disconnected {
-          background-color: #ff6e59;
+          background-color: $color-disconnected;
         }
 
         &_connecting {
-          background-color: #6883d3;
+          background-color: $color-connecting;
         }
 
         &_connected {
@@ -55,7 +100,7 @@
         }
 
         &_disconnecting {
-          background-color: #ca9eff;
+          background-color: $color-disconnecting;
         }
       }
     }
@@ -70,7 +115,7 @@
       .vnc-info {
         height: 80px;
         color: #fff;
-        border-bottom: 1px dashed #3d444c;
+        border-bottom: 1px dashed $background-color-lighter;
         padding-left: 30px;
         padding-right: 30px;
         display: flex;
@@ -97,7 +142,7 @@
       margin-right: 3px;
       margin-left: 3px;
       font-size: 1.5em;
-      color: #3d444c;
+      color: $background-color-lighter;
     }
 
     &__version {
