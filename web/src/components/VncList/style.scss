@@ -1,3 +1,5 @@
+$color-accent: #59a781;
+
 .vnc-list {
   display: flex;
   flex-wrap: wrap;
@@ -49,7 +51,7 @@
     }
 
     &__version {
-      background-color: #59a781;
+      background-color: $color-accent;
       padding-left: 20px;
       padding-right: 20px;
     }
