@@ -25,8 +25,8 @@ export default class VncList extends Component {
                         </Link>
                     );
                 }) || (
-
                     <div className="vnc-list__no-any">
+                        <div title="No any" className="icon dripicons-hourglass"/>
                         <div className="novnc-any-text">NO ANY VNC YET :'(</div>
                         <div className="novnc-count">Sessions without VNC: {novncCount}</div>
                     </div>
