@@ -11,6 +11,7 @@ import (
 	"time"
 	"github.com/aerokube/selenoid-ui/selenoid"
 	"github.com/aerokube/selenoid-ui/sse"
+	"fmt"
 )
 
 //go:generate go-bindata-assetfs data/...
@@ -19,6 +20,10 @@ var (
 	listen      string
 	selenoidUri string
 	period      time.Duration
+
+	version     bool
+	gitRevision string = "HEAD"
+	buildStamp  string = "unknown"
 )
 
 func mux(sse *sse.SseBroker) http.Handler {
@@ -34,11 +39,22 @@ func mux(sse *sse.SseBroker) http.Handler {
 	return mux
 }
 
+func showVersion() {
+	fmt.Printf("Git Revision: %s\n", gitRevision)
+	fmt.Printf("UTC Build Time: %s\n", buildStamp)
+}
+
 func init() {
 	flag.StringVar(&listen, "listen", ":8080", "host and port to listen on")
 	flag.StringVar(&selenoidUri, "selenoid-uri", "http://localhost:4444", "selenoid uri to fetch data from")
 	flag.DurationVar(&period, "period", 5*time.Second, "data refresh period, e.g. 5s or 1m")
+	flag.BoolVar(&version, "version", false, "Show version and exit")
 	flag.Parse()
+
+	if version {
+		showVersion()
+		os.Exit(0)
+	}
 }
 
 func main() {
