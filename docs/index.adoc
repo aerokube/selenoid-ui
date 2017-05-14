@@ -23,8 +23,14 @@ Source code available at https://github.com/aerokube/selenoid-ui[aerokube/seleno
 Shows current quota usage, pending browsers and queue.
 Gets updates via SSE, so no need to refresh browser to see what happens.
 
-.Stats
+.Stats and capabilities
 image:img/ui.png[ui]
+
+=== Capabilities
+
+You can choose browser from the available browser list and UI will provide
+an example of setup with right capabilities. Examples available for several languages.
+
 
 === VNC
 
