@@ -43,7 +43,9 @@
     "noVNC": "https://github.com/novnc/noVNC.git#0613d18",
     "react": "15.4.2",
     "react-dom": "15.4.2",
+    "react-highlight": "0.10.0",
     "react-router-dom": "next",
+    "react-select": "1.0.0-rc.4",
     "rx": "^4.1.0",
     "rx-connect": "^0.6.1",
     "rx-dom": "^7.0.3"
