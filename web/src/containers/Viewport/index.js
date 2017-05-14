@@ -9,6 +9,7 @@ import "./style.scss";
 
 import Navigation from "components/Navigation";
 import Stats from "containers/Stats";
+import Capabilities from "containers/Capabilities";
 import Vnc from "components/Vnc";
 import VncList from "components/VncList";
 
@@ -164,6 +165,10 @@ export default class Viewport extends Component {
                             state: state,
                             browsers: browsers
                         }}/>
+                    )}/>
+
+                    <Route exact={true} path="/" render={() => (
+                        <Capabilities state={state} origin={origin}/>
                     )}/>
 
                     <Route exact={true} path="/vnc/" render={() => (

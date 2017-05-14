@@ -20,6 +20,10 @@ export default class Stats extends Component {
 
         return (
             <div className="stats">
+                <div className="stats__section-title">
+                    Stats
+                </div>
+
                 <div className="stats__status">
                     <Status status={sse} title="sse"/>
                     <Status status={status} title="selenoid"/>
