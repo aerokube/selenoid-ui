@@ -37,9 +37,11 @@ $selected-color: #59a781;
 }
 
 pre.hljs, code.hljs {
-  font-family: monospace, sans-serif;
+  font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 13px;
+  line-height: 1.2;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   background: inherit;
 }
 
