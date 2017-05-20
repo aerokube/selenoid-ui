@@ -1,5 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 
 const sourcePath = path.join(__dirname, './src');
 const staticsPath = path.join(__dirname, '../data/');
@@ -17,10 +20,27 @@ module.exports = function (env) {
             },
             filename: 'vendor.bundle.js'
         }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'highlightjs',
+            minChunks: function (module) {
+                // only hljs
+                return module.context && module.context.indexOf('node_modules/highlight\.js') !== -1;
+            },
+            filename: 'hljs.bundle.js'
+        }),
+        new webpack.optimize.CommonsChunkPlugin({name: 'manifest'}),
         new webpack.EnvironmentPlugin({
             NODE_ENV: nodeEnv
         }),
-        new webpack.NamedModulesPlugin()
+        new webpack.NamedModulesPlugin(),
+        new HtmlWebpackPlugin({
+            title: 'Selenoid UI',
+            hash: true,
+            template: 'index.ejs'
+        }),
+        // new BundleAnalyzerPlugin({
+        //     analyzerMode: 'static'
+        // })
     ];
 
     if (isProd) {
@@ -60,8 +80,7 @@ module.exports = function (env) {
         entry: {
             js: './index.js',
             vendor: [
-                'react',
-                'noVNC'
+                'react'
             ]
         },
         output: {

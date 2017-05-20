@@ -3,7 +3,6 @@ import React from "react";
 
 import Viewport from "containers/Viewport";
 
-import "index.html";
 import "static/dripicons.css"
 
 ReactDOM.render(
