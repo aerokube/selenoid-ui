@@ -31,10 +31,11 @@
     "eslint-plugin-jsx-a11y": "3.0.2",
     "eslint-plugin-react": "6.9.0",
     "file-loader": "0.11.1",
+    "html-webpack-plugin": "^2.28.0",
     "node-sass": "^4.5.0",
     "sass-loader": "6.0.3",
     "style-loader": "0.16.1",
-    "webpack": "2.4.1",
+    "webpack": "2.5.1",
     "webpack-dev-server": "2.4.3"
   },
   "dependencies": {
