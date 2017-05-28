@@ -183,6 +183,10 @@ module.exports = function (env) {
                 "/vnc/": {
                     target: "http://localhost:3000",
                     pathRewrite: {"^/vnc/": ""}
+                },
+                "/log/": {
+                    target: "http://localhost:3000",
+                    pathRewrite: {"^/log/": ""}
                 }
             }
         }

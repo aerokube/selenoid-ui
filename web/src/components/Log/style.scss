@@ -1,0 +1,111 @@
+$color-disconnected: #ff6e59;
+$color-connecting: #6883d3;
+$color-disconnecting: #ca9eff;
+$color-fullscreen: #555f6a;
+$color-base-control: #59a781;
+$background-color-lighter: #3d444c;
+$term-bg: #151515;
+$light-font: #999;
+
+.log {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+
+  .log-card {
+    height: 450px;
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
+
+    &__header {
+      height: 30px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      background-color: $background-color-lighter;
+
+      .control {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: $color-disconnected;
+        text-align: center;
+        text-decoration: none;
+        margin-left: 10px;
+        color: #fff;
+        transition: background-color 0.5s ease-out 0s;
+        cursor: pointer;
+      }
+    }
+
+    &__content {
+      width: 100%;
+      height: calc(100% - 30px);
+      display: flex;
+      flex-direction: column;
+      background-color: $term-bg;
+
+      .term {
+        height: calc(100% - 30px);
+        padding: 20px 20px 10px;
+
+        .terminal {
+          color: #fff;
+          font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
+          font-size: 13px;
+          line-height: 20px;
+
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+
+          .xterm-viewport {
+            background-color: $term-bg;
+          }
+        }
+      }
+    }
+  }
+
+  .log-info {
+    display: inline-flex;
+    margin: auto;
+    justify-content: center;
+    line-height: 20px;
+    width: 200px;
+    color: $light-font;
+
+    &__name {
+      text-transform: uppercase;
+      font-weight: 200;
+    }
+
+    &__version-separator {
+      margin-right: 4px;
+      margin-left: 4px;
+      font-size: 0.6em;
+      color: #fff;
+    }
+
+    &__version {
+      font-size: 0.8em;
+    }
+
+    &__quota {
+      font-size: 0.8em;
+      color: $light-font;
+    }
+  }
+
+  .log-session {
+    line-height: 20px;
+    font-size: 0.8em;
+    color: $light-font;
+    text-align: center;
+  }
+}

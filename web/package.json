@@ -39,6 +39,7 @@
     "webpack-dev-server": "2.4.3"
   },
   "dependencies": {
+    "ansi-256-colors": "^1.1.0",
     "babel-runtime": "6.22.0",
     "jsonschema": "1.1.1",
     "noVNC": "https://github.com/novnc/noVNC.git#0613d18",
@@ -49,7 +50,8 @@
     "react-select": "1.0.0-rc.4",
     "rx": "^4.1.0",
     "rx-connect": "^0.6.1",
-    "rx-dom": "^7.0.3"
+    "rx-dom": "^7.0.3",
+    "xterm": "^2.6.0"
   },
   "peerDependencies": {
     "node-sass": "^4.5.0"

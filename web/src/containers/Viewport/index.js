@@ -11,7 +11,9 @@ import Navigation from "components/Navigation";
 import Stats from "containers/Stats";
 import Capabilities from "containers/Capabilities";
 import Vnc from "components/Vnc";
+import Log from "components/Log";
 import VncList from "components/VncList";
+import LogList from "components/LogList";
 
 
 const schema = {
@@ -146,7 +148,8 @@ export default class Viewport extends Component {
     render() {
         const links = [
             {href: "/", title: "STATS", exact: true},
-            {href: "/vnc/", title: "VNC"}
+            {href: "/vnc/", title: "VNC"},
+            {href: "/log/", title: "LOGS"}
         ];
 
         const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
@@ -176,6 +179,16 @@ export default class Viewport extends Component {
                     )}/>
                     <Route path="/vnc/:session" render={({match}) => (
                         <Vnc session={match.params.session}
+                             origin={origin}
+                             browser={sessions[match.params.session]}/>
+                    )}/>
+
+                    <Route exact={true} path="/log/" render={() => (
+                        <LogList sessions={sessions}/>
+                    )}/>
+
+                    <Route path="/log/:session" render={({match}) => (
+                        <Log session={match.params.session}
                              origin={origin}
                              browser={sessions[match.params.session]}/>
                     )}/>
