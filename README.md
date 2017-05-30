@@ -14,7 +14,7 @@ of [selenoid](https://github.com/aerokube/selenoid) on small go backend.
 
 We distribute UI as a lightweight [Docker](http://docker.com/) container. To run it type:
 ```
-$ docker run -d --name selenoid-ui --net host aerokube/selenoid-ui
+$ docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui --selenoid-uri=http://selenoid-host
 ```
 Then access the UI on port 8080:
 ```
