@@ -55,7 +55,6 @@ image:img/ui.png[ui]
 You can choose browser from the available browser list and UI will provide
 an example of setup with right capabilities. Examples available for several languages.
 
-
 === VNC
 
 If you get browser from selenoid with `enableVNC=true` capability, you can see list of available screens:
@@ -70,13 +69,6 @@ image:img/vnc.png[ui]
 
 .Fullscreen mode
 image:img/vnc-fs.png[ui]
-
-=== LOGS
-
-With same as VNC list you can see logs of docker container (no any additional action required)
-
-.Logs
-image:img/logs.png[logs]
 
 Please refer to http://aerokube.com/selenoid/latest/#_live_browser_screen[selenoid documentation] about VNC usage.
 
