@@ -99,7 +99,7 @@ export default class Log extends Component {
 }
 
 function Back() {
-    return <Link className="control" to="/">
+    return <Link className="control" to="/log/">
         <div title="Back"></div>
     </Link>;
 }
