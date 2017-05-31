@@ -84,8 +84,12 @@ func httpDo(ctx context.Context, req *http.Request, handle func(*http.Response, 
 	}
 }
 
+const (
+	statusPath = "/status"
+)
+
 func Status(ctx context.Context, baseUrl string) ([]byte, error) {
-	req, err := http.NewRequest("GET", baseUrl+"/status", nil)
+	req, err := http.NewRequest("GET", baseUrl+statusPath, nil)
 	if err != nil {
 		return nil, err
 	}

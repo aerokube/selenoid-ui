@@ -4,10 +4,48 @@ import (
 	"testing"
 	"encoding/json"
 	. "github.com/aandryashin/matchers"
-	"log"
+	"net/http/httptest"
+	"net/http"
+	"context"
 )
 
+var (
+	srv  *httptest.Server
+)
+
+func init() {
+	srv = httptest.NewServer(mockSelenoid())
+}
+
+func mockSelenoid() http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc(statusPath, mockStatus)
+	return mux
+}
+
+func mockStatus(w http.ResponseWriter, _ *http.Request) {
+	data, _ := json.MarshalIndent(getTestState(), "", " ")
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
+}
+
 func TestToUI(t *testing.T) {
+	ui := toUI(getTestState(), "http://localhost")
+	data, err := json.MarshalIndent(ui, "", " ")
+	AssertThat(t, err, Is{nil})
+	AssertThat(t, data, Is{Not{nil}})
+	AssertThat(t, ui.Browsers["firefox"], Is{1})
+	AssertThat(t, ui.Browsers["chrome"], Is{1})
+	AssertThat(t, ui.Browsers["opera"], Is{0})
+}
+
+func TestStatus(t *testing.T) {
+	data, err := Status(context.Background(), srv.URL)
+	AssertThat(t, err, Is{nil})
+	AssertThat(t, data, Is{Not{nil}})
+}
+
+func getTestState() State {
 	var state State
 	json.Unmarshal([]byte(`{
   "total": 20,
@@ -48,11 +86,5 @@ func TestToUI(t *testing.T) {
     }
   }
 }`), &state)
-	ui := toUI(state, "http://localhost")
-	res, _ := json.MarshalIndent(ui, "", " ")
-	log.Println(string(res))
-	AssertThat(t, ui.Browsers["firefox"], Is{1})
-	AssertThat(t, ui.Browsers["chrome"], Is{1})
-	AssertThat(t, ui.Browsers["opera"], Is{0})
+	return state
 }
-

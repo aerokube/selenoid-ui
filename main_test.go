@@ -3,12 +3,27 @@ package main
 import (
 	"testing"
 	. "github.com/aandryashin/matchers"
+	. "github.com/aandryashin/matchers/httpresp"
 	"fmt"
 	"strings"
+	"net/http/httptest"
+	"github.com/aerokube/selenoid-ui/sse"
+	"net/http"
 )
 
-func TestLoads(t *testing.T) {
+var (
+	srv  *httptest.Server
+	broker = sse.NewSseBroker()
+)
 
+func init() {
+	srv = httptest.NewServer(mux(broker))
+}
+
+func TestRootLoads(t *testing.T) {
+	resp, err := http.Get(srv.URL + "/")
+	AssertThat(t, err, Is{nil})
+	AssertThat(t, resp, Code{200})
 }
 
 func TestRegex(t *testing.T) {
