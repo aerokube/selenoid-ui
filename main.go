@@ -14,7 +14,7 @@ import (
 	"fmt"
 )
 
-//go:generate go-bindata-assetfs -debug data/...
+//go:generate go-bindata-assetfs data/...
 
 var (
 	listen      string
