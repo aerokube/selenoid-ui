@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Terminal from "xterm";
 import {Link} from "react-router-dom";
-import link from "../../util/link";
+import urlTo from "../../util/urlTo";
 import "xterm/dist/xterm.css";
 import "./style.scss";
 import colors from "ansi-256-colors";
@@ -32,7 +32,7 @@ export default class Log extends Component {
     }
 
     connect(origin, session) {
-        const selenoid = link(origin);
+        const selenoid = urlTo(origin);
         const ws = `ws://${selenoid.host}/logs/${session}`;
 
         this.terminal.writeln(`Connecting to ${ws}...`);

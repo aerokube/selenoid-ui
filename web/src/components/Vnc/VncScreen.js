@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import RFB from "noVNC/core/rfb";
-import link from "../../util/link"
+import urlTo from "../../util/urlTo"
 
 import "./style.scss";
 
@@ -45,7 +45,7 @@ export default class VncScreen extends Component {
         }
 
         if (origin && session) {
-            let link = link(origin);
+            let link = urlTo(origin);
             this.rfb.connect(link.hostname, link.port, "selenoid", `vnc/${session}`);
         }
     }
@@ -55,7 +55,7 @@ export default class VncScreen extends Component {
         const {session, origin} = this.props;
 
         if (origin && session && prevOrigin !== origin) {
-            let link = link(origin);
+            let link = urlTo(origin);
 
             this.rfb.connect(link.hostname, link.port, "selenoid", `vnc/${session}`);
         }
