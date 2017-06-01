@@ -1,10 +1,10 @@
 package selenoid
 
 import (
-	"net/http"
 	"context"
-	"time"
 	"encoding/json"
+	"net/http"
+	"time"
 )
 
 /* -------------- *
@@ -58,11 +58,11 @@ type sessionInfo struct {
 
 // result - processed selenoid state
 type result struct {
-	State    State                     `json:"state"`
-	Origin   string                    `json:"origin"`
-	Browsers map[string]int            `json:"browsers"`
-	Sessions map[string]sessionInfo    `json:"sessions"`
-	Errors   []interface{}             `json:"errors"`
+	State    State                  `json:"state"`
+	Origin   string                 `json:"origin"`
+	Browsers map[string]int         `json:"browsers"`
+	Sessions map[string]sessionInfo `json:"sessions"`
+	Errors   []interface{}          `json:"errors"`
 }
 
 func httpDo(ctx context.Context, req *http.Request, handle func(*http.Response, error) error) error {
