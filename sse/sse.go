@@ -1,9 +1,10 @@
 package sse
 
 import (
-	"net/http"
 	"fmt"
 	"log"
+	"net/http"
+	"sync"
 	"time"
 )
 
@@ -11,9 +12,15 @@ import (
 // a slow client or a client that closed after `range clients` started.
 const patience time.Duration = time.Second * 1
 
+type Broker interface {
+	http.Handler
+	Notify(data []byte)
+	HasClients() bool
+}
+
 type SseBroker struct {
 	// Events are pushed to this channel
-	Notifier chan []byte
+	notifier chan []byte
 
 	// New client connections
 	newClients chan chan []byte
@@ -23,11 +30,13 @@ type SseBroker struct {
 
 	// Client connections registry
 	clients map[chan []byte]bool
+
+	lock sync.RWMutex
 }
 
 func NewSseBroker() (broker *SseBroker) {
 	broker = &SseBroker{
-		Notifier:       make(chan []byte, 1),
+		notifier:       make(chan []byte, 1),
 		newClients:     make(chan chan []byte),
 		closingClients: make(chan chan []byte),
 		clients:        make(map[chan []byte]bool),
@@ -72,7 +81,13 @@ func (sse *SseBroker) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 }
 
+func (sse *SseBroker) Notify(data []byte) {
+	sse.notifier <- data
+}
+
 func (sse *SseBroker) HasClients() bool {
+	sse.lock.RLock()
+	defer sse.lock.RUnlock()
 	return len(sse.clients) > 0
 }
 
@@ -81,15 +96,19 @@ func (broker *SseBroker) listen() {
 		select {
 		case s := <-broker.newClients:
 			{
+				broker.lock.Lock()
 				broker.clients[s] = true
+				broker.lock.Unlock()
 				log.Printf("Client added. %d registered clients", len(broker.clients))
 			}
 		case s := <-broker.closingClients:
 			{
+				broker.lock.Lock()
 				delete(broker.clients, s)
+				broker.lock.Unlock()
 				log.Printf("Removed client. %d registered clients", len(broker.clients))
 			}
-		case event := <-broker.Notifier:
+		case event := <-broker.notifier:
 			{
 				for clientMessageChan := range broker.clients {
 					select {

@@ -1,51 +1,27 @@
 package selenoid
 
 import (
-	"testing"
+	"context"
 	"encoding/json"
 	. "github.com/aandryashin/matchers"
-	"net/http/httptest"
 	"net/http"
-	"context"
+	"net/http/httptest"
+	"testing"
 )
 
-var (
-	srv  *httptest.Server
-)
-
-func init() {
-	srv = httptest.NewServer(mockSelenoid())
-}
-
-func mockSelenoid() http.Handler {
+func selenoidApi() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc(statusPath, mockStatus)
 	return mux
 }
 
 func mockStatus(w http.ResponseWriter, _ *http.Request) {
-	data, _ := json.MarshalIndent(getTestState(), "", " ")
+	data, _ := json.MarshalIndent(selenoidState(), "", " ")
 	w.WriteHeader(http.StatusOK)
 	w.Write(data)
 }
 
-func TestToUI(t *testing.T) {
-	ui := toUI(getTestState(), "http://localhost")
-	data, err := json.MarshalIndent(ui, "", " ")
-	AssertThat(t, err, Is{nil})
-	AssertThat(t, data, Is{Not{nil}})
-	AssertThat(t, ui.Browsers["firefox"], Is{1})
-	AssertThat(t, ui.Browsers["chrome"], Is{1})
-	AssertThat(t, ui.Browsers["opera"], Is{0})
-}
-
-func TestStatus(t *testing.T) {
-	data, err := Status(context.Background(), srv.URL)
-	AssertThat(t, err, Is{nil})
-	AssertThat(t, data, Is{Not{nil}})
-}
-
-func getTestState() State {
+func selenoidState() State {
 	var state State
 	json.Unmarshal([]byte(`{
   "total": 20,
@@ -87,4 +63,21 @@ func getTestState() State {
   }
 }`), &state)
 	return state
+}
+
+func TestToUI(t *testing.T) {
+	ui := toUI(selenoidState(), "http://localhost")
+	data, err := json.MarshalIndent(ui, "", " ")
+	AssertThat(t, err, Is{nil})
+	AssertThat(t, data, Is{Not{nil}})
+	AssertThat(t, ui.Browsers["firefox"], Is{1})
+	AssertThat(t, ui.Browsers["chrome"], Is{1})
+	AssertThat(t, ui.Browsers["opera"], Is{0})
+}
+
+func TestStatus(t *testing.T) {
+	srv := httptest.NewServer(selenoidApi())
+	data, err := Status(context.Background(), srv.URL)
+	AssertThat(t, err, Is{nil})
+	AssertThat(t, data, Not{nil})
 }

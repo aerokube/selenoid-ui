@@ -3,16 +3,16 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
+	"github.com/aerokube/selenoid-ui/selenoid"
+	"github.com/aerokube/selenoid-ui/sse"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"regexp"
 	"syscall"
 	"time"
-	"github.com/aerokube/selenoid-ui/selenoid"
-	"github.com/aerokube/selenoid-ui/sse"
-	"fmt"
-	"regexp"
 )
 
 //go:generate go-bindata-assetfs data/...
@@ -68,37 +68,39 @@ func init() {
 	}
 }
 
+func tick(broker sse.Broker, selenoidUri string, period time.Duration, stop chan os.Signal) {
+	ticker := time.NewTicker(period)
+	for {
+		ctx, cancel := context.WithCancel(context.Background())
+		select {
+		case <-ticker.C:
+			{
+				if broker.HasClients() {
+					res, err := selenoid.Status(ctx, selenoidUri)
+					if err != nil {
+						log.Printf("can't get status (%s)\n", err)
+						broker.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
+						continue
+					}
+					broker.Notify(res)
+				}
+			}
+		case <-stop:
+			{
+				cancel()
+				ticker.Stop()
+				os.Exit(0)
+			}
+		}
+	}
+}
+
 func main() {
 	broker := sse.NewSseBroker()
 	stop := make(chan os.Signal)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 
-	go func() {
-		ticker := time.NewTicker(period)
-		for {
-			ctx, cancel := context.WithCancel(context.Background())
-			select {
-			case <-ticker.C:
-				{
-					if broker.HasClients() {
-						res, err := selenoid.Status(ctx, selenoidUri)
-						if err != nil {
-							log.Printf("can't get status (%s)\n", err)
-							broker.Notifier <- []byte(`{ "errors": [{"msg": "can't get status"}] }`)
-							continue
-						}
-						broker.Notifier <- res
-					}
-				}
-			case <-stop:
-				{
-					cancel()
-					ticker.Stop()
-					os.Exit(0)
-				}
-			}
-		}
-	}()
+	go tick(broker, selenoidUri, period, stop)
 
 	log.Printf("Listening on %s\n", listen)
 	log.Fatal(http.ListenAndServe(listen, mux(broker)))
