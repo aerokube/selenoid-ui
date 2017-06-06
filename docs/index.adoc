@@ -24,7 +24,7 @@ Source code available at https://github.com/aerokube/selenoid-ui[GitHub].
 
     # docker run -d --name selenoid-ui --net host aerokube/selenoid-ui
     
-. If you don't want to use `--het host` or have no support (e.g. under MacOS) you need to http://blog.michaelhamrah.com/2014/06/accessing-the-docker-host-server-within-a-container/[determine] your Docker host IP address. Then launch Selenoid UI like the following:
+. If you don't want to use `--net host` or have no support (e.g. under MacOS) you need to http://blog.michaelhamrah.com/2014/06/accessing-the-docker-host-server-within-a-container/[determine] your Docker host IP address. Then launch Selenoid UI like the following:
     
     # docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui -selenoid-uri http://<host-ip>:4444
 
