@@ -91,7 +91,6 @@ export default class Log extends Component {
                             this.termel = term;
                         }}></div>
                     </div>
-
                 </div>
             </div>
         );
