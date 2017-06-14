@@ -6,6 +6,8 @@ import "xterm/dist/xterm.css";
 import "./style.scss";
 import colors from "ansi-256-colors";
 
+import LogInfo from "./LogInfo";
+
 export default class Log extends Component {
     componentDidMount() {
         const {session, origin} = this.props;
@@ -15,7 +17,7 @@ export default class Log extends Component {
         this.terminal = new Terminal();
         this.terminal.open(this.termel, true);
         this.terminal.fit();
-        this.terminal.writeln(colors.fg.getRgb(2,3,4) + "Initialize..." + colors.reset);
+        this.terminal.writeln(colors.fg.getRgb(2, 3, 4) + "Initialize..." + colors.reset);
 
         if (origin && session) {
             this.connect(origin, session);
@@ -67,11 +69,11 @@ export default class Log extends Component {
         };
 
         this.socket.onopen = () => {
-            this.terminal.writeln(colors.fg.getRgb(0,2,0) + "Connected!" + colors.reset);
+            this.terminal.writeln(colors.fg.getRgb(0, 2, 0) + "Connected!" + colors.reset);
         };
 
         this.socket.onclose = () => {
-            this.terminal.writeln(colors.fg.getRgb(5,1,1) + "Disconnected" + colors.reset);
+            this.terminal.writeln(colors.fg.getRgb(5, 1, 1) + "Disconnected" + colors.reset);
         };
     }
 
@@ -97,22 +99,9 @@ export default class Log extends Component {
     }
 }
 
-function Back() {
-    return <Link className="control" to="/log/">
+const Back = () => (
+    <Link className="control" to="/log/">
         <div title="Back"></div>
-    </Link>;
-}
+    </Link>
+);
 
-function LogInfo(props) {
-    const {session, browser} = props;
-
-    return (<div className="log-info">
-            <span className="log-info__quota">{browser.quota}</span>
-            {browser.quota && (<span className="log-info__version-separator">:</span>)}
-            <span className="log-info__name">{browser.browser}</span>
-            {browser.browser && (<span className="log-info__version-separator">:</span>)}
-            <span className="log-info__version">{browser.version}</span>
-            {browser.browser && (<span className="log-info__version-separator">:</span>)}
-            <span className="log-session">{session.substring(0, 8)}</span>
-    </div>);
-}
