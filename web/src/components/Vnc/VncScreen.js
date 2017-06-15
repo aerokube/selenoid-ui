@@ -45,8 +45,8 @@ export default class VncScreen extends Component {
         }
 
         if (origin && session) {
-            let link = urlTo(origin);
-            this.rfb.connect(link.hostname, link.port, "selenoid", `vnc/${session}`);
+            let link = urlTo(window.location.href);
+            this.rfb.connect(link.hostname, link.port, "selenoid", `ws/vnc/${session}`);
         }
     }
 
@@ -55,9 +55,9 @@ export default class VncScreen extends Component {
         const {session, origin} = this.props;
 
         if (origin && session && prevOrigin !== origin) {
-            let link = urlTo(origin);
+            let link = urlTo(window.location.href);
 
-            this.rfb.connect(link.hostname, link.port, "selenoid", `vnc/${session}`);
+            this.rfb.connect(link.hostname, link.port, "selenoid", `ws/vnc/${session}`);
         }
     }
 

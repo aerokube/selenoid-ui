@@ -20,7 +20,7 @@ export default class Log extends Component {
         this.terminal.writeln(colors.fg.getRgb(2, 3, 4) + "Initialize..." + colors.reset);
 
         if (origin && session) {
-            this.connect(origin, session);
+            this.connect(session);
         }
     }
 
@@ -29,13 +29,19 @@ export default class Log extends Component {
         const {session, origin} = this.props;
 
         if (origin && session && prevOrigin !== origin) {
-            this.connect(origin, session);
+            this.connect(session);
         }
     }
 
-    connect(origin, session) {
-        const selenoid = urlTo(origin);
-        const ws = `ws://${selenoid.host}/logs/${session}`;
+    componentWillUnmount() {
+        this.socket
+        && this.socket.readyState !== this.socket.CLOSED
+        && this.socket.close();
+    }
+
+    connect(session) {
+        const wsProxyUrl = urlTo(window.location.href);
+        const ws = `ws://${wsProxyUrl.host}/ws/logs/${session}`;
 
         this.terminal.writeln(`Connecting to ${ws}...`);
 

@@ -95,7 +95,7 @@ const schema = {
 @rxConnect(() => {
     const open = new Rx.Subject();
     return Rx.Observable.merge(
-        Rx.DOM.fromEventSource('events', open)
+        Rx.DOM.fromEventSource('/events', open)
             .map(event => JSON.parse(event))
             .map(event => {
                 if (event.errors && event.errors.length) {
