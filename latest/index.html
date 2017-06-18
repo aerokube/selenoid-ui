@@ -517,7 +517,7 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community</span><br>
 <span id="revnumber">version latest,</span>
-<span id="revdate">2017-06-14</span>
+<span id="revdate">2017-06-18</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -566,22 +566,83 @@ Source code available at <a href="https://github.com/aerokube/selenoid-ui">GitHu
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Start UI with one command:</p>
-<div class="literalblock">
+<p>On the same host where the <strong>selenoid</strong> runs:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Assumed you have <code>selenoid</code> container up and running</p>
+<div class="listingblock">
 <div class="content">
-<pre># docker run -d --name selenoid-ui --net host aerokube/selenoid-ui</pre>
+<pre>$ docker ps
+
+CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                                                   NAMES
+fc479233071d        aerokube/selenoid      "/usr/bin/selenoid..."   10 minutes ago      Up 10 minutes       0.0.0.0:4444-&gt;4444/tcp                                  selenoid</pre>
 </div>
 </div>
 </li>
 <li>
-<p>If you don&#8217;t want to use <code>--net host</code> or have no support (e.g. under MacOS) you need to <a href="http://blog.michaelhamrah.com/2014/06/accessing-the-docker-host-server-within-a-container/">determine</a> your Docker host IP address. Then launch Selenoid UI like the following:</p>
-<div class="literalblock">
+<p>Just run linked UI:</p>
+<div class="listingblock">
 <div class="content">
-<pre># docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui -selenoid-uri http://&lt;host-ip&gt;:4444</pre>
+<pre>$ docker run -d         \
+    --name selenoid-ui  \
+    --link selenoid     \ <i class="conum" data-value="1"></i><b>(1)</b>
+    -p 8080:8080        \
+    aerokube/selenoid-ui --selenoid-uri=http://selenoid:4444 <i class="conum" data-value="2"></i><b>(2)</b></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>selenoid</code> is name of <strong>Selenoid</strong> container</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>should be the same as link name</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>If you don&#8217;t want to use <code>--link</code> or have <strong>Selenoid</strong> on another host you need to determine direct selenoid uri first (it can&#8217;t be localhost!).</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If you know this exact uri - just specify it.
+If it inside another container on the same host - use the gateway address or the host interface address where the selenoid listens.
+For MacOS it can be <a href="http://blog.michaelhamrah.com/2014/06/accessing-the-docker-host-server-within-a-container/">determined</a> with help of netstat.</p>
+</li>
+<li>
+<p>If you use default network mode, then just</p>
+</li>
+</ul>
 </div>
 </li>
 </ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ DOCKER_GATEWAY_ADDR=`docker inspect selenoid -f {{.NetworkSettings.Gateway}}`
+$ echo $DOCKER_GATEWAY_ADDR
+172.17.0.1 <i class="conum" data-value="1"></i><b>(1)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>May be different</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui --selenoid-uri http://${DOCKER_GATEWAY_ADDR}:4444</pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -603,7 +664,7 @@ Source code available at <a href="https://github.com/aerokube/selenoid-ui">GitHu
 <p>To connect to remote Selenoid just specify its URI:</p>
 <div class="literalblock">
 <div class="content">
-<pre>$ ./selenoid-ui -selenoid-uri http://&lt;host-ip&gt;:4444</pre>
+<pre>$ ./selenoid-ui --selenoid-uri http://&lt;host-ip&gt;:4444</pre>
 </div>
 </div>
 </li>
@@ -678,7 +739,7 @@ an example of setup with right capabilities. Examples available for several lang
 <div class="ulist">
 <ul>
 <li>
-<p>For tests deps install <code>go get -u github.com/aandryashin/matchers</code></p>
+<p>Get deps with <code>go get -u github.com/kardianos/govendor &amp;&amp; govendor sync</code></p>
 </li>
 </ul>
 </div>
@@ -726,7 +787,7 @@ $ docker build -t selenoid-ui:latest .</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2017-06-14 10:46:38 UTC
+Last updated 2017-06-18 12:06:00 UTC
 </div>
 </div>
 </body>
