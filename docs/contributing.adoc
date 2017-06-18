@@ -2,7 +2,7 @@
 
 1) Ensure you have https://github.com/yarnpkg/yarn[yarn] and https://github.com/elazarl/go-bindata-assetfs[go-bindata-assetfs] installed
 
- - For tests deps install `go get -u github.com/aandryashin/matchers`
+ - Get deps with `go get -u github.com/kardianos/govendor && govendor sync`
 
 2) Generate static resources:
 

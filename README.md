@@ -14,17 +14,20 @@ of [selenoid](https://github.com/aerokube/selenoid) on small go backend.
 
 We distribute UI as a lightweight [Docker](http://docker.com/) container. To run it type:
 ```
-$ docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui --selenoid-uri=http://selenoid-host
+$ docker run -d --name selenoid-ui --link selenoid -p 8080:8080 aerokube/selenoid-ui --selenoid-uri=http://selenoid:4444
 ```
+
+where `--link selenoid` links with running container named `selenoid` with selenoid inside
+
 Then access the UI on port 8080:
 ```
 http://localhost:8080/
 ```
 The following flags are supported:
 
-- ```--listen``` - host and port to listen (e.g. ```:1234```)
-- ```--period``` - data refresh period (e.g. ```5s``` or ```1m```)
-- ```--selenoid-uri``` - selenoid uri to fetch data from (e.g. ```http://localhost:4444/```)
+- `--listen` - host and port to listen (e.g. `:1234`)
+- `--period` - data refresh period (e.g. `5s` or `1m`)
+- `--selenoid-uri` - selenoid uri to fetch data from (e.g. `http://selenoid.example.com:4444/`)
 
 ## Features, Screenshots and Complete Guide
 

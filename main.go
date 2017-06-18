@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/aerokube/selenoid-ui/selenoid"
 	"github.com/aerokube/selenoid-ui/sse"
+	"github.com/koding/websocketproxy"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +14,8 @@ import (
 	"regexp"
 	"syscall"
 	"time"
+	"net/url"
+	"strings"
 )
 
 //go:generate go-bindata-assetfs data/...
@@ -47,6 +50,20 @@ func mux(sse *sse.SseBroker) http.Handler {
 		static.ServeHTTP(w, r)
 	})
 	mux.Handle("/events", sse)
+
+
+	parsedUri, err := url.Parse(selenoidUri)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	mux.HandleFunc("/ws/", func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = strings.TrimPrefix(r.URL.Path, "/ws")
+		ws := &url.URL{Scheme: "ws", Host: parsedUri.Host, Path: r.URL.Path}
+		log.Printf("[WS_PROXY] [/ws%s] [%s]", r.URL.Path, ws)
+		websocketproxy.NewProxy(ws).ServeHTTP(w, r)
+		log.Printf("[WS_PROXY] [%s] [CLOSED]", r.URL.Path)
+	})
 	return mux
 }
 
