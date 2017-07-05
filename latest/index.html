@@ -517,15 +517,15 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community</span><br>
 <span id="revnumber">version latest,</span>
-<span id="revdate">2017-06-22</span>
+<span id="revdate">2017-07-05</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_quick_start_guide">1. Quick Start Guide</a>
 <ul class="sectlevel2">
-<li><a href="#_you_have_docker">1.1. You have Docker</a></li>
-<li><a href="#_you_don_t_have_docker">1.2. You don&#8217;t have Docker</a></li>
+<li><a href="#_when_you_have_docker_there_are_3_ways">1.1. When you have Docker, there are 3 ways</a></li>
+<li><a href="#_when_you_don_t_have_docker">1.2. When you don&#8217;t have Docker</a></li>
 </ul>
 </li>
 <li><a href="#_features_list">2. Features list:</a>
@@ -556,21 +556,92 @@ backed by constant polling of status handle
 of <a href="https://github.com/aerokube/selenoid">Selenoid</a> on small go backend.
 Source code available at <a href="https://github.com/aerokube/selenoid-ui">GitHub</a>.</p>
 </div>
+<div class="paragraph">
+<p><span class="image"><img src="img/selenoidui.gif" alt="ui"></span></p>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_quick_start_guide"><a class="anchor" href="#_quick_start_guide"></a>1. Quick Start Guide</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_you_have_docker"><a class="anchor" href="#_you_have_docker"></a>1.1. You have Docker</h3>
+<h3 id="_when_you_have_docker_there_are_3_ways"><a class="anchor" href="#_when_you_have_docker_there_are_3_ways"></a>1.1. When you have Docker, there are 3 ways</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>On the same host where the <strong>selenoid</strong> runs:</p>
+<p>If you know exact uri of selenoid - just specify it with <code>--selenoid-uri</code>.
+No matter this is the same host or not.</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui --selenoid-uri http://${SELENOID_HOST}:4444</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+It can&#8217;t be <code>localhost</code> or <code>127.0.0.1</code> until the UI is started in the same container as selenoid.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>When the UI and <strong>Selenoid</strong> on the same host you need to determine selenoid uri accessible from UI container.
+Usually it can be the docker gateway address.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Assumed you have <code>selenoid</code> container up and running</p>
+<p>If you use default network mode, firstly</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ DOCKER_GATEWAY_ADDR=`docker inspect selenoid -f {{.NetworkSettings.Gateway}}`
+$ echo $DOCKER_GATEWAY_ADDR
+172.17.0.1 <i class="conum" data-value="1"></i><b>(1)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>May be different</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+For MacOS you should <a href="http://blog.michaelhamrah.com/2014/06/accessing-the-docker-host-server-within-a-container/">determine</a> interface with help of netstat.
+Remember that gateway address and host address is not the same in this case.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Then run Selenoid UI</p>
+<div class="listingblock">
+<div class="content">
+<pre>$ docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui --selenoid-uri http://${DOCKER_GATEWAY_ADDR}:4444</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>On the same host you can just <em>link</em> with <strong>selenoid</strong> container:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Assumed you have <code>selenoid</code> container already up and running</p>
 <div class="listingblock">
 <div class="content">
 <pre>$ docker ps
@@ -603,51 +674,30 @@ fc479233071d        aerokube/selenoid      "/usr/bin/selenoid..."   10 minutes a
 </tr>
 </table>
 </div>
-</li>
-</ul>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+UI will think that <code><a href="http://selenoid:4444" class="bare">http://selenoid:4444</a></code> is real address of selenoid.
+But it&#8217;s true only inside of UI container.
+</td>
+</tr>
+</table>
 </div>
-</li>
-<li>
-<p>If you don&#8217;t want to use <code>--link</code> or have <strong>Selenoid</strong> on another host you need to determine direct selenoid uri first (it can&#8217;t be localhost!).</p>
-<div class="ulist">
-<ul>
-<li>
-<p>If you know this exact uri - just specify it.
-If it inside another container on the same host - use the gateway address or the host interface address where the selenoid listens.
-For MacOS it can be <a href="http://blog.michaelhamrah.com/2014/06/accessing-the-docker-host-server-within-a-container/">determined</a> with help of netstat.</p>
-</li>
-<li>
-<p>If you use default network mode, then just</p>
 </li>
 </ul>
 </div>
 </li>
 </ol>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>$ DOCKER_GATEWAY_ADDR=`docker inspect selenoid -f {{.NetworkSettings.Gateway}}`
-$ echo $DOCKER_GATEWAY_ADDR
-172.17.0.1 <i class="conum" data-value="1"></i><b>(1)</b></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>May be different</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>$ docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui --selenoid-uri http://${DOCKER_GATEWAY_ADDR}:4444</pre>
-</div>
-</div>
 </div>
 <div class="sect2">
-<h3 id="_you_don_t_have_docker"><a class="anchor" href="#_you_don_t_have_docker"></a>1.2. You don&#8217;t have Docker</h3>
+<h3 id="_when_you_don_t_have_docker"><a class="anchor" href="#_when_you_don_t_have_docker"></a>1.2. When you don&#8217;t have Docker</h3>
 <div class="olist arabic">
+<div class="title">Or just want to dramatically simplify all the things :)</div>
 <ol class="arabic">
 <li>
 <p>Download Selenoid UI binary from <a href="https://github.com/aerokube/selenoid-ui/releases">releases</a> page.</p>
@@ -656,15 +706,7 @@ $ echo $DOCKER_GATEWAY_ADDR
 <p>Start it:</p>
 <div class="literalblock">
 <div class="content">
-<pre>$ ./selenoid-ui</pre>
-</div>
-</div>
-</li>
-<li>
-<p>To connect to remote Selenoid just specify its URI:</p>
-<div class="literalblock">
-<div class="content">
-<pre>$ ./selenoid-ui --selenoid-uri http://&lt;host-ip&gt;:4444</pre>
+<pre>$ ./selenoid-ui --selenoid-uri http://&lt;selenoid-host-or-ip&gt;:4444</pre>
 </div>
 </div>
 </li>
@@ -787,7 +829,7 @@ $ docker build -t selenoid-ui:latest .</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2017-06-22 18:23:26 UTC
+Last updated 2017-07-05 19:45:31 UTC
 </div>
 </div>
 </body>
