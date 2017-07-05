@@ -20,7 +20,7 @@ image:img/selenoidui.gif[ui]
 
 == Quick Start Guide
 
-=== When you have Docker, there are 3 ways
+=== When you have Docker
 
 . If you know exact uri of selenoid - just specify it with `--selenoid-uri`.
 No matter this is the same host or not.
@@ -78,6 +78,32 @@ $ docker run -d         \
 NOTE: UI will think that `http://selenoid:4444` is real address of selenoid.
 But it's true only inside of UI container.
 
+=== With Docker Compose
+
+With docker compose remember to use the same network with selenoid and browser containers. For now this is only `bridge` network mode.
+
+[source,yaml]
+----
+version: '3'
+services:
+  selenoid:
+    image: "aerokube/selenoid"
+    network_mode: bridge
+    ports:
+      - "4444:4444"
+    volumes:
+      - "$PWD:/etc/selenoid/" # assumed current dir contains browsers.json
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  selenoid-ui:
+    image: "aerokube/selenoid-ui"
+    network_mode: bridge
+    links:
+      - selenoid
+    ports:
+      - "8080:8080"
+    command: ["--selenoid-uri", "http://selenoid:4444"]
+----
+
 === When you don't have Docker
 .Or just want to dramatically simplify all the things :)
 
@@ -86,7 +112,6 @@ But it's true only inside of UI container.
 . Start it:
  
     $ ./selenoid-ui --selenoid-uri http://<selenoid-host-or-ip>:4444
-    
 
 == Features list:
 
