@@ -14,6 +14,7 @@ import "./style.scss";
 const code = (browser, version, origin) => {
     return {
         yaml: `# selenium: "${origin || 'http://selenoid-uri:4444/wd/hub'}"
+# please note that real accessible selenoid uri can be different        
 browserName: "${browser}"
 version: "${version}"
 `,

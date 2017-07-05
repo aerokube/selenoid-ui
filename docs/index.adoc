@@ -16,12 +16,45 @@ backed by constant polling of status handle
 of https://github.com/aerokube/selenoid[Selenoid] on small go backend.
 Source code available at https://github.com/aerokube/selenoid-ui[GitHub].
 
+image:img/selenoidui.gif[ui]
+
 == Quick Start Guide
 
-=== You have Docker
+=== When you have Docker, there are 3 ways
 
-. On the same host where the *selenoid* runs:
-- Assumed you have `selenoid` container up and running
+. If you know exact uri of selenoid - just specify it with `--selenoid-uri`.
+No matter this is the same host or not.
++
+----
+$ docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui --selenoid-uri http://${SELENOID_HOST}:4444
+----
++
+TIP: It can't be `localhost` or `127.0.0.1` until the UI is started in the same container as selenoid.
+
+. When the UI and *Selenoid* on the same host you need to determine selenoid uri accessible from UI container.
+Usually it can be the docker gateway address.
++
+- If you use default network mode, firstly
++
+----
+$ DOCKER_GATEWAY_ADDR=`docker inspect selenoid -f {{.NetworkSettings.Gateway}}`
+$ echo $DOCKER_GATEWAY_ADDR
+172.17.0.1 <1>
+----
+<1> May be different
++
+WARNING: For MacOS you should http://blog.michaelhamrah.com/2014/06/accessing-the-docker-host-server-within-a-container/[determine] interface with help of netstat.
+Remember that gateway address and host address is not the same in this case.
++
+- Then run Selenoid UI
++
+----
+$ docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui --selenoid-uri http://${DOCKER_GATEWAY_ADDR}:4444
+----
+
+
+. On the same host you can just _link_ with *selenoid* container:
+- Assumed you have `selenoid` container already up and running
 +
 ----
 $ docker ps
@@ -29,7 +62,7 @@ $ docker ps
 CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                                                   NAMES
 fc479233071d        aerokube/selenoid      "/usr/bin/selenoid..."   10 minutes ago      Up 10 minutes       0.0.0.0:4444->4444/tcp                                  selenoid
 ----
-
++
 - Just run linked UI:
 +
 ----
@@ -41,39 +74,19 @@ $ docker run -d         \
 ----
 <1> `selenoid` is name of *Selenoid* container
 <2> should be the same as link name
-    
-. If you don't want to use `--link` or have *Selenoid* on another host you need to determine direct selenoid uri first (it can't be localhost!).
-- If you know this exact uri - just specify it.
-If it inside another container on the same host - use the gateway address or the host interface address where the selenoid listens.
-For MacOS it can be http://blog.michaelhamrah.com/2014/06/accessing-the-docker-host-server-within-a-container/[determined] with help of netstat.
++
+NOTE: UI will think that `http://selenoid:4444` is real address of selenoid.
+But it's true only inside of UI container.
 
-- If you use default network mode, then just
-
-----
-$ DOCKER_GATEWAY_ADDR=`docker inspect selenoid -f {{.NetworkSettings.Gateway}}`
-$ echo $DOCKER_GATEWAY_ADDR
-172.17.0.1 <1>
-----
-<1> May be different
-
-
-- And run Selenoid UI
-
-----
-$ docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui --selenoid-uri http://${DOCKER_GATEWAY_ADDR}:4444
-----
-
-=== You don't have Docker
+=== When you don't have Docker
+.Or just want to dramatically simplify all the things :)
 
 . Download Selenoid UI binary from https://github.com/aerokube/selenoid-ui/releases[releases] page.
 
 . Start it:
  
-    $ ./selenoid-ui
+    $ ./selenoid-ui --selenoid-uri http://<selenoid-host-or-ip>:4444
     
-. To connect to remote Selenoid just specify its URI:
-
-    $ ./selenoid-ui --selenoid-uri http://<host-ip>:4444
 
 == Features list:
 
