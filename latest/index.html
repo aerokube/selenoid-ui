@@ -524,8 +524,9 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel1">
 <li><a href="#_quick_start_guide">1. Quick Start Guide</a>
 <ul class="sectlevel2">
-<li><a href="#_when_you_have_docker_there_are_3_ways">1.1. When you have Docker, there are 3 ways</a></li>
-<li><a href="#_when_you_don_t_have_docker">1.2. When you don&#8217;t have Docker</a></li>
+<li><a href="#_when_you_have_docker">1.1. When you have Docker</a></li>
+<li><a href="#_with_docker_compose">1.2. With Docker Compose</a></li>
+<li><a href="#_when_you_don_t_have_docker">1.3. When you don&#8217;t have Docker</a></li>
 </ul>
 </li>
 <li><a href="#_features_list">2. Features list:</a>
@@ -565,7 +566,7 @@ Source code available at <a href="https://github.com/aerokube/selenoid-ui">GitHu
 <h2 id="_quick_start_guide"><a class="anchor" href="#_quick_start_guide"></a>1. Quick Start Guide</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_when_you_have_docker_there_are_3_ways"><a class="anchor" href="#_when_you_have_docker_there_are_3_ways"></a>1.1. When you have Docker, there are 3 ways</h3>
+<h3 id="_when_you_have_docker"><a class="anchor" href="#_when_you_have_docker"></a>1.1. When you have Docker</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -695,7 +696,35 @@ But it&#8217;s true only inside of UI container.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_when_you_don_t_have_docker"><a class="anchor" href="#_when_you_don_t_have_docker"></a>1.2. When you don&#8217;t have Docker</h3>
+<h3 id="_with_docker_compose"><a class="anchor" href="#_with_docker_compose"></a>1.2. With Docker Compose</h3>
+<div class="paragraph">
+<p>With docker compose remember to use the same network with selenoid and browser containers. For now this is only <code>bridge</code> network mode.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">version</span>: <span class="string"><span class="content">'3'</span></span>
+<span class="key">services</span>:
+  <span class="key">selenoid</span>:
+    <span class="key">image</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">aerokube/selenoid</span><span class="delimiter">&quot;</span></span>
+    <span class="key">network_mode</span>: <span class="string"><span class="content">bridge</span></span>
+    <span class="key">ports</span>:
+      - <span class="string"><span class="delimiter">&quot;</span><span class="content">4444:4444</span><span class="delimiter">&quot;</span></span>
+    <span class="key">volumes</span>:
+      - <span class="string"><span class="delimiter">&quot;</span><span class="content">$PWD:/etc/selenoid/</span><span class="delimiter">&quot;</span></span> <span class="comment"># assumed current dir contains browsers.json</span>
+      - <span class="string"><span class="delimiter">&quot;</span><span class="content">/var/run/docker.sock:/var/run/docker.sock</span><span class="delimiter">&quot;</span></span>
+  <span class="key">selenoid-ui</span>:
+    <span class="key">image</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">aerokube/selenoid-ui</span><span class="delimiter">&quot;</span></span>
+    <span class="key">network_mode</span>: <span class="string"><span class="content">bridge</span></span>
+    <span class="key">links</span>:
+      - <span class="string"><span class="content">selenoid</span></span>
+    <span class="key">ports</span>:
+      - <span class="string"><span class="delimiter">&quot;</span><span class="content">8080:8080</span><span class="delimiter">&quot;</span></span>
+    <span class="key">command</span>: <span class="string"><span class="content">[&quot;--selenoid-uri&quot;, &quot;http://selenoid:4444&quot;]</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_when_you_don_t_have_docker"><a class="anchor" href="#_when_you_don_t_have_docker"></a>1.3. When you don&#8217;t have Docker</h3>
 <div class="olist arabic">
 <div class="title">Or just want to dramatically simplify all the things :)</div>
 <ol class="arabic">
@@ -829,7 +858,7 @@ $ docker build -t selenoid-ui:latest .</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2017-07-05 19:45:31 UTC
+Last updated 2017-07-05 20:03:24 UTC
 </div>
 </div>
 </body>
