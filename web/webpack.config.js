@@ -180,14 +180,19 @@ module.exports = function (env) {
             },
             proxy: {
                 "/events": 'http://localhost:8080/',
-                "/ws": 'ws://localhost:8080/',
+                "/ws": {
+                    target: 'ws://localhost:8080/',
+                    ws: true
+                },
                 "/vnc/": {
                     target: "http://localhost:3000",
-                    pathRewrite: {"^/vnc/": ""}
+                    pathRewrite: {"^/vnc/": ""},
+                    ws: true
                 },
                 "/log/": {
                     target: "http://localhost:3000",
-                    pathRewrite: {"^/log/": ""}
+                    pathRewrite: {"^/log/": ""},
+                    ws: true
                 }
             }
         }
