@@ -9,9 +9,9 @@ import "./style.scss";
 export default class Vnc extends Component {
     state = {connection: 'connecting'};
 
-    connection(connection) {
+    connection = (connection) => {
         this.setState({connection: connection});
-    }
+    };
 
     handleFullscreen = () => {
         this.setState({fullscreen: !this.state.fullscreen});
