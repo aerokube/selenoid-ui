@@ -17,6 +17,7 @@ of https://github.com/aerokube/selenoid[Selenoid] on small go backend.
 Source code available at https://github.com/aerokube/selenoid-ui[GitHub].
 
 image:img/selenoidui.gif[ui]
+_Recorded with https://github.com/justinfrankel/licecap[licecap]_
 
 == Quick Start Guide
 
