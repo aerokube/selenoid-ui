@@ -26,6 +26,11 @@ RemoteWebDriver driver = new RemoteWebDriver(
     browser
 );
 `,
+        python: `capabilities = {"browserName": "${browser}","version": "${version}"}
+driver = webdriver.Remote(
+    command_executor="${origin}/wd/hub",
+    desired_capabilities=capabilities)
+`,
         javascript: `var webdriverio = require('webdriverio');
 var options = { 
     desiredCapabilities: { 
@@ -93,7 +98,7 @@ export default class Capabilities extends Component {
                 <div className="capabilities__lang-selector">
                     <div className="capabilities-langs">
                         {
-                            ['yaml', 'java', 'javascript']
+                            ['yaml', 'java', 'javascript', 'python']
                                 .map(next =>
                                     <div key={next}
                                          className={`capabilities-lang ${next === lang && 'capabilities-lang_active'}`}
