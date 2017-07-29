@@ -12,15 +12,18 @@ const LogInfo = ({session, browser}) => {
             )}
 
             {browser.browser && (
-                <div>
+                <span>
                     <span className="log-info__name">{browser.browser}</span>
                     <span className="log-info__version-separator">:</span>
                     <span className="log-info__version">{browser.version}</span>
                     <span className="log-info__version-separator">:</span>
-                </div>
+                </span>
             )}
 
-            <span className="log-session">{session.substring(0, 8)}</span>
+            <span>
+                <span className="log-info__session">{session.substring(0, 8)}</span>
+            </span>
+
         </div>
     );
 };

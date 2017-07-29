@@ -4,12 +4,14 @@ $border-section-color: #353b42;
 .stats {
   height: 250px;
   width: 100%;
+  min-width: 360px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   position: relative;
   padding-top: 40px;
+  margin-top: 40px;
 
   &__section-title {
     color: #666;

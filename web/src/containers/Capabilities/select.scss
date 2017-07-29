@@ -1,4 +1,5 @@
 $selected-color: #59a781;
+$select-bg-color: #30363C;
 
 .capabilities__setup {
   .Select-control {
@@ -37,7 +38,7 @@ $selected-color: #59a781;
   }
 
   .Select-option {
-    background-color: inherit;
+    background-color: $select-bg-color;
     color: #ccc;
     text-transform: uppercase;
   }
@@ -46,11 +47,11 @@ $selected-color: #59a781;
     border-bottom-left-radius: 0;
   }
   .Select-option.is-selected {
-    background-color: inherit;
+    background-color: $select-bg-color;
     color: $selected-color;
   }
   .Select-option.is-focused {
-    background-color: inherit;
+    background-color: $select-bg-color;
     color: $selected-color;
   }
 
