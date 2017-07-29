@@ -11,9 +11,9 @@ import "./select.scss";
 import "./style.scss";
 
 
-const code = (browser, version, origin) => {
+const code = (browser = 'Firefox', version = '', origin = 'http://selenoid-uri:4444') => {
     return {
-        yaml: `# selenium: "${origin || 'http://selenoid-uri:4444/wd/hub'}"
+        yaml: `# selenium: "${origin}"
 # please note that real accessible selenoid uri can be different        
 browserName: "${browser}"
 version: "${version}"
@@ -21,18 +21,27 @@ version: "${version}"
         java: `DesiredCapabilities browser = new DesiredCapabilities();
 browser.setBrowserName("${browser}");
 browser.setVersion("${version}");
+
 RemoteWebDriver driver = new RemoteWebDriver(
     URI.create("${origin}/wd/hub").toURL(), 
     browser
 );
 `,
-        python: `capabilities = {"browserName": "${browser}","version": "${version}"}
+        python: `from selenium import webdriver
+        
+capabilities = {
+    "browserName": "${browser}",
+    "version": "${version}"
+}
+
 driver = webdriver.Remote(
     command_executor="${origin}/wd/hub",
     desired_capabilities=capabilities)
 `,
         javascript: `var webdriverio = require('webdriverio');
+        
 var options = { 
+    host: '${origin}',
     desiredCapabilities: { 
         browserName: '${browser}', 
         version: '${version}' 
@@ -72,6 +81,7 @@ export default class Capabilities extends Component {
                 })));
 
         const {name, version, value} = browser || {};
+        const caps = code(name, version, origin);
 
         return (
             <div className="capabilities">
@@ -92,13 +102,13 @@ export default class Capabilities extends Component {
                     />
                 </div>
                 <Highlight className={lang}>
-                    {code(name, version, origin)[lang]}
+                    {caps[lang]}
                 </Highlight>
 
                 <div className="capabilities__lang-selector">
                     <div className="capabilities-langs">
                         {
-                            ['yaml', 'java', 'javascript', 'python']
+                            Object.keys(caps)
                                 .map(next =>
                                     <div key={next}
                                          className={`capabilities-lang ${next === lang && 'capabilities-lang_active'}`}

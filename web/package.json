@@ -51,7 +51,7 @@
     "rx": "^4.1.0",
     "rx-connect": "^0.6.1",
     "rx-dom": "^7.0.3",
-    "xterm": "^2.6.0"
+    "xterm": "~2.8.1"
   },
   "peerDependencies": {
     "node-sass": "^4.5.0"
