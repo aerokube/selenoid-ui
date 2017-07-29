@@ -5156,9 +5156,9 @@ xtend@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
 
-xterm@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/xterm/-/xterm-2.6.0.tgz#d8daa6d9c3ebee0c850b156cd2f92fbfc8fdfb3e"
+xterm@~2.8.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/xterm/-/xterm-2.8.1.tgz#3f6b939bcb8d015a1f247d66257102cb16a0b2e1"
 
 y18n@^3.2.1:
   version "3.2.1"
