@@ -26,11 +26,13 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
+  padding-top: 40px;
 }
 
 .navigation-top {
   position: absolute;
   top: 20px;
   left: 50%;
+  z-index: 1;
   transform: translateX(-50%);
 }
