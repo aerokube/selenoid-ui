@@ -100,12 +100,12 @@ $light-font: #999;
       font-size: 0.8em;
       color: $light-font;
     }
-  }
 
-  .log-session {
-    line-height: 20px;
-    font-size: 0.8em;
-    color: $light-font;
-    text-align: center;
+    &__session {
+      line-height: 20px;
+      font-size: 0.8em;
+      color: $light-font;
+      text-align: center;
+    }
   }
 }
