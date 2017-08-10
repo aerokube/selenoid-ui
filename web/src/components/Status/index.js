@@ -1,15 +1,15 @@
-import React, {Component} from "react";
+import React from "react";
 import "./style.scss";
 
 
-export default class Status extends Component {
-    render() {
-        const {status, title} = this.props;
+const Status = (props) => {
+        const {status, title} = props;
 
         return (
             <div className="status">
                 <div className={`indicator indicator_${status}`}>{title}</div>
             </div>
         );
-    }
-}
+};
+
+export default Status;

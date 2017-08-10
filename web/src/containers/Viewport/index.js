@@ -14,6 +14,7 @@ import Vnc from "components/Vnc";
 import Log from "components/Log";
 import VncList from "components/VncList";
 import LogList from "components/LogList";
+import Status from "components/Status";
 
 
 const schema = {
@@ -157,16 +158,18 @@ export default class Viewport extends Component {
         return (
             <Router>
                 <div className="viewport">
-                    <div className="navigation-top">
+                    <div className="top-bar">
+                        <div className="connection-status">
+                            <Status status={sse} title="sse"/>
+                            <Status status={status} title="selenoid"/>
+                        </div>
                         <Navigation links={links}/>
                     </div>
 
                     <Route exact={true} path="/" render={() => (
                         <Stats {...{
-                            sse: sse,
-                            status: status,
-                            state: state,
-                            browsers: browsers
+                            state,
+                            browsers
                         }}/>
                     )}/>
 
