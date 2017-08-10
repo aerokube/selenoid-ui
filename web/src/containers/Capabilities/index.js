@@ -11,7 +11,7 @@ import "./select.scss";
 import "./style.scss";
 
 
-const code = (browser = 'Firefox', version = '', origin = 'http://selenoid-uri:4444') => {
+const code = (browser = 'UNKNOWN', version = '', origin = 'http://selenoid-uri:4444') => {
     return {
         yaml: `# selenium: "${origin}"
 # please note that real accessible selenoid uri can be different        
