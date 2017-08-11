@@ -30,10 +30,20 @@ body {
   position: relative;
 }
 
-.navigation-top {
+.top-bar {
   position: absolute;
-  top: 20px;
-  left: 50%;
+  top: 10px;
+  width: 100%;
   z-index: 1;
-  transform: translateX(-50%);
+  display: inline-flex;
+  justify-content: space-between;
+}
+
+$menu-border-bottom-color: #353b42;
+
+.connection-status {
+  display: flex;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-bottom: 1px solid $menu-border-bottom-color;
 }

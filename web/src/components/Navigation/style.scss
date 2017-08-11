@@ -1,14 +1,18 @@
+$menu-border-bottom-color: #353b42;
+
 .nav {
   display: flex;
   flex-wrap: wrap;
   line-height: 30px;
   font-size: 1.0em;
   min-width: 200px;
+  border-bottom: 1px solid $menu-border-bottom-color;
 
   &__element {
     color: #fff;
     text-decoration: none;
     margin-left: 10px;
+
 
     &_active {
       border-bottom: 1px solid #59a781;

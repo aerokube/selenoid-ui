@@ -38,9 +38,9 @@ module.exports = function (env) {
             hash: true,
             template: 'index.ejs'
         }),
-        // new BundleAnalyzerPlugin({
-        //     analyzerMode: 'static'
-        // })
+         // new BundleAnalyzerPlugin({
+         //     analyzerMode: 'static'
+         // })
     ];
 
     if (isProd) {

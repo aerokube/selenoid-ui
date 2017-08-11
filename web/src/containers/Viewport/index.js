@@ -2,8 +2,9 @@ import React, {Component} from "react";
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import {validate} from "jsonschema";
 import {rxConnect} from "rx-connect";
-import Rx from "rx";
-import "rx-dom";
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/operator/map';
 
 import "./style.scss";
 
@@ -14,6 +15,7 @@ import Vnc from "components/Vnc";
 import Log from "components/Log";
 import VncList from "components/VncList";
 import LogList from "components/LogList";
+import Status from "components/Status";
 
 
 const schema = {
@@ -93,9 +95,20 @@ const schema = {
 };
 
 @rxConnect(() => {
-    const open = new Rx.Subject();
-    return Rx.Observable.merge(
-        Rx.DOM.fromEventSource('/events', open)
+    const open = new Subject();
+    const errors = new Subject();
+
+    return Observable.merge(
+        Observable.defer(() => Observable.create(observer => {
+            const sse = new EventSource('/events');
+            sse.onmessage = x => observer.next(x.data);
+            sse.onerror = x => observer.error(x);
+            sse.onopen = x => open.next(x);
+
+            return () => {
+                sse.close();
+            };
+        }))
             .map(event => JSON.parse(event))
             .map(event => {
                 if (event.errors && event.errors.length) {
@@ -120,18 +133,22 @@ const schema = {
                     };
                 }
             })
-            .catch(error => {
-                console.error('SSE Error', error);
-                return Rx.Observable.just(
-                    {
+            .retryWhen(errs => errs
+                .do(err => {
+                    console.error('Error connecting to SSE', err.target.url);
+                    errors.next({
                         sse: "error",
                         status: "unknown"
-                    }
-                );
-            }),
-        open.map(event => ({
-            sse: "ok"
-        }))
+                    });
+                })
+                .delayWhen(val => Observable.timer(3000))
+            ),
+        Observable.merge(
+            open.map(event => ({
+                sse: "ok"
+            })),
+            errors
+        )
     ).startWith({
         sse: "unknown",
         status: "unknown",
@@ -157,16 +174,18 @@ export default class Viewport extends Component {
         return (
             <Router>
                 <div className="viewport">
-                    <div className="navigation-top">
+                    <div className="top-bar">
+                        <div className="connection-status">
+                            <Status status={sse} title="sse"/>
+                            <Status status={status} title="selenoid"/>
+                        </div>
                         <Navigation links={links}/>
                     </div>
 
                     <Route exact={true} path="/" render={() => (
                         <Stats {...{
-                            sse: sse,
-                            status: status,
-                            state: state,
-                            browsers: browsers
+                            state,
+                            browsers
                         }}/>
                     )}/>
 

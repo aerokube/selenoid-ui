@@ -36,6 +36,7 @@
     "sass-loader": "6.0.3",
     "style-loader": "0.16.1",
     "webpack": "2.5.1",
+    "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "2.4.3"
   },
   "dependencies": {
@@ -49,8 +50,8 @@
     "react-router-dom": "next",
     "react-select": "1.0.0-rc.4",
     "rx": "^4.1.0",
-    "rx-connect": "^0.6.1",
-    "rx-dom": "^7.0.3",
+    "rx-connect": "^0.6.2",
+    "rxjs": "^5.4.2",
     "xterm": "~2.8.1"
   },
   "peerDependencies": {
