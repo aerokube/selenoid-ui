@@ -1,0 +1,43 @@
+import React from "react";
+import {Link} from "react-router-dom";
+
+import "./style.scss";
+
+
+const Sessions = (props) => {
+    const {sessions = {}} = props;
+    const list = Object.keys(sessions);
+
+    return (
+        <div className="sessions">
+            {list.length && list.map(session => {
+                return (
+                    <Link className="session-link" key={session} to={`/vnc/${session}`}>
+                        <div className="session-link-browser">
+                            <span className="session-link-browser__name">{sessions[session].caps.browserName}</span>
+                            <span className="session-link-browser__version">{sessions[session].caps.version}</span>
+                        </div>
+                        {sessions[session].caps.name && (
+                            <div className="session-cap session-cap__name">
+                                {sessions[session].caps.name}
+                            </div>
+                        )}
+                        {sessions[session].caps.enableVNC && (
+                            <div className="session-cap session-cap__with-vnc">
+                                <span title="With VNC" className="icon dripicons-device-desktop"/> <sup>VNC</sup>
+                            </div>
+                        )}
+                    </Link>
+                );
+            }) || (
+                <div className="sessions__no-any">
+                    <div title="No any" className="icon dripicons-hourglass"/>
+                    <div className="novnc-any-text">NO ANY VNC YET :'(</div>
+                    <div className="novnc-count">Sessions without VNC:</div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default Sessions;
