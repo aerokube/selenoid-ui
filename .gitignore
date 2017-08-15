@@ -12,3 +12,7 @@ vendor/*/
 bindata_assetfs.go
 selenoid-ui
 data
+
+.DS_Store
+dist/**
+docs/output/*.html

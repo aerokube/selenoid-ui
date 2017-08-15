@@ -17,7 +17,7 @@ backed by constant polling of status handle
 of https://github.com/aerokube/selenoid[Selenoid] on small go backend.
 Source code available at https://github.com/aerokube/selenoid-ui[GitHub].
 
-image:img/selenoidui.gif[ui]
+image:img/selenoid-ui.gif[ui]
 _Recorded with https://github.com/justinfrankel/licecap[licecap]_
 
 == Quick Start Guide
@@ -121,35 +121,38 @@ services:
 
 Shows current quota usage, pending browsers and queue.
 Gets updates via SSE, so no need to refresh browser to see what happens.
+It will reconnect automatically on any temp failures.
 
 .Stats and capabilities
-image:img/ui.png[ui]
+image:img/stats.png[ui]
 
 === Capabilities
 
 You can choose browser from the available browser list and UI will provide
 an example of setup with right capabilities. Examples available for several languages.
 
-=== VNC
+=== LOGS & VNC
 
 If you get browser from selenoid with `enableVNC=true` capability, you can see list of available screens:
 
 .VNC list
-image:img/vnc-list.png[ui]
+image:img/sessions.png[ui]
 
-VNC allows to see and interact with browser:
+Pay attention to named sessions - you can achieve same result with `name=your.test.name` capability.
+
+VNC allows to see and interact with browser while log will reflect all driver actions:
 
 .Exact VNC session
-image:img/vnc.png[ui]
+image:img/session-logs-vnc.png[ui]
 
 .Fullscreen mode
 image:img/vnc-fs.png[ui]
 
 Please refer to http://aerokube.com/selenoid/latest/#_live_browser_screen[selenoid documentation] about VNC usage.
 
-=== LOGS
+==== LOGS
 
-With same as VNC list you can see logs of docker container (no any additional action required)
+You can see logs of docker container for each session even without vnc and name (no any additional action required)
 
 .Logs
 image:img/logs.png[logs]

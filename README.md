@@ -8,7 +8,7 @@ Simple status page with UI updates by SSE,
 backed by constant polling of status handle
 of [selenoid](https://github.com/aerokube/selenoid) on small go backend.
 
-![ui](docs/img/ui.png)
+![ui](docs/img/stats.png)
 
 ## Usage
 

@@ -11,11 +11,21 @@ import (
  * SELENOID TYPES *
  * ------v------- */
 
+// Caps - user capabilities
+type Caps struct {
+	Name             string `json:"browserName"`
+	Version          string `json:"version"`
+	ScreenResolution string `json:"screenResolution"`
+	VNC              bool   `json:"enableVNC"`
+	TestName         string `json:"name"`
+	TimeZone         string `json:"timeZone"`
+}
+
 // Session - session id and vnc flag
 type Session struct {
-	ID     string `json:"id"`
-	VNC    bool   `json:"vnc"`
-	Screen string `json:"screen"`
+	ID        string `json:"id"`
+	Container string `json:"container"`
+	Caps      Caps   `json:"caps"`
 }
 
 // Sessions - used count and individual sessions for quota user
@@ -46,14 +56,12 @@ type State struct {
  * SELENOID TYPES *
  * -------------- */
 
-// sessionInfo - extended (and inverted) session information
+// sessionInfo - extended session information
 type sessionInfo struct {
-	ID      string `json:"id"`
-	VNC     bool   `json:"vnc"`
-	Screen  string `json:"screen"`
-	Browser string `json:"browser"`
-	Version string `json:"version"`
-	Quota   string `json:"quota"`
+	ID        string `json:"id"`
+	Container string `json:"container"`
+	Caps      Caps   `json:"caps"`
+	Quota     string `json:"quota"`
 }
 
 // result - processed selenoid state
@@ -117,17 +125,15 @@ func toUI(state State, baseUrl string) result {
 
 	for browser, version := range state.Browsers {
 		count := 0
-		for versionName, quota := range version {
+		for _, quota := range version {
 			for quotaName, sess := range quota {
 				count += sess.Count
 				for _, session := range sess.Sessions {
 					sessions[session.ID] = sessionInfo{
-						ID:      session.ID,
-						VNC:     session.VNC,
-						Screen:  session.Screen,
-						Browser: browser,
-						Version: versionName,
-						Quota:   quotaName,
+						ID:        session.ID,
+						Quota:     quotaName,
+						Container: session.Container,
+						Caps:      session.Caps,
 					}
 				}
 			}
