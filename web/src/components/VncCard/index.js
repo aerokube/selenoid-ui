@@ -2,11 +2,10 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 
 import VncScreen from "./VncScreen";
-import VncInfo from "./VncInfo";
 import "./style.scss";
 
 
-export default class Vnc extends Component {
+export default class VncCard extends Component {
     state = {connection: 'connecting'};
 
     connection = (connection) => {
@@ -18,12 +17,16 @@ export default class Vnc extends Component {
     };
 
     render() {
-        const {origin, session, browser} = this.props;
+        const {origin, session, browser = {}} = this.props;
         const {connection, fullscreen} = this.state;
         const connected = connection === 'connected';
 
+        if (browser.caps && !browser.caps.enableVNC) {
+            return <span/>
+        }
+
         return (
-            <div className="vnc">
+            <div className={`vnc ${fullscreen && "vnc_fullscreen"}`}>
                 <div className={`vnc-card ${!connected && "vnc-card_small"} ${fullscreen && "vnc-card_fullscreen"}`}>
                     <div className="vnc-card__controls">
                         <Back/>
@@ -32,14 +35,13 @@ export default class Vnc extends Component {
                     </div>
 
                     <div className="vnc-card__content">
-                        {connected && (<VncInfo session={session} browser={browser}/>)}
                         <VncScreen session={session} origin={origin}
                                    onUpdateState={(state) => this.connection(state)}/>
                     </div>
 
                 </div>
 
-                {!connected && (<div className={`vnc-connection-status vnc-connection-status_${connection}`}>{connection}</div>)}
+                {!connected && (<div className={`vnc-connection-status vnc-connection-status_${connection}`}>VNC {connection}</div>)}
 
             </div>
         );
@@ -47,7 +49,7 @@ export default class Vnc extends Component {
 }
 
 function Back() {
-    return <Link className="control" to="/vnc/">
+    return <Link className="control" to="/sessions/">
         <span title="Back" className="icon dripicons-arrow-thin-left"/>
     </Link>;
 }

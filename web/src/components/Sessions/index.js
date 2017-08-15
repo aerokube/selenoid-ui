@@ -12,7 +12,7 @@ const Sessions = (props) => {
         <div className="sessions">
             {list.length && list.map(session => {
                 return (
-                    <Link className="session-link" key={session} to={`/vnc/${session}`}>
+                    <Link className="session-link" key={session} to={`/sessions/${session}`}>
                         <div className="session-link-browser">
                             <span className="session-link-browser__name">{sessions[session].caps.browserName}</span>
                             <span className="session-link-browser__version">{sessions[session].caps.version}</span>
@@ -32,8 +32,7 @@ const Sessions = (props) => {
             }) || (
                 <div className="sessions__no-any">
                     <div title="No any" className="icon dripicons-hourglass"/>
-                    <div className="novnc-any-text">NO ANY VNC YET :'(</div>
-                    <div className="novnc-count">Sessions without VNC:</div>
+                    <div className="nosession-any-text">NO SESSIONS YET :'(</div>
                 </div>
             )}
         </div>

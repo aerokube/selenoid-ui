@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"regexp"
 	"syscall"
 	"time"
 	"net/url"
@@ -30,27 +29,12 @@ var (
 	buildStamp  string = "unknown"
 )
 
-func staticRewrite(path string) string {
-	jsfile, _ := regexp.Compile("/(?:log/|vnc/)(.*\\.js$)")
-	any, _ := regexp.Compile("/(?:log/|vnc/)(.*)")
-	return any.ReplaceAllString(jsfile.ReplaceAllString(path, "$1"), "")
-}
-
 func mux(sse *sse.SseBroker) http.Handler {
 	mux := http.NewServeMux()
 	static := http.FileServer(assetFS())
 
 	mux.Handle("/", static)
-	mux.HandleFunc("/vnc/", func(w http.ResponseWriter, r *http.Request) {
-		r.URL.Path = staticRewrite(r.URL.Path)
-		static.ServeHTTP(w, r)
-	})
-	mux.HandleFunc("/log/", func(w http.ResponseWriter, r *http.Request) {
-		r.URL.Path = staticRewrite(r.URL.Path)
-		static.ServeHTTP(w, r)
-	})
 	mux.Handle("/events", sse)
-
 
 	parsedUri, err := url.Parse(selenoidUri)
 	if err != nil {

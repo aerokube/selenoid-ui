@@ -84,14 +84,14 @@ export default class Log extends Component {
     }
 
     render() {
-        const {session, browser = {}} = this.props;
+        const {session} = this.props;
 
         return (
             <div className="log">
                 <div className="log-card">
                     <div className="log-card__header">
                         <Back/>
-                        <LogInfo browser={browser} session={session}/>
+                        <LogInfo session={session}/>
                     </div>
 
                     <div className="log-card__content">
@@ -106,7 +106,7 @@ export default class Log extends Component {
 }
 
 const Back = () => (
-    <Link className="control" to="/log/">
+    <Link className="control" to="/sessions/">
         <div title="Back"></div>
     </Link>
 );

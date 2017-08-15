@@ -37,7 +37,15 @@ func selenoidState() State {
             {
               "id": "5ad7e24dd38f7283163d839cae5e7e70",
               "vnc": false,
-              "screen": "1920x1080x24"
+              "screen": "1920x1080x24",
+              "caps": {
+                "browserName": "firefox",
+                "version": "46",
+                "screenResolution": "1920x1080x24",
+                "enableVNC": true,
+                "name": "",
+                "timeZone": ""
+              }
             }
           ]
         }
@@ -51,7 +59,15 @@ func selenoidState() State {
             {
               "id": "87cffbdd-8b63-46a5-ba65-6f2d32d40304",
               "vnc": false,
-              "screen": "1920x1080x24"
+              "screen": "1920x1080x24",
+              "caps": {
+                "browserName": "firefox",
+                "version": "46",
+                "screenResolution": "1920x1080x24",
+                "enableVNC": true,
+                "name": "",
+                "timeZone": ""
+              }
             }
           ]
         }
