@@ -517,7 +517,7 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community</span><br>
 <span id="revnumber">version latest,</span>
-<span id="revdate">2017-08-11</span>
+<span id="revdate">2017-08-15</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -533,8 +533,11 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_stats">2.1. Stats</a></li>
 <li><a href="#_capabilities">2.2. Capabilities</a></li>
-<li><a href="#_vnc">2.3. VNC</a></li>
-<li><a href="#_logs">2.4. LOGS</a></li>
+<li><a href="#_logs_vnc">2.3. LOGS &amp; VNC</a>
+<ul class="sectlevel3">
+<li><a href="#_logs">2.3.1. LOGS</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_contributing_development">3. Contributing &amp; Development</a>
@@ -558,7 +561,7 @@ of <a href="https://github.com/aerokube/selenoid">Selenoid</a> on small go backe
 Source code available at <a href="https://github.com/aerokube/selenoid-ui">GitHub</a>.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/selenoidui.gif" alt="ui"></span>
+<p><span class="image"><img src="img/selenoid-ui.gif" alt="ui"></span>
 <em>Recorded with <a href="https://github.com/justinfrankel/licecap">licecap</a></em></p>
 </div>
 </div>
@@ -752,11 +755,12 @@ But it&#8217;s true only inside of UI container.
 <h3 id="_stats"><a class="anchor" href="#_stats"></a>2.1. Stats</h3>
 <div class="paragraph">
 <p>Shows current quota usage, pending browsers and queue.
-Gets updates via SSE, so no need to refresh browser to see what happens.</p>
+Gets updates via SSE, so no need to refresh browser to see what happens.
+It will reconnect automatically on any temp failures.</p>
 </div>
 <div class="paragraph">
 <div class="title">Stats and capabilities</div>
-<p><span class="image"><img src="img/ui.png" alt="ui"></span></p>
+<p><span class="image"><img src="img/stats.png" alt="ui"></span></p>
 </div>
 </div>
 <div class="sect2">
@@ -767,20 +771,23 @@ an example of setup with right capabilities. Examples available for several lang
 </div>
 </div>
 <div class="sect2">
-<h3 id="_vnc"><a class="anchor" href="#_vnc"></a>2.3. VNC</h3>
+<h3 id="_logs_vnc"><a class="anchor" href="#_logs_vnc"></a>2.3. LOGS &amp; VNC</h3>
 <div class="paragraph">
 <p>If you get browser from selenoid with <code>enableVNC=true</code> capability, you can see list of available screens:</p>
 </div>
 <div class="paragraph">
 <div class="title">VNC list</div>
-<p><span class="image"><img src="img/vnc-list.png" alt="ui"></span></p>
+<p><span class="image"><img src="img/sessions.png" alt="ui"></span></p>
 </div>
 <div class="paragraph">
-<p>VNC allows to see and interact with browser:</p>
+<p>Pay attention to named sessions - you can achieve same result with <code>name=your.test.name</code> capability.</p>
+</div>
+<div class="paragraph">
+<p>VNC allows to see and interact with browser while log will reflect all driver actions:</p>
 </div>
 <div class="paragraph">
 <div class="title">Exact VNC session</div>
-<p><span class="image"><img src="img/vnc.png" alt="ui"></span></p>
+<p><span class="image"><img src="img/session-logs-vnc.png" alt="ui"></span></p>
 </div>
 <div class="paragraph">
 <div class="title">Fullscreen mode</div>
@@ -789,15 +796,15 @@ an example of setup with right capabilities. Examples available for several lang
 <div class="paragraph">
 <p>Please refer to <a href="http://aerokube.com/selenoid/latest/#_live_browser_screen">selenoid documentation</a> about VNC usage.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_logs"><a class="anchor" href="#_logs"></a>2.4. LOGS</h3>
+<div class="sect3">
+<h4 id="_logs"><a class="anchor" href="#_logs"></a>2.3.1. LOGS</h4>
 <div class="paragraph">
-<p>With same as VNC list you can see logs of docker container (no any additional action required)</p>
+<p>You can see logs of docker container for each session even without vnc and name (no any additional action required)</p>
 </div>
 <div class="paragraph">
 <div class="title">Logs</div>
 <p><span class="image"><img src="img/logs.png" alt="logs"></span></p>
+</div>
 </div>
 </div>
 </div>
@@ -859,7 +866,7 @@ $ docker build -t selenoid-ui:latest .</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2017-08-11 00:03:51 UTC
+Last updated 2017-08-15 11:32:58 UTC
 </div>
 </div>
 <!-- Yandex.Metrika counter -->
