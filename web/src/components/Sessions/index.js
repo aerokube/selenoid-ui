@@ -18,13 +18,13 @@ const Sessions = (props) => {
                             <span className="session-link-browser__version">{sessions[session].caps.version}</span>
                         </div>
                         {sessions[session].caps.name && (
-                            <div className="session-cap session-cap__name">
+                            <div className="session-cap session-cap__name" title={sessions[session].caps.name}>
                                 {sessions[session].caps.name}
                             </div>
                         )}
                         {sessions[session].caps.enableVNC && (
                             <div className="session-cap session-cap__with-vnc">
-                                <span title="With VNC" className="icon dripicons-device-desktop"/> <sup>VNC</sup>
+                                <span title="With VNC" className="icon dripicons-device-desktop"/>&nbsp;<sup>VNC</sup>
                             </div>
                         )}
                     </Link>

@@ -16,20 +16,37 @@ export default class Session extends Component {
                     browser
                 }}/>
 
-                <Log { ... {
-                    origin,
-                    session,
-                    browser
-                }} />
+                <div className="session__interactive">
+                    <VncContainer {... {
+                        origin,
+                        session,
+                        browser
+                    }}/>
+                    <div className="session-interactive-card">
+                        <Log {... {
+                            origin,
+                            session,
+                            browser
+                        }} />
+                    </div>
 
-                <VncCard { ... {
-                    origin,
-                    session,
-                    browser
-                }}/>
-
+                </div>
             </div>
         );
     }
+}
+
+function VncContainer({origin, session, browser = {}}) {
+    if (browser.caps && !browser.caps.enableVNC) {
+        return <span/>
+    }
+
+    return <div className="session-interactive-card">
+        <VncCard {... {
+            origin,
+            session,
+            browser
+        }}/>
+    </div>;
 }
 

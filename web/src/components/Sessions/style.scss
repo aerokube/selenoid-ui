@@ -54,14 +54,15 @@ $color-session-name: #555f6a;
     }
 
     .session-cap {
-      height: 25px;
-      line-height: 25px;
+      height: 30px;
+      line-height: 30px;
       box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
       margin: -3px 5px 0;
       padding: 0 5px;
 
       &__name {
-        overflow: scroll;
+        overflow-x: visible;
+        overflow-y: hidden;
         background-color: $color-session-name;
         font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
 
@@ -73,8 +74,9 @@ $color-session-name: #555f6a;
       &__with-vnc {
         background-color: $color-accent;
         padding: 0 10px;
-        line-height: 22px;
-        width: 43px;
+        line-height: 30px;
+        width: 45px;
+        text-align: center;
       }
     }
   }
