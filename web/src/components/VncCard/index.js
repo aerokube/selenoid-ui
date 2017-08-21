@@ -49,8 +49,8 @@ export default class VncCard extends Component {
 }
 
 function Back() {
-    return <Link className="control" to="/sessions/">
-        <span title="Back" className="icon dripicons-arrow-thin-left"/>
+    return <Link className="control control_back" to="/sessions/">
+        <div title="Back">X</div>
     </Link>;
 }
 
@@ -76,6 +76,6 @@ function Connection(props) {
 function Fullscreen(props) {
     const {handleFullscreen, fullscreen} = props;
     return <div className="control control_fullscreen" onClick={handleFullscreen}>
-        <span title="Fullscreen" className={'icon dripicons-' + (fullscreen ? 'contract' : 'expand')}/>
+        <div title="Fullscreen" className={'icon dripicons-' + (fullscreen ? 'chevron-down' : 'chevron-up')}/>
     </div>;
 }

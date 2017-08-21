@@ -1,8 +1,8 @@
 $color-disconnected: #ff6e59;
 $color-connecting: #6883d3;
 $color-disconnecting: #ca9eff;
-$color-fullscreen: #555f6a;
-$color-base-control: #59a781;
+$color-base-control: #555f6a;
+$color-fullscreen: #59a781;
 $background-color-lighter: #3d444c;
 
 .vnc {
@@ -13,10 +13,11 @@ $background-color-lighter: #3d444c;
 
   &_fullscreen {
     position: absolute;
-    height: 110%;
+    height: 100%;
     width: 100%;
     z-index: 2;
     top: 0;
+    left: 0;
   }
 
   .vnc-connection-status {
@@ -53,9 +54,9 @@ $background-color-lighter: #3d444c;
 
   .vnc-card {
     height: 450px;
-    width: 800px;
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
 
     &_fullscreen {
@@ -65,40 +66,66 @@ $background-color-lighter: #3d444c;
     }
 
     &_small {
-      height: 160px;
-      width: 80px;
+      height: 30px;
+      width: 65px;
     }
 
     &__controls {
-      width: 80px;
+      height: 30px;
+      width: 100%;
       display: flex;
-      flex-direction: column;
       align-items: center;
       background-color: $background-color-lighter;
 
       .control {
-        width: 100%;
-        line-height: 70px;
-        padding-top: 10px;
-        font-size: 2em;
-        background-color: $color-base-control;
+        width: 15px;
+        height: 15px;
+        line-height: 15px;
+        border-radius: 50%;
+        background-color: $color-disconnected;
         text-align: center;
         text-decoration: none;
+        margin-left: 10px;
+        font-size: 10px;
         color: #fff;
         transition: background-color 0.5s ease-out 0s;
 
         &_fullscreen {
           cursor: pointer;
           background-color: $color-fullscreen;
-          color: #ccc;
+          color: $color-fullscreen;
+
+          &:hover {
+            color: #fff;
+          }
+        }
+
+        &_back {
+          cursor: pointer;
+          background-color: $color-disconnected;
+          color: $color-disconnected;
+
+          &:hover {
+            color: #fff;
+          }
         }
 
         &_disconnected {
           background-color: $color-disconnected;
+          height: 30px;
+          width: 30px;
+          line-height: 30px;
+          font-size: 1em;
+          border-radius: 0;
         }
 
         &_connecting {
           background-color: $color-connecting;
+          height: 30px;
+          width: 30px;
+          line-height: 30px;
+          font-size: 1em;
+          border-radius: 0;
         }
 
         &_connected {
@@ -112,8 +139,8 @@ $background-color-lighter: #3d444c;
     }
 
     &__content {
-      width: calc(100% - 80px);
-      height: 100%;
+      width: 100%;
+      height: calc(100% - 30px);
       display: flex;
       flex-direction: column;
       background-color: #000;

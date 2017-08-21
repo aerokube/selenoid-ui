@@ -8,6 +8,19 @@ $background-color-lighter: #3d444c;
   width: 100%;
   margin-top: 90px;
 
+  &__interactive {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .session-interactive-card {
+    max-width: 800px;
+    width: 45%;
+    min-width: 450px;
+    margin: 20px;
+  }
+
   .session-info {
     color: #fff;
     padding: 0 30px;

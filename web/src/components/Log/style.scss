@@ -12,11 +12,10 @@ $light-font: #999;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  margin: 20px 0;
 
   .log-card {
     height: 450px;
-    width: 800px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -30,8 +29,8 @@ $light-font: #999;
       background-color: $background-color-lighter;
 
       .control {
-        width: 12px;
-        height: 12px;
+        width: 15px;
+        height: 15px;
         border-radius: 50%;
         background-color: $color-disconnected;
         text-align: center;

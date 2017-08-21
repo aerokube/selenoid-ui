@@ -6,8 +6,6 @@ import "xterm/dist/xterm.css";
 import "./style.scss";
 import colors from "ansi-256-colors";
 
-import LogInfo from "./LogInfo";
-
 export default class Log extends Component {
     componentDidMount() {
         const {session, origin} = this.props;
@@ -84,14 +82,11 @@ export default class Log extends Component {
     }
 
     render() {
-        const {session} = this.props;
-
         return (
             <div className="log">
                 <div className="log-card">
                     <div className="log-card__header">
                         <Back/>
-                        <LogInfo session={session}/>
                     </div>
 
                     <div className="log-card__content">
