@@ -21,7 +21,7 @@ before_install:
   - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}/
   - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
   - cd $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
-  - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.8 bash)"
+  - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.9.x bash)"
 
 install:
   - go get -u github.com/jteeuwen/go-bindata/...
