@@ -6,12 +6,13 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 
+import 'event-source-polyfill'
+
 import "./style.scss";
 
 import Navigation from "components/Navigation";
 import Stats from "containers/Stats";
 import Capabilities from "containers/Capabilities";
-import Log from "components/Log";
 import Status from "components/Status";
 import Sessions from "components/Sessions";
 import Session from "components/Session";
@@ -158,7 +159,7 @@ const schema = {
             })
             .retryWhen(errs => errs
                 .do(err => {
-                    console.error('Error connecting to SSE', err.target.url);
+                    console.error('Error connecting to SSE', err.target ? err.target.url : err);
                     errors.next({
                         sse: "error",
                         status: "unknown"
