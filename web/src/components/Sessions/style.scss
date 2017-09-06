@@ -61,8 +61,7 @@ $color-session-name: #555f6a;
       padding: 0 5px;
 
       &__name {
-        overflow-x: visible;
-        overflow-y: hidden;
+        overflow: hidden;
         background-color: $color-session-name;
         font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
 
