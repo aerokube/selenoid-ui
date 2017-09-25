@@ -46,7 +46,8 @@ export default class VncScreen extends Component {
 
         if (origin && session) {
             let link = urlTo(window.location.href);
-            this.rfb.connect(link.hostname, link.port, "selenoid", `ws/vnc/${session}`);
+            let port = link.port || link.protocol === "https:" ? "443" : "80";
+            this.rfb.connect(link.hostname, port, "selenoid", `ws/vnc/${session}`);
         }
     }
 
