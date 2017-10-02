@@ -14,6 +14,10 @@ export default class VncScreen extends Component {
         }
     }
 
+    static defaultPort({port, protocol}) {
+        return port || (protocol === "https:" ? "443" : "80");
+    }
+
     connection(connection) {
         this.props.onUpdateState(connection);
     }
@@ -45,8 +49,8 @@ export default class VncScreen extends Component {
         }
 
         if (origin && session) {
-            let link = urlTo(window.location.href);
-            let port = link.port || link.protocol === "https:" ? "443" : "80";
+            const link = urlTo(window.location.href);
+            const port = VncScreen.defaultPort(link);
             this.rfb.connect(link.hostname, port, "selenoid", `ws/vnc/${session}`);
         }
     }
@@ -56,9 +60,10 @@ export default class VncScreen extends Component {
         const {session, origin} = this.props;
 
         if (origin && session && prevOrigin !== origin) {
-            let link = urlTo(window.location.href);
+            const link = urlTo(window.location.href);
+            const port = VncScreen.defaultPort(link);
 
-            this.rfb.connect(link.hostname, link.port, "selenoid", `ws/vnc/${session}`);
+            this.rfb.connect(link.hostname, port, "selenoid", `ws/vnc/${session}`);
         }
     }
 
