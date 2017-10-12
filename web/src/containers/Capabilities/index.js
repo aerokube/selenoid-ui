@@ -18,14 +18,17 @@ const code = (browser = 'UNKNOWN', version = '', origin = 'http://selenoid-uri:4
 browserName: "${browser}"
 version: "${version}"
 `,
-        java: `DesiredCapabilities browser = new DesiredCapabilities();
-browser.setBrowserName("${browser}");
-browser.setVersion("${version}");
+        java: `DesiredCapabilities capabilities = new DesiredCapabilities();
+capabilities.setBrowserName("${browser}");
+capabilities.setVersion("${version}");
 
 RemoteWebDriver driver = new RemoteWebDriver(
     URI.create("${origin}/wd/hub").toURL(), 
-    browser
+    capabilities
 );
+`
+		c-sharp: `var capabilities = new DesiredCapabilities("${browser}", "${version}", new Platform(PlatformType.Any));
+var driver = new RemoteWebDriver(new Uri("${origin}/wd/hub"), capabilities);
 `,
         python: `from selenium import webdriver
         
@@ -48,6 +51,18 @@ var options = {
     } 
 };
 var client = webdriverio.remote(options);
+`,
+		php: `$web_driver = RemoteWebDriver::create("${origin}/wd/hub",
+array("version"=>"${version}", "browserName"=>"${browser}")
+  );
+`,
+		ruby: `caps = Selenium::WebDriver::Remote::Capabilities.new
+caps["browserName"] = "${browser}"
+caps["version"] = "${version}"
+
+driver = Selenium::WebDriver.for(:remote,
+  :url => "${origin}/wd/hub",
+  :desired_capabilities => caps)
 `
     }
 };
