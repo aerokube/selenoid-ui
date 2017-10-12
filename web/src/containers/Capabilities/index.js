@@ -27,7 +27,7 @@ RemoteWebDriver driver = new RemoteWebDriver(
     capabilities
 );
 `
-		c-sharp: `var capabilities = new DesiredCapabilities("${browser}", "${version}", new Platform(PlatformType.Any));
+	c-sharp: `var capabilities = new DesiredCapabilities("${browser}", "${version}", new Platform(PlatformType.Any));
 var driver = new RemoteWebDriver(new Uri("${origin}/wd/hub"), capabilities);
 `,
         python: `from selenium import webdriver
@@ -52,11 +52,11 @@ var options = {
 };
 var client = webdriverio.remote(options);
 `,
-		php: `$web_driver = RemoteWebDriver::create("${origin}/wd/hub",
+	php: `$web_driver = RemoteWebDriver::create("${origin}/wd/hub",
 array("version"=>"${version}", "browserName"=>"${browser}")
   );
 `,
-		ruby: `caps = Selenium::WebDriver::Remote::Capabilities.new
+	ruby: `caps = Selenium::WebDriver::Remote::Capabilities.new
 caps["browserName"] = "${browser}"
 caps["version"] = "${version}"
 
