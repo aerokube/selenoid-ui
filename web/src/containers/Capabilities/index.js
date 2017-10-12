@@ -26,8 +26,8 @@ RemoteWebDriver driver = new RemoteWebDriver(
     URI.create("${origin}/wd/hub").toURL(), 
     capabilities
 );
-`
-	c-sharp: `var capabilities = new DesiredCapabilities("${browser}", "${version}", new Platform(PlatformType.Any));
+`,
+	csharp: `var capabilities = new DesiredCapabilities("${browser}", "${version}", new Platform(PlatformType.Any));
 var driver = new RemoteWebDriver(new Uri("${origin}/wd/hub"), capabilities);
 `,
         python: `from selenium import webdriver
