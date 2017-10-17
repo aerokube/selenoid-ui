@@ -29,7 +29,7 @@ $selected-color: #59a781;
   }
 
   &__lang-selector {
-    height: 200px;
+    height: 160px;
     margin-left: 50px;
     margin-top: 20px;
   }
@@ -47,11 +47,10 @@ pre.hljs, code.hljs {
 
 .capabilities-langs {
   border-left: 1px dashed $border-langs-color;
-  width: 100%;
   height: 100%;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
-  justify-content: center;
 }
 
 .capabilities-lang {
@@ -62,6 +61,7 @@ pre.hljs, code.hljs {
   border-left: 3px solid $border-langs-color;
   cursor: pointer;
   transition: border-color 0.2s ease-out 0s;
+  min-width: 80px;
 
   &_active {
     border-left-color: $selected-color;
