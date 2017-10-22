@@ -1,11 +1,31 @@
 $color-accent: #59a781;
 $color-session-name: #555f6a;
+$small-screen: 720px;
+$big-screen: 1280px;
 
 .sessions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   width: 100%;
+
+  &__count-1 {
+    justify-content: center;
+  }
+
+  &__count-2 {
+    justify-content: center;
+  }
+
+  &__count-3 {
+    @media screen and (max-width: $big-screen) {
+      justify-content: flex-start;
+    }
+
+    @media screen and (min-width: $big-screen + 1) {
+      justify-content: center;
+    }
+  }
 
   &__no-any {
     color: #fff;
@@ -14,6 +34,7 @@ $color-session-name: #555f6a;
     flex-direction: column;
     align-items: center;
     font-size: 1.2em;
+    justify-content: center;
 
     .nosession-any-text {
       margin: 10px;
@@ -23,17 +44,17 @@ $color-session-name: #555f6a;
   .session-container {
     flex: 0 0 auto;
 
-    @media screen and (max-width: 720px) {
+    @media screen and (max-width: $small-screen) {
       flex-basis: 100%;
       max-width: 100%;
     }
 
-    @media screen and (min-width: 721px) and (max-width: 1280px) {
+    @media screen and (min-width: $small-screen + 1) and (max-width: $big-screen) {
       flex-basis: 50%;
       max-width: 50%;
     }
 
-    @media screen and (min-width: 1281px) {
+    @media screen and (min-width: $big-screen + 1) {
       flex-basis: 33.333%;
       max-width: 33.333%;
     }
