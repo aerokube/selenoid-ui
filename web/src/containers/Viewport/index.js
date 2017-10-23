@@ -189,7 +189,7 @@ export default class Viewport extends Component {
     render() {
         const links = [
             {href: "/", title: "STATS", exact: true},
-            {href: "/sessions/", title: "SESSIONS"}
+            {href: "/capabilities/", title: "CAPABILITIES", exact: true},
         ];
 
         const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
@@ -213,11 +213,11 @@ export default class Viewport extends Component {
                     )}/>
 
                     <Route exact={true} path="/" render={() => (
-                        <Capabilities state={state} origin={origin}/>
+                        <Sessions sessions={sessions}/>
                     )}/>
 
-                    <Route exact={true} path="/sessions/" render={() => (
-                        <Sessions sessions={sessions}/>
+                    <Route exact={true} path="/capabilities" render={() => (
+                        <Capabilities state={state} origin={origin}/>
                     )}/>
 
                     <Route path="/sessions/:session" render={({match}) => (
