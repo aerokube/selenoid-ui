@@ -9,15 +9,11 @@ $big-screen: 1280px;
   justify-content: flex-start;
   width: 100%;
 
-  &__count-1 {
+  &_count-0, &_count-1, &_count-2 {
     justify-content: center;
   }
 
-  &__count-2 {
-    justify-content: center;
-  }
-
-  &__count-3 {
+  &_count-3 {
     @media screen and (max-width: $big-screen) {
       justify-content: flex-start;
     }

@@ -9,7 +9,7 @@ const Sessions = (props) => {
     const list = Object.keys(sessions);
 
     return (
-        <div className={`sessions sessions__count-${list.length}`}>
+        <div className={`sessions sessions_count-${list.length}`}>
             {list.length && list.map(session => {
                 return (
                     <div className="session-container">
