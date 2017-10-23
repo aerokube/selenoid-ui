@@ -1,11 +1,27 @@
 $color-accent: #59a781;
 $color-session-name: #555f6a;
+$small-screen: 720px;
+$big-screen: 1280px;
 
 .sessions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
+
+  &_count-0, &_count-1, &_count-2 {
+    justify-content: center;
+  }
+
+  &_count-3 {
+    @media screen and (max-width: $big-screen) {
+      justify-content: flex-start;
+    }
+
+    @media screen and (min-width: $big-screen + 1) {
+      justify-content: center;
+    }
+  }
 
   &__no-any {
     color: #fff;
@@ -14,9 +30,29 @@ $color-session-name: #555f6a;
     flex-direction: column;
     align-items: center;
     font-size: 1.2em;
+    justify-content: center;
 
     .nosession-any-text {
       margin: 10px;
+    }
+  }
+
+  .session-container {
+    flex: 0 0 auto;
+
+    @media screen and (max-width: $small-screen) {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+
+    @media screen and (min-width: $small-screen + 1) and (max-width: $big-screen) {
+      flex-basis: 50%;
+      max-width: 50%;
+    }
+
+    @media screen and (min-width: $big-screen + 1) {
+      flex-basis: 33.333%;
+      max-width: 33.333%;
     }
   }
 
@@ -27,10 +63,8 @@ $color-session-name: #555f6a;
     text-decoration: none;
     box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
     margin: 5px;
-    flex-grow: 1;
     background-color: #222;
     min-width: 350px;
-    max-width: 600px;
 
     .session-link-browser {
       display: flex;
