@@ -101,7 +101,7 @@ export default class Log extends Component {
 }
 
 const Back = () => (
-    <Link className="control" to="/sessions/">
+    <Link className="control" to="/">
         <div title="Back"></div>
     </Link>
 );

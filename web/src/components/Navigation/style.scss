@@ -5,8 +5,9 @@ $menu-border-bottom-color: #353b42;
   flex-wrap: wrap;
   line-height: 30px;
   font-size: 1.0em;
-  min-width: 150px;
   border-bottom: 1px solid $menu-border-bottom-color;
+  letter-spacing: 1px;
+  padding-right: 30px;
 
   &__element {
     color: #fff;

@@ -1,9 +1,42 @@
 $color-accent: #59a781;
 $color-session-name: #555f6a;
+$border-section-color: #353b42;
 $small-screen: 720px;
 $big-screen: 1280px;
 
 .sessions {
+  width: 100%;
+
+  &__section-title {
+    color: #666;
+    position: relative;
+    top: 0;
+    left: 0;
+    padding-left: 5%;
+    border-bottom: 1px solid $border-section-color;
+    width: 95%;
+    letter-spacing: 1px;
+    font-size: 10px;
+    line-height: 20px;
+    margin-bottom: 20px;
+  }
+
+  &__no-any {
+    color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.2em;
+    justify-content: center;
+
+    .nosession-any-text {
+      margin: 10px;
+    }
+  }
+}
+
+.sessions__list {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -20,20 +53,6 @@ $big-screen: 1280px;
 
     @media screen and (min-width: $big-screen + 1) {
       justify-content: center;
-    }
-  }
-
-  &__no-any {
-    color: #fff;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    align-items: center;
-    font-size: 1.2em;
-    justify-content: center;
-
-    .nosession-any-text {
-      margin: 10px;
     }
   }
 

@@ -1,12 +1,8 @@
 $background-color-lighter: #3d444c;
 
 .session {
-  //display: flex;
-  //flex-wrap: wrap;
-  //flex-direction: column;
   height: 100%;
   width: 100%;
-  margin-top: 90px;
 
   &__interactive {
     display: flex;

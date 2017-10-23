@@ -49,7 +49,7 @@ export default class VncCard extends Component {
 }
 
 function Back() {
-    return <Link className="control control_back" to="/sessions/">
+    return <Link className="control control_back" to="/">
         <div title="Back">X</div>
     </Link>;
 }
