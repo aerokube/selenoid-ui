@@ -524,7 +524,7 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community</span><br>
 <span id="revnumber">version latest,</span>
-<span id="revdate">2017-10-23</span>
+<span id="revdate">2017-11-01</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -538,7 +538,7 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_features_list">2. Features list:</a>
 <ul class="sectlevel2">
-<li><a href="#_stats">2.1. Stats</a></li>
+<li><a href="#_stats_and_sessions">2.1. Stats and sessions</a></li>
 <li><a href="#_capabilities">2.2. Capabilities</a></li>
 <li><a href="#_logs_vnc">2.3. LOGS &amp; VNC</a>
 <ul class="sectlevel3">
@@ -759,15 +759,15 @@ But it&#8217;s true only inside of UI container.
 <h2 id="_features_list"><a class="anchor" href="#_features_list"></a>2. Features list:</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_stats"><a class="anchor" href="#_stats"></a>2.1. Stats</h3>
+<h3 id="_stats_and_sessions"><a class="anchor" href="#_stats_and_sessions"></a>2.1. Stats and sessions</h3>
 <div class="paragraph">
 <p>Shows current quota usage, pending browsers and queue.
 Gets updates via SSE, so no need to refresh browser to see what happens.
 It will reconnect automatically on any temp failures.</p>
 </div>
 <div class="paragraph">
-<div class="title">Stats and capabilities</div>
-<p><span class="image"><img src="img/stats.png" alt="ui"></span></p>
+<div class="title">Stats and sessions</div>
+<p><span class="image"><img src="img/stats-sessions.png" alt="ui"></span></p>
 </div>
 </div>
 <div class="sect2">
@@ -776,18 +776,15 @@ It will reconnect automatically on any temp failures.</p>
 <p>You can choose browser from the available browser list and UI will provide
 an example of setup with right capabilities. Examples available for several languages.</p>
 </div>
+<div class="paragraph">
+<div class="title">Capabilities</div>
+<p><span class="image"><img src="img/capabilities.png" alt="ui"></span></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_logs_vnc"><a class="anchor" href="#_logs_vnc"></a>2.3. LOGS &amp; VNC</h3>
 <div class="paragraph">
-<p>If you get browser from selenoid with <code>enableVNC=true</code> capability, you can see list of available screens:</p>
-</div>
-<div class="paragraph">
-<div class="title">VNC list</div>
-<p><span class="image"><img src="img/sessions.png" alt="ui"></span></p>
-</div>
-<div class="paragraph">
-<p>Pay attention to named sessions - you can achieve same result with <code>name=your.test.name</code> capability.</p>
+<p>If you get browser from selenoid with <code>enableVNC=true</code> capability, you can see list of available at stats page. Notice <code>VNC</code> badge.</p>
 </div>
 <div class="paragraph">
 <p>VNC allows to see and interact with browser while log will reflect all driver actions:</p>
@@ -795,6 +792,9 @@ an example of setup with right capabilities. Examples available for several lang
 <div class="paragraph">
 <div class="title">Exact VNC session</div>
 <p><span class="image"><img src="img/session-logs-vnc.png" alt="ui"></span></p>
+</div>
+<div class="paragraph">
+<p>Pay attention to named sessions - you can achieve same result with <code>name=your.test.name</code> capability.</p>
 </div>
 <div class="paragraph">
 <div class="title">Fullscreen mode</div>
@@ -873,7 +873,7 @@ $ docker build -t selenoid-ui:latest .</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2017-10-23 11:40:07 UTC
+Last updated 2017-11-01 00:47:15 UTC
 </div>
 </div>
 <!-- Yandex.Metrika counter -->
