@@ -117,33 +117,33 @@ services:
 
 == Features list:
 
-=== Stats
+=== Stats and sessions
 
 Shows current quota usage, pending browsers and queue.
 Gets updates via SSE, so no need to refresh browser to see what happens.
 It will reconnect automatically on any temp failures.
 
-.Stats and capabilities
-image:img/stats.png[ui]
+.Stats and sessions
+image:img/stats-sessions.png[ui]
 
 === Capabilities
 
 You can choose browser from the available browser list and UI will provide
 an example of setup with right capabilities. Examples available for several languages.
 
+.Capabilities
+image:img/capabilities.png[ui]
+
 === LOGS & VNC
 
-If you get browser from selenoid with `enableVNC=true` capability, you can see list of available screens:
-
-.VNC list
-image:img/sessions.png[ui]
-
-Pay attention to named sessions - you can achieve same result with `name=your.test.name` capability.
+If you get browser from selenoid with `enableVNC=true` capability, you can see list of available at stats page. Notice `VNC` badge.
 
 VNC allows to see and interact with browser while log will reflect all driver actions:
 
 .Exact VNC session
 image:img/session-logs-vnc.png[ui]
+
+Pay attention to named sessions - you can achieve same result with `name=your.test.name` capability.
 
 .Fullscreen mode
 image:img/vnc-fs.png[ui]
