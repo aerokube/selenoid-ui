@@ -26,9 +26,9 @@ before_install:
 install:
   - go get -u github.com/jteeuwen/go-bindata/...
   - go get -u github.com/elazarl/go-bindata-assetfs/...
-  - go get -u github.com/kardianos/govendor
+  - go get -u github.com/golang/dep
   - go get -u github.com/mitchellh/gox # cross compile
-  - govendor sync
+  - dep ensure
   - npm install cross-env
 
 after_success:
