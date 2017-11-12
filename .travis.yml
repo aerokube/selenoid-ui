@@ -21,14 +21,14 @@ before_install:
   - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}/
   - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
   - cd $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
-  - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.9.x bash)"
+  - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.9 bash)"
 
 install:
   - go get -u github.com/jteeuwen/go-bindata/...
   - go get -u github.com/elazarl/go-bindata-assetfs/...
-  - go get -u github.com/kardianos/govendor
+  - go get -u github.com/golang/dep/cmd/dep
   - go get -u github.com/mitchellh/gox # cross compile
-  - govendor sync
+  - dep ensure
   - npm install cross-env
 
 after_success:
