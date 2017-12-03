@@ -192,6 +192,10 @@ export default class Viewport extends Component {
             {href: "/capabilities/", title: "CAPABILITIES", exact: true},
         ];
 
+        /*
+         // can be checked offline with simple
+         const {origin, sse, status, state, browsers = {}, sessions = {}} = require("../../../sse-example.json");
+         */
         const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
 
         return (
