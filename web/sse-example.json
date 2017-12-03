@@ -1,0 +1,262 @@
+{
+  "sse": "ok",
+  "status": "ok",
+  "state": {
+    "total": 5,
+    "used": 3,
+    "queued": 0,
+    "pending": 0,
+    "browsers": {
+      "firefox": {
+        "": {
+          "unknown": {
+            "count": 3,
+            "sessions": [
+              {
+                "id": "dcf57935-ba86-4c33-949a-7a6f34b6150f",
+                "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+                "caps": {
+                  "browserName": "firefox",
+                  "version": "",
+                  "screenResolution": "1920x1080x24",
+                  "enableVNC": true,
+                  "name": "com.aerokube.selenoid.DemoTest",
+                  "timeZone": ""
+                }
+              },
+              {
+                "id": "dcf57935-ba86-4c33-949a-7a6f34b61501",
+                "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+                "caps": {
+                  "browserName": "firefox",
+                  "version": "",
+                  "screenResolution": "1920x1080x24",
+                  "enableVNC": true,
+                  "name": "com.aerokube.selenoid.DemoTest",
+                  "timeZone": ""
+                },
+                "quota": "unknown"
+              },
+              {
+                "id": "dcf57935-ba86-4c33-949a-7a6f34b61503",
+                "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+                "caps": {
+                  "browserName": "firefox",
+                  "version": "",
+                  "screenResolution": "1920x1080x24",
+                  "enableVNC": true,
+                  "name": "com.aerokube.selenoid.DemoTest",
+                  "timeZone": ""
+                },
+                "quota": "unknown"
+              }
+            ]
+          }
+        },
+        "57.0": {}
+      }
+    }
+  },
+  "origin": "http://localhost:4444",
+  "browsers": {
+    "firefox": 3
+  },
+  "sessions": {
+    "dcf57935-ba86-4c33-949a-7a6f34b6150f": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b6150f",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61501": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61501",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61502": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61502",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61503": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61503",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61504": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61504",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61505": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61505",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61506": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61506",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61507": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61507",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61508": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61508",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61509": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61509",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61510": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61510",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61511": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61511",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61512": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61512",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61513": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61513",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    },
+    "dcf57935-ba86-4c33-949a-7a6f34b61514": {
+      "id": "dcf57935-ba86-4c33-949a-7a6f34b61514",
+      "container": "63c12b1d28baedc5ace0b189e40864a4ad7d703bc695be049346c666b20709d9",
+      "caps": {
+        "browserName": "firefox",
+        "version": "",
+        "screenResolution": "1920x1080x24",
+        "enableVNC": true,
+        "name": "com.aerokube.selenoid.DemoTest",
+        "timeZone": ""
+      },
+      "quota": "unknown"
+    }
+  },
+  "errors": []
+}

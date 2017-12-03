@@ -51,7 +51,7 @@
     "react-router-dom": "next",
     "react-select": "1.0.0-rc.4",
     "rx": "^4.1.0",
-    "rx-connect": "^0.6.2",
+    "rx-connect": "0.7.0",
     "rxjs": "^5.4.2",
     "xterm": "~2.8.1"
   },
