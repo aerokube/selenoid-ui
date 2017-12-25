@@ -61,9 +61,7 @@ const schema = {
                                                     "id": {
                                                         "type": "string"
                                                     },
-                                                    "container": {
-                                                        "type": "string"
-                                                    },
+                                                    "container": {},
                                                     "caps": {
                                                         "type": "object",
                                                         "properties": {
