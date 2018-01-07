@@ -24,15 +24,15 @@ mkdir -p ${TRAVIS_BUILD_DIR}/docs/output/${TAGNAME}
 rm -rf ${TRAVIS_BUILD_DIR}/docs/output/${TAGNAME}/*
 
 echo "Copying images"
-cp -R ${TRAVIS_BUILD_DIR}/docs/img ${TRAVIS_BUILD_DIR}/docs/output/${TAGNAME}/img
+cp -Rv ${TRAVIS_BUILD_DIR}/docs/img ${TRAVIS_BUILD_DIR}/docs/output/${TAGNAME}/img
 echo "Copying files to root"
-cp -R ${TRAVIS_BUILD_DIR}/docs/files/ ${TRAVIS_BUILD_DIR}/docs/output
+cp -Rv ${TRAVIS_BUILD_DIR}/docs/files/* ${TRAVIS_BUILD_DIR}/docs/output
 echo "Generating docs"
 docker run -v ${TRAVIS_BUILD_DIR}/docs/:/documents/ --name asciidoc-to-html asciidoctor/docker-asciidoctor asciidoctor -a revnumber=${TAGNAME} -D /documents/output/${TAGNAME} index.adoc
 
 
 echo "Updating gh-pages branch"
-cd ${TRAVIS_BUILD_DIR}/docs/output && git add --all && git commit -m "Publishing to gh-pages"
+cd ${TRAVIS_BUILD_DIR}/docs/output && git add --all && git status && git commit -m "Publishing to gh-pages"
 
 
 git push upstream HEAD:gh-pages
