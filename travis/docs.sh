@@ -25,6 +25,8 @@ rm -rf ${TRAVIS_BUILD_DIR}/docs/output/${TAGNAME}/*
 
 echo "Copying images"
 cp -R ${TRAVIS_BUILD_DIR}/docs/img ${TRAVIS_BUILD_DIR}/docs/output/${TAGNAME}/img
+echo "Copying files to root"
+cp -R ${TRAVIS_BUILD_DIR}/docs/files ${TRAVIS_BUILD_DIR}/docs/output
 echo "Generating docs"
 docker run -v ${TRAVIS_BUILD_DIR}/docs/:/documents/ --name asciidoc-to-html asciidoctor/docker-asciidoctor asciidoctor -a revnumber=${TAGNAME} -D /documents/output/${TAGNAME} index.adoc
 
