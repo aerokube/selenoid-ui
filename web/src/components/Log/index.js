@@ -1,84 +1,97 @@
 import React, {Component} from "react";
-import Terminal from "xterm";
+import {Terminal} from "xterm";
 import {Link} from "react-router-dom";
 import urlTo from "../../util/urlTo";
 import "xterm/dist/xterm.css";
 import "./style.scss";
 import colors from "ansi-256-colors";
+import Rx from "rxjs";
+import {Observable} from "rxjs/Observable";
+import * as fit from 'xterm/lib/addons/fit/fit';
 
 export default class Log extends Component {
-    componentDidMount() {
-        const {session, origin} = this.props;
 
-        Terminal.loadAddon('fit');
+    constructor(props) {
+        super(props);
 
-        this.terminal = new Terminal();
-        this.terminal.open(this.termel, true);
-        this.terminal.fit();
-        this.terminal.writeln(colors.fg.getRgb(2, 3, 4) + "Initialize..." + colors.reset);
-
-        if (origin && session) {
-            this.connect(session);
-        }
+        Terminal.applyAddon(fit);
+        this.term = new Terminal({
+            cursorBlink: false,
+            tabStopWidth: 4,
+            disableStdin: true,
+            enableBold: false,
+            fontSize: 13,
+            lineHeight: 1,
+            theme: {
+                background: '#151515'
+            }
+        });
+        this.props$ = new Rx.BehaviorSubject(props);
     }
 
-    componentDidUpdate(prevProps) {
-        const prevOrigin = prevProps.origin;
-        const {session, origin} = this.props;
+    componentWillReceiveProps(nextProps) {
+        this.props$.next(nextProps);
+    }
 
-        if (origin && session && prevOrigin !== origin) {
-            this.connect(session);
-        }
+
+    componentDidMount() {
+        this.term.open(this.termel);
+
+        this.resize = Rx.Observable.fromEvent(window, 'resize')
+            .debounceTime(100)
+            .startWith({})
+            .do(() => this.term.fit())
+            .subscribe();
+        this.term.writeln(colors.fg.getRgb(2, 3, 4) + "Initialize...\n\r" + colors.reset);
+
+        this.subscription = this.props$
+            .map(({session, origin}) => ({session, origin}))
+            .distinctUntilChanged()
+            .filter(it => it && it.session && it.origin)
+            .map(({session}) => {
+                const wsProxyUrl = urlTo(window.location.href);
+                return `ws://${wsProxyUrl.host}/ws/logs/${session}`;
+            })
+            .switchMap(ws => {
+                return Rx.Observable.defer(() => {
+                    this.term.clear();
+
+                    return Observable.create(observer => {
+                        observer.next(`Connecting to ${ws}...\n\r`);
+
+                        const socket = new WebSocket(ws);
+                        const decoder = new TextDecoder('utf8');
+
+                        socket.binaryType = 'arraybuffer';
+                        socket.onmessage = event => {
+                            if (event) {
+                                observer.next(decoder.decode(event.data) + '\r');
+                            }
+                        };
+
+                        socket.onopen = () => {
+                            observer.next(colors.fg.getRgb(0, 2, 0) + "Connected!\n\r" + colors.reset);
+                        };
+
+                        socket.onclose = () => {
+                            observer.next(colors.fg.getRgb(5, 1, 1) + "Disconnected\n\r" + colors.reset);
+                        };
+
+                        return () => {
+                            socket
+                            && socket.readyState !== this.socket.CLOSED
+                            && socket.close();
+                        };
+                    })
+                })
+            })
+            .do(msg => this.term.write(msg))
+            .subscribe();
     }
 
     componentWillUnmount() {
-        this.socket
-        && this.socket.readyState !== this.socket.CLOSED
-        && this.socket.close();
-    }
-
-    connect(session) {
-        const wsProxyUrl = urlTo(window.location.href);
-        const ws = `ws://${wsProxyUrl.host}/ws/logs/${session}`;
-
-        this.terminal.writeln(`Connecting to ${ws}...`);
-
-        this.socket = new WebSocket(ws);
-        this.socket.binaryType = 'arraybuffer';
-        this.socket.onmessage = event => {
-            const arrayBufferToStr = ab => {
-                let i = 8;
-                let result = '';
-                const view = new DataView(ab);
-
-                while (i < ab.byteLength) {
-                    const code = view.getUint8(i);
-                    if (code === 10) {
-                        result += "\n\r";
-                        i += 9;
-                        continue;
-                    }
-
-                    result += String.fromCharCode(code);
-                    i++;
-                }
-
-                return result;
-            };
-
-            if (event) {
-                const msg = arrayBufferToStr(event.data);
-                this.terminal.write(msg);
-            }
-        };
-
-        this.socket.onopen = () => {
-            this.terminal.writeln(colors.fg.getRgb(0, 2, 0) + "Connected!" + colors.reset);
-        };
-
-        this.socket.onclose = () => {
-            this.terminal.writeln(colors.fg.getRgb(5, 1, 1) + "Disconnected" + colors.reset);
-        };
+        this.resize && this.resize.unsubscribe();
+        this.subscription && this.subscription.unsubscribe();
     }
 
     render() {
@@ -90,9 +103,9 @@ export default class Log extends Component {
                     </div>
 
                     <div className="log-card__content">
-                        <div className="term" ref={ term => {
+                        <div className="term" ref={term => {
                             this.termel = term;
-                        }}></div>
+                        }}/>
                     </div>
                 </div>
             </div>
@@ -102,7 +115,7 @@ export default class Log extends Component {
 
 const Back = () => (
     <Link className="control" to="/">
-        <div title="Back"></div>
+        <div title="Back"/>
     </Link>
 );
 
