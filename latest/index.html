@@ -637,17 +637,28 @@ Remember that gateway address and host address is not the same in this case.
 </table>
 </div>
 </li>
-<li>
-<p>Then run Selenoid UI</p>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>You can also try magic command <code>ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1</code></p>
+</div>
+<div class="paragraph">
+<p>+
+- Then run Selenoid UI</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre>$ docker run -d --name selenoid-ui -p 8080:8080 aerokube/selenoid-ui --selenoid-uri http://${DOCKER_GATEWAY_ADDR}:4444</pre>
 </div>
 </div>
-</li>
-</ul>
-</div>
-</li>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>On the same host you can just <em>link</em> with <strong>selenoid</strong> container:</p>
 <div class="ulist">
@@ -873,7 +884,7 @@ $ docker build -t selenoid-ui:latest .</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2018-03-04 08:48:11 UTC
+Last updated 2018-03-04 20:33:42 UTC
 </div>
 </div>
 <!-- Yandex.Metrika counter -->
