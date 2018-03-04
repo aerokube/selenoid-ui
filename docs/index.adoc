@@ -47,6 +47,8 @@ $ echo $DOCKER_GATEWAY_ADDR
 +
 WARNING: For MacOS you should http://blog.michaelhamrah.com/2014/06/accessing-the-docker-host-server-within-a-container/[determine] interface with help of netstat.
 Remember that gateway address and host address is not the same in this case.
+
+You can also try magic command `ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1`
 +
 - Then run Selenoid UI
 +
