@@ -8,11 +8,13 @@ $background-color-lighter: #3d444c;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
   }
 
   .session-interactive-card {
     max-width: 800px;
-    width: 45%;
+    flex: 1;
+    flex-basis: 45%;
     min-width: 450px;
     margin: 20px;
   }
