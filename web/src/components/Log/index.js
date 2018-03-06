@@ -79,7 +79,7 @@ export default class Log extends Component {
 
                         return () => {
                             socket
-                            && socket.readyState !== this.socket.CLOSED
+                            && socket.readyState !== WebSocket.CLOSED
                             && socket.close();
                         };
                     })
