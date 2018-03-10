@@ -45,9 +45,8 @@ export default class Log extends Component {
         this.term.writeln(colors.fg.getRgb(2, 3, 4) + "Initialize...\n\r" + colors.reset);
 
         this.subscription = this.props$
-            .map(({session, origin}) => ({session, origin}))
-            .distinctUntilChanged()
-            .filter(it => it && it.session && it.origin)
+            .filter(it => it && it.session && it.origin && it.browser)
+            .distinctUntilChanged((prev, {origin}) => prev.origin === origin)
             .map(({session}) => {
                 const wsProxyUrl = urlTo(window.location.href);
                 return `ws://${wsProxyUrl.host}/ws/logs/${session}`;
@@ -85,8 +84,7 @@ export default class Log extends Component {
                     })
                 })
             })
-            .do(msg => this.term.write(msg))
-            .subscribe();
+            .subscribe(msg => this.term.write(msg));
     }
 
     componentWillUnmount() {

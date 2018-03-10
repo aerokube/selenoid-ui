@@ -21,9 +21,9 @@ body {
 }
 
 .viewport {
+  height: 100%;
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
   position: relative;
   padding-top: 60px;
   flex-direction: column;

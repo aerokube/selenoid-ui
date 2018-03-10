@@ -1,4 +1,5 @@
 import React from "react";
+import { BeatLoader } from 'react-spinners';
 
 import "./style.scss";
 
@@ -10,6 +11,11 @@ const SessionInfo = (props) => {
 
             <div className="session-info__main">
                 <div className="session-browser">
+                    <BeatLoader
+                        size={5}
+                        color={'#fff'}
+                        loading={!browser.quota}
+                    />
                     <span className="session-browser__quota">{browser.quota}</span>
                     {browser.quota && (<span className="session-browser__version-separator">/</span>)}
                     <span className="session-browser__name">{browser.caps.browserName}</span>
