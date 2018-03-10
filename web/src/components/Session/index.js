@@ -16,7 +16,7 @@ export default class Session extends Component {
                     browser
                 }}/>
 
-                <div className="session__interactive">
+                {browser && (<div className="session__interactive">
                     <VncContainer {... {
                         origin,
                         session,
@@ -29,8 +29,7 @@ export default class Session extends Component {
                             browser
                         }} />
                     </div>
-
-                </div>
+                </div>)}
             </div>
         );
     }

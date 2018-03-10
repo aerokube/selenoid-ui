@@ -3,6 +3,10 @@ $background-color-lighter: #3d444c;
 .session {
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   &__interactive {
     display: flex;
@@ -37,6 +41,7 @@ $background-color-lighter: #3d444c;
       min-width: 350px;
       border-bottom: 1px dashed $background-color-lighter;
       margin: 15px 0;
+      flex-shrink: 0;
 
       .session-browser {
         line-height: 40px;
