@@ -5,16 +5,16 @@ import (
 	"flag"
 	"fmt"
 	"github.com/aerokube/selenoid-ui/selenoid"
-	"github.com/aerokube/selenoid-ui/sse"
+	"github.com/aerokube/util/sse"
 	"github.com/koding/websocketproxy"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
-	"net/url"
-	"strings"
 )
 
 //go:generate go-bindata-assetfs data/...
@@ -25,8 +25,8 @@ var (
 	period      time.Duration
 
 	version     bool
-	gitRevision string = "HEAD"
-	buildStamp  string = "unknown"
+	gitRevision = "HEAD"
+	buildStamp  = "unknown"
 )
 
 func mux(sse *sse.SseBroker) http.Handler {
@@ -69,39 +69,20 @@ func init() {
 	}
 }
 
-func tick(broker sse.Broker, selenoidUri string, period time.Duration, stop chan os.Signal) {
-	ticker := time.NewTicker(period)
-	for {
-		ctx, cancel := context.WithCancel(context.Background())
-		select {
-		case <-ticker.C:
-			{
-				if broker.HasClients() {
-					res, err := selenoid.Status(ctx, selenoidUri)
-					if err != nil {
-						log.Printf("can't get status (%s)\n", err)
-						broker.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
-						continue
-					}
-					broker.Notify(res)
-				}
-			}
-		case <-stop:
-			{
-				cancel()
-				ticker.Stop()
-				os.Exit(0)
-			}
-		}
-	}
-}
-
 func main() {
 	broker := sse.NewSseBroker()
 	stop := make(chan os.Signal)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 
-	go tick(broker, selenoidUri, period, stop)
+	go sse.Tick(broker, func(ctx context.Context, br sse.Broker) {
+		res, err := selenoid.Status(ctx, selenoidUri)
+		if err != nil {
+			log.Printf("can't get status (%s)\n", err)
+			broker.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
+			return
+		}
+		broker.Notify(res)
+	}, period, stop)
 
 	log.Printf("Listening on %s\n", listen)
 	log.Fatal(http.ListenAndServe(listen, mux(broker)))
