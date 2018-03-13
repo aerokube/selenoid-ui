@@ -9,6 +9,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/aerokube/util"
+  packages = ["sse"]
+  revision = "9a1a16b55d3d055bd148ffdad5ff29415a7bc461"
+
+[[projects]]
+  branch = "master"
   name = "github.com/elazarl/go-bindata-assetfs"
   packages = ["."]
   revision = "30f82fa23fd844bd5bb1e5f216db87fd77b5eb43"
@@ -28,6 +34,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d3b5286b7aceff54bf90b6f57862c95be6cc426fa66c9d6045b68c560e77e6ad"
+  inputs-digest = "735ced668b48cd70c9acdcada4befc6896eee93a37d41bf1e70ac5a029f49b49"
   solver-name = "gps-cdcl"
   solver-version = 1
