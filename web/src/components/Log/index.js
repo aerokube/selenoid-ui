@@ -90,6 +90,7 @@ export default class Log extends Component {
     componentWillUnmount() {
         this.resize && this.resize.unsubscribe();
         this.subscription && this.subscription.unsubscribe();
+        this.term.dispose();
     }
 
     render() {

@@ -124,7 +124,7 @@ module.exports = function (env) {
                 // explicit noVNC babel-loading
                 // more info: https://github.com/joeeames/WebpackFundamentalsCourse/issues/3
                 {
-                    test: /noVNC\/.*\.(js|jsx)$/,
+                    test: /novnc\/.*\.(js|jsx)$/,
                     use: [
                         'babel-loader'
                     ],
