@@ -18,9 +18,16 @@ export default class VncScreen extends Component {
     }
 
     connection(connection) {
-        //FIXME ignore on unmount
         this.props.onUpdateState(connection);
     }
+
+    onVNCDisconnect = () => {
+        this.connection("disconnected");
+    };
+
+    onVNCConnect = () => {
+        this.connection("connected");
+    };
 
     componentDidMount() {
         const {session, origin} = this.props;
@@ -50,6 +57,8 @@ export default class VncScreen extends Component {
     }
 
     componentWillUnmount() {
+        this.rfb && this.rfb.removeEventListener("disconnect", this.onVNCDisconnect);
+        this.rfb && this.rfb.removeEventListener("connect", this.onVNCConnect);
         this.disconnect(this.rfb);
     }
 
@@ -64,18 +73,19 @@ export default class VncScreen extends Component {
             }
         );
 
-        rfb.addEventListener("connect", () => {
-            this.connection("connected");
-        });
-
-        rfb.addEventListener("disconnect", () => {
-            this.connection("disconnected");
-        });
+        rfb.addEventListener("connect", this.onVNCConnect);
+        rfb.addEventListener("disconnect", this.onVNCDisconnect);
 
         rfb.scaleViewport = true;
         rfb.resizeSession = true;
-        // rfb.viewOnly = true;
+        rfb.viewOnly = true;
         return rfb;
+    }
+
+    lock(unlocked) {
+        if (this.rfb) {
+            this.rfb.viewOnly = !unlocked;
+        }
     }
 
     disconnect(rfb) {
@@ -90,7 +100,6 @@ export default class VncScreen extends Component {
                 this.canvas = screen;
                 VncScreen.resizeVnc(this.rfb);
             }}>
-                <button onClick={() => {this.rfb.viewOnly = !this.rfb.viewOnly}}>TOGGLE View Only</button>
             </div>
         );
     }

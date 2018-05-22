@@ -110,6 +110,16 @@ $background-color-lighter: #3d444c;
           }
         }
 
+        &_lock {
+          cursor: pointer;
+          background-color: $color-connecting;
+          color: $color-connecting;
+
+          &:hover {
+            color: #fff;
+          }
+        }
+
         &_disconnected {
           background-color: $color-disconnected;
           height: 30px;
