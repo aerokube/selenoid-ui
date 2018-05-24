@@ -90,16 +90,13 @@ export default class Log extends Component {
     componentWillUnmount() {
         this.resize && this.resize.unsubscribe();
         this.subscription && this.subscription.unsubscribe();
+        this.term.dispose();
     }
 
     render() {
         return (
             <div className="log">
                 <div className="log-card">
-                    <div className="log-card__header">
-                        <Back/>
-                    </div>
-
                     <div className="log-card__content">
                         <div className="term" ref={term => {
                             this.termel = term;
@@ -110,10 +107,4 @@ export default class Log extends Component {
         );
     }
 }
-
-const Back = () => (
-    <Link className="control" to="/">
-        <div title="Back"/>
-    </Link>
-);
 

@@ -19,32 +19,10 @@ $light-font: #999;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
-
-    &__header {
-      height: 30px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      background-color: $background-color-lighter;
-
-      .control {
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        background-color: $color-disconnected;
-        text-align: center;
-        text-decoration: none;
-        margin-left: 10px;
-        color: #fff;
-        transition: background-color 0.5s ease-out 0s;
-        cursor: pointer;
-      }
-    }
 
     &__content {
       width: 100%;
-      height: calc(100% - 30px);
+      height: 100%;
       display: flex;
       flex-direction: column;
       background-color: $term-bg;

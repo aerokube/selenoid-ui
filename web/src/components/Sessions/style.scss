@@ -60,6 +60,7 @@ $big-screen: 1280px;
 
   .session-container {
     flex: 0 0 auto;
+    transition: all 0.5s;
 
     @media screen and (max-width: $small-screen) {
       flex-basis: 100%;

@@ -1,16 +1,15 @@
 import React, {Component} from "react";
-import RFB from "noVNC/core/rfb";
+import RFB from "@novnc/novnc/core/rfb";
 import urlTo from "../../util/urlTo"
 
 import "./style.scss";
 
 export default class VncScreen extends Component {
 
-    static resizeVnc({width = 1, height = 1}, rfb) {
-        if (rfb && rfb.get_display()) {
-            let display = rfb.get_display();
-            display.set_scale(1);
-            display.autoscale(width, height, false);
+    static resizeVnc(rfb) {
+        if (rfb) {
+            rfb.resizeSession = true;
+            rfb.scaleViewport = true;
         }
     }
 
@@ -22,36 +21,25 @@ export default class VncScreen extends Component {
         this.props.onUpdateState(connection);
     }
 
+    onVNCDisconnect = () => {
+        this.connection("disconnected");
+    };
+
+    onVNCConnect = () => {
+        this.connection("connected");
+    };
+
     componentDidMount() {
         const {session, origin} = this.props;
         this.connection('connecting');
 
-        try {
-            this.rfb = new RFB({
-                encrypt: false,
-                target: this.canvas,
-                onFBUComplete: (rfb) => {
-                    // set right size of canvas, based on enclosing element
-                    VncScreen.resizeVnc(this.screen || {}, rfb);
-
-                    rfb.set_onFBUComplete(() => {
-                    })
-                },
-                onUpdateState: (rfb, state) => {
-                    this.connection(state);
-                },
-                onDisconnected: (rfb, reason) => {
-                }
-            });
-        } catch (exc) {
-            console.error("Unable to create RFB client", exc);
-            return;
-        }
 
         if (origin && session) {
             const link = urlTo(window.location.href);
             const port = VncScreen.defaultPort(link);
-            this.rfb.connect(link.hostname, port, "selenoid", `ws/vnc/${session}`);
+
+            this.disconnect(this.rfb);
+            this.rfb = this.createRFB(link, port, session);
         }
     }
 
@@ -63,34 +51,55 @@ export default class VncScreen extends Component {
             const link = urlTo(window.location.href);
             const port = VncScreen.defaultPort(link);
 
-            this.rfb.connect(link.hostname, port, "selenoid", `ws/vnc/${session}`);
+            this.disconnect(this.rfb);
+            this.rfb = this.createRFB(link, port, session);
         }
     }
 
     componentWillUnmount() {
-        if (this.rfb && this.rfb._rfb_connection_state && this.rfb._rfb_connection_state !== 'disconnected') {
-            this.rfb.set_onUpdateState(() => {
-            });
-            this.rfb.set_onDisconnected(() => {
-            });
-            this.rfb.disconnect();
+        this.rfb && this.rfb.removeEventListener("disconnect", this.onVNCDisconnect);
+        this.rfb && this.rfb.removeEventListener("connect", this.onVNCConnect);
+        this.disconnect(this.rfb);
+    }
+
+    createRFB(link, port, session) {
+        const rfb = new RFB(
+            this.canvas,
+            `ws://${link.hostname}:${port}/ws/vnc/${session}`,
+            {
+                credentials: {
+                    password: "selenoid"
+                }
+            }
+        );
+
+        rfb.addEventListener("connect", this.onVNCConnect);
+        rfb.addEventListener("disconnect", this.onVNCDisconnect);
+
+        rfb.scaleViewport = true;
+        rfb.resizeSession = true;
+        rfb.viewOnly = true;
+        return rfb;
+    }
+
+    lock(unlocked) {
+        if (this.rfb) {
+            this.rfb.viewOnly = !unlocked;
+        }
+    }
+
+    disconnect(rfb) {
+        if (rfb && rfb._rfb_connection_state && rfb._rfb_connection_state !== 'disconnected') {
+            rfb.disconnect();
         }
     }
 
     render() {
         return (
-            <div className="vnc-screen" ref={ screen => {
-                const {offsetHeight = 1, offsetWidth = 1} = (screen || {});
-                this.screen = {width: offsetWidth, height: offsetHeight};
-                VncScreen.resizeVnc(this.screen, this.rfb);
+            <div className="vnc-screen" ref={screen => {
+                this.canvas = screen;
+                VncScreen.resizeVnc(this.rfb);
             }}>
-                <canvas ref={
-                    canvas => {
-                        this.canvas = canvas;
-                    }
-                } width="0" height="0">
-                    Canvas not supported.
-                </canvas>
             </div>
         );
     }
