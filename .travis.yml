@@ -8,7 +8,7 @@ services:
 
 script:
   - go generate ./web ./...
-  - ./travis/coverage.sh
+  - go test -race -v -coverprofile=coverage.txt -covermode=atomic ./...
   - gox -os "linux darwin windows" -arch "amd64" -osarch="windows/386"  -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`"
   - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build  -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`" # for docker
 
@@ -21,7 +21,7 @@ before_install:
   - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}/
   - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
   - cd $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
-  - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.9 bash)"
+  - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.10.x bash)"
 
 install:
   - go get -u github.com/jteeuwen/go-bindata/...
