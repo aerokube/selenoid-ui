@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/aerokube/selenoid-ui/selenoid"
@@ -23,6 +24,8 @@ var (
 	listen      string
 	selenoidUri string
 	period      time.Duration
+
+	startTime = time.Now()
 
 	version     bool
 	gitRevision = "HEAD"
@@ -48,7 +51,16 @@ func mux(sse *sse.SseBroker) http.Handler {
 		websocketproxy.NewProxy(ws).ServeHTTP(w, r)
 		log.Printf("[WS_PROXY] [%s] [CLOSED]", r.URL.Path)
 	})
+	mux.HandleFunc("/ping", ping)
 	return mux
+}
+
+func ping(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(struct {
+		Uptime  string `json:"uptime"`
+		Version string `json:"version"`
+	}{time.Since(startTime).String(), gitRevision})
 }
 
 func showVersion() {
