@@ -12,6 +12,7 @@ vendor/*/
 bindata_assetfs.go
 selenoid-ui
 data
+coverage.txt
 
 .DS_Store
 dist/**
