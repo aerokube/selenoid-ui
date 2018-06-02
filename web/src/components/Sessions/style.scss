@@ -33,6 +33,11 @@ $big-screen: 1280px;
     .nosession-any-text {
       margin: 10px;
     }
+
+    // don't show until all sessions are gone
+    &_state-enter-active {
+      display: none;
+    }
   }
 }
 
@@ -75,6 +80,25 @@ $big-screen: 1280px;
     @media screen and (min-width: $big-screen + 1) {
       flex-basis: 33.333%;
       max-width: 33.333%;
+    }
+
+    //TRANSITIONS
+    &_state-enter {
+      opacity: 0.01;
+    }
+
+    &_state-enter-active {
+      opacity: 1;
+      transition: opacity 500ms ease-in;
+    }
+
+    &_state-exit {
+      opacity: 1;
+    }
+
+    &_state-exit-active {
+      opacity: 0.01;
+      transition: opacity 500ms ease-out;
     }
   }
 
