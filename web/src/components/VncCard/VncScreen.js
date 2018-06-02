@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import RFB from "@novnc/novnc/core/rfb";
 import urlTo from "../../util/urlTo"
+import isSecure from "../../util/isSecure"
 
 import "./style.scss";
 
@@ -39,7 +40,7 @@ export default class VncScreen extends Component {
             const port = VncScreen.defaultPort(link);
 
             this.disconnect(this.rfb);
-            this.rfb = this.createRFB(link, port, session);
+            this.rfb = this.createRFB(link, port, session, isSecure(link));
         }
     }
 
@@ -52,7 +53,7 @@ export default class VncScreen extends Component {
             const port = VncScreen.defaultPort(link);
 
             this.disconnect(this.rfb);
-            this.rfb = this.createRFB(link, port, session);
+            this.rfb = this.createRFB(link, port, session, isSecure(link));
         }
     }
 
@@ -62,10 +63,10 @@ export default class VncScreen extends Component {
         this.disconnect(this.rfb);
     }
 
-    createRFB(link, port, session) {
+    createRFB(link, port, session, secure) {
         const rfb = new RFB(
             this.canvas,
-            `ws://${link.hostname}:${port}/ws/vnc/${session}`,
+            `${secure ? 'wss' : 'ws'}://${link.hostname}:${port}/ws/vnc/${session}`,
             {
                 credentials: {
                     password: "selenoid"
