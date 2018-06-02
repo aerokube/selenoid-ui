@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {Terminal} from "xterm";
-import {Link} from "react-router-dom";
 import urlTo from "../../util/urlTo";
+import isSecure from "../../util/isSecure"
+
 import "xterm/dist/xterm.css";
 import "./style.scss";
 import colors from "ansi-256-colors";
@@ -49,7 +50,7 @@ export default class Log extends Component {
             .distinctUntilChanged((prev, {origin}) => prev.origin === origin)
             .map(({session}) => {
                 const wsProxyUrl = urlTo(window.location.href);
-                return `ws://${wsProxyUrl.host}/ws/logs/${session}`;
+                return `${isSecure(wsProxyUrl) ? 'wss' : 'ws'}://${wsProxyUrl.host}/ws/logs/${session}`;
             })
             .switchMap(ws => {
                 return Rx.Observable.defer(() => {
