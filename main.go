@@ -52,6 +52,7 @@ func mux(sse *sse.SseBroker) http.Handler {
 		log.Printf("[WS_PROXY] [%s] [CLOSED]", r.URL.Path)
 	})
 	mux.HandleFunc("/ping", ping)
+	mux.HandleFunc("/status", status)
 	return mux
 }
 
@@ -61,6 +62,20 @@ func ping(w http.ResponseWriter, _ *http.Request) {
 		Uptime  string `json:"uptime"`
 		Version string `json:"version"`
 	}{time.Since(startTime).String(), gitRevision})
+}
+
+func status(w http.ResponseWriter, req *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+
+	status, err := selenoid.Status(req.Context(), selenoidUri)
+	if err != nil {
+		log.Printf("can't get status (%s)\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
+		return
+	}
+
+	w.Write(status)
 }
 
 func showVersion() {
@@ -87,13 +102,13 @@ func main() {
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 
 	go sse.Tick(broker, func(ctx context.Context, br sse.Broker) {
-		res, err := selenoid.Status(ctx, selenoidUri)
+		status, err := selenoid.Status(ctx, selenoidUri)
 		if err != nil {
 			log.Printf("can't get status (%s)\n", err)
-			broker.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
+			br.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
 			return
 		}
-		broker.Notify(res)
+		br.Notify(status)
 	}, period, stop)
 
 	log.Printf("Listening on %s\n", listen)
