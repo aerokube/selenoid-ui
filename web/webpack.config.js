@@ -180,6 +180,7 @@ module.exports = function (env) {
             },
             proxy: {
                 "/events": 'http://localhost:8080/',
+                "/status": 'http://localhost:8080/',
                 "/ws": {
                     target: 'ws://localhost:8080/',
                     ws: true
