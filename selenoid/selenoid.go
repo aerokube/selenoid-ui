@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
-	"bytes"
 )
 
 /* -------------- *
@@ -92,7 +91,6 @@ func httpDo(ctx context.Context, req *http.Request, handle func(*http.Response, 
 
 const (
 	statusPath     = "/status"
-	hubSessionPath = "/wd/hub/session"
 )
 
 func Status(ctx context.Context, baseUrl string) ([]byte, error) {
@@ -116,61 +114,6 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 	}
 
 	return json.Marshal(toUI(state, baseUrl))
-}
-
-func StartSession(ctx context.Context, baseUrl string, caps Caps) (string, error) {
-	browser, _ := json.Marshal(struct {
-		Capabilities Caps `json:"desiredCapabilities"`
-	}{
-		Capabilities: caps,
-	})
-
-	req, err := http.NewRequest("POST", baseUrl+hubSessionPath, bytes.NewReader(browser))
-	if err != nil {
-		return "", err
-	}
-
-	timedCtx, cancel := context.WithTimeout(ctx, 1*time.Minute)
-	defer cancel()
-
-	var state struct {
-		Value struct {
-			SessionId string `json:"sessionId"`
-		} `json:"value"`
-	}
-	if err = httpDo(ctx, req.WithContext(timedCtx), func(resp *http.Response, err error) error {
-		if err != nil {
-			return err
-		}
-		defer resp.Body.Close()
-		return json.NewDecoder(resp.Body).Decode(&state)
-	}); err != nil {
-		return "", err
-	}
-
-	return state.Value.SessionId, nil
-}
-
-func StopSession(ctx context.Context, baseUrl string, sessionId string) error {
-	req, err := http.NewRequest("DELETE", baseUrl+hubSessionPath+"/"+sessionId, nil)
-	if err != nil {
-		return err
-	}
-
-	timedCtx, cancel := context.WithTimeout(ctx, 1*time.Minute)
-	defer cancel()
-
-	if err = httpDo(ctx, req.WithContext(timedCtx), func(resp *http.Response, err error) error {
-		if err != nil {
-			return err
-		}
-		defer resp.Body.Close()
-		return nil
-	}); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func toUI(state State, baseUrl string) result {

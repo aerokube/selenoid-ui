@@ -16,6 +16,7 @@ import (
 	"strings"
 	"syscall"
 	"time"
+	"net/http/httputil"
 )
 
 //go:generate go-bindata-assetfs data/...
@@ -53,8 +54,7 @@ func mux(sse *sse.SseBroker) http.Handler {
 	})
 	mux.HandleFunc("/ping", ping)
 	mux.HandleFunc("/status", status)
-	mux.HandleFunc("/webdriver/session", startSession)
-	mux.HandleFunc("/webdriver/session/", stopSession)
+	mux.HandleFunc("/webdriver/", proxy)
 	return mux
 }
 
@@ -80,42 +80,12 @@ func status(w http.ResponseWriter, req *http.Request) {
 	w.Write(status)
 }
 
-
-func startSession(w http.ResponseWriter, req *http.Request) {
-	if req.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-
-	var caps selenoid.Caps
-	json.NewDecoder(req.Body).Decode(&caps)
-
-	sessionId, err := selenoid.StartSession(req.Context(), selenoidUri, caps)
+func proxy(w http.ResponseWriter, req *http.Request) {
+	u, err := url.Parse(selenoidUri)
 	if err != nil {
-		log.Printf("can't start new session (%s)\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		log.Printf("can't proxy webdriver requests to %v\n", selenoidUri)
 	}
-
-	w.Write([]byte(`{"sessionId": "` + sessionId +`"}`))
-}
-
-
-func stopSession(w http.ResponseWriter, req *http.Request) {
-	if req.Method != "DELETE" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
-	sessionId := strings.TrimPrefix(req.URL.Path, "/webdriver/session/")
-	err := selenoid.StopSession(req.Context(), selenoidUri, sessionId)
-	if err != nil {
-		log.Printf("can't stop session (%s)\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	httputil.NewSingleHostReverseProxy(u).ServeHTTP(w, req)
 }
 
 func showVersion() {
