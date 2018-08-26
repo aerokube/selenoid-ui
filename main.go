@@ -106,13 +106,13 @@ func main() {
 	go sse.Tick(broker, func(ctx context.Context, br sse.Broker) {
 		timedCtx, cancel := context.WithTimeout(ctx, timeout)
 		defer cancel()
-		res, err := selenoid.Status(timedCtx, selenoidUri)
+		status, err := selenoid.Status(timedCtx, selenoidUri)
 		if err != nil {
 			log.Printf("can't get status (%s)\n", err)
 			br.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
 			return
 		}
-		br.Notify(res)
+		br.Notify(status)
 	}, period, stop)
 
 	log.Printf("Listening on %s\n", listen)
