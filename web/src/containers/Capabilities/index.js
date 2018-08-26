@@ -17,10 +17,25 @@ const code = (browser = 'UNKNOWN', version = '', origin = 'http://selenoid-uri:4
 # please note that real accessible selenoid uri can be different        
 browserName: "${browser}"
 version: "${version}"
+enableVNC: true
+enableVideo: false 
+`,
+        curl: `curl -X POST 'http://127.0.0.1:4444/wd/hub/session' -d '{ 
+            "desiredCapabilities":{
+                "browserName":"${browser}", 
+                "version": "${version}", 
+                "platform":"ANY",
+                "enableVNC": true,
+                "name": "this.test.is.launched.by.curl",
+                "sessionTimeout": 30
+            }
+        }'
 `,
         java: `DesiredCapabilities capabilities = new DesiredCapabilities();
 capabilities.setBrowserName("${browser}");
 capabilities.setVersion("${version}");
+capabilities.setCapability("enableVNC", true);
+capabilities.setCapability("enableVideo", false);
 
 RemoteWebDriver driver = new RemoteWebDriver(
     URI.create("${origin}/wd/hub").toURL(), 
@@ -34,7 +49,9 @@ var driver = new RemoteWebDriver(new Uri("${origin}/wd/hub"), capabilities);
         
 capabilities = {
     "browserName": "${browser}",
-    "version": "${version}"
+    "version": "${version}",
+    "enableVNC": True,
+    "enableVideo": False
 }
 
 driver = webdriver.Remote(
@@ -47,7 +64,9 @@ var options = {
     host: '${origin}',
     desiredCapabilities: { 
         browserName: '${browser}', 
-        version: '${version}' 
+        version: '${version}',
+        enableVNC: true,
+        enableVideo: false 
     } 
 };
 var client = webdriverio.remote(options);
@@ -63,6 +82,14 @@ caps["version"] = "${version}"
 driver = Selenium::WebDriver.for(:remote,
   :url => "${origin}/wd/hub",
   :desired_capabilities => caps)
+`,
+	go: `// "github.com/tebeka/selenium"
+caps := selenium.Capabilities{"browserName": "${browser}", "version": "${version}"}
+driver, err := selenium.NewRemote(caps, "${origin}/wd/hub")
+if err != nil {
+	panic("create selenium session: %v\\n", err)
+}
+defer driver.Quit()
 `
 ,
 	go: `// "github.com/tebeka/selenium"
