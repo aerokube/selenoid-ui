@@ -87,15 +87,6 @@ driver = Selenium::WebDriver.for(:remote,
 caps := selenium.Capabilities{"browserName": "${browser}", "version": "${version}"}
 driver, err := selenium.NewRemote(caps, "${origin}/wd/hub")
 if err != nil {
-	panic("create selenium session: %v\\n", err)
-}
-defer driver.Quit()
-`
-,
-	go: `// "github.com/tebeka/selenium"
-caps := selenium.Capabilities{"browserName": "${browser}", "version": "${version}"}
-driver, err := selenium.NewRemote(caps, "${origin}/wd/hub")
-if err != nil {
 	panic("create selenium session: %v\n", err)
 }
 defer driver.Quit()
