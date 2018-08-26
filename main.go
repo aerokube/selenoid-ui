@@ -23,6 +23,7 @@ import (
 var (
 	listen      string
 	selenoidUri string
+	timeout     time.Duration
 	period      time.Duration
 
 	startTime = time.Now()
@@ -71,6 +72,7 @@ func showVersion() {
 func init() {
 	flag.StringVar(&listen, "listen", ":8080", "host and port to listen on")
 	flag.StringVar(&selenoidUri, "selenoid-uri", "http://localhost:4444", "selenoid uri to fetch data from")
+	flag.DurationVar(&timeout, "timeout", 3*time.Second, "response timeout, e.g. 5s or 1m")
 	flag.DurationVar(&period, "period", 5*time.Second, "data refresh period, e.g. 5s or 1m")
 	flag.BoolVar(&version, "version", false, "Show version and exit")
 	flag.Parse()
@@ -87,7 +89,9 @@ func main() {
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 
 	go sse.Tick(broker, func(ctx context.Context, br sse.Broker) {
-		res, err := selenoid.Status(ctx, selenoidUri)
+		timedCtx, cancel := context.WithTimeout(ctx, timeout)
+		defer cancel()
+		res, err := selenoid.Status(timedCtx, selenoidUri)
 		if err != nil {
 			log.Printf("can't get status (%s)\n", err)
 			broker.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"time"
 )
 
 /* -------------- *
@@ -102,11 +101,8 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 		return nil, err
 	}
 
-	timedCtx, cancel := context.WithTimeout(ctx, 1*time.Second)
-	defer cancel()
-
 	var state State
-	if err = httpDo(ctx, req.WithContext(timedCtx), func(resp *http.Response, err error) error {
+	if err = httpDo(ctx, req.WithContext(ctx), func(resp *http.Response, err error) error {
 		if err != nil {
 			return err
 		}
