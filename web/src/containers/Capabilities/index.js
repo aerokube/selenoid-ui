@@ -87,7 +87,7 @@ driver = Selenium::WebDriver.for(:remote,
 caps := selenium.Capabilities{"browserName": "${browser}", "version": "${version}"}
 driver, err := selenium.NewRemote(caps, "${origin}/wd/hub")
 if err != nil {
-	panic("create selenium session: %v\\n", err)
+	panic("create selenium session: %v\n", err)
 }
 defer driver.Quit()
 `
