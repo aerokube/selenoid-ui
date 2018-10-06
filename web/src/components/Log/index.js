@@ -95,8 +95,10 @@ export default class Log extends Component {
     }
 
     render() {
+        const {hidden} = this.props;
+
         return (
-            <div className="log">
+            <div className={`log log_hidden-${hidden}`}>
                 <div className="log-card">
                     <div className="log-card__content">
                         <div className="term" ref={term => {
