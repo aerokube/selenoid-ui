@@ -13,6 +13,7 @@ export default class VncCard extends Component {
     };
 
     handleFullscreen = () => {
+        this.props.onVNCFullscreenChange(!this.state.fullscreen)
         this.setState({fullscreen: !this.state.fullscreen});
     };
 
