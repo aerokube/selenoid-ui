@@ -21,10 +21,11 @@ import (
 //go:generate go-bindata-assetfs data/...
 
 var (
-	listen      string
-	selenoidUri string
-	timeout     time.Duration
-	period      time.Duration
+	listen        string
+	selenoidUri   string
+	allowedOrigin string
+	timeout       time.Duration
+	period        time.Duration
 
 	startTime = time.Now()
 
@@ -49,12 +50,39 @@ func mux(sse *sse.SseBroker) http.Handler {
 		r.URL.Path = strings.TrimPrefix(r.URL.Path, "/ws")
 		ws := &url.URL{Scheme: "ws", Host: parsedUri.Host, Path: r.URL.Path}
 		log.Printf("[WS_PROXY] [/ws%s] [%s]", r.URL.Path, ws)
-		websocketproxy.NewProxy(ws).ServeHTTP(w, r)
+		wsProxy := websocketproxy.NewProxy(ws)
+
+		if allowedOrigin != "" {
+			upgrader := websocketproxy.DefaultUpgrader
+			upgrader.CheckOrigin = checkOrigin(allowedOrigin)
+		}
+		wsProxy.ServeHTTP(w, r)
 		log.Printf("[WS_PROXY] [%s] [CLOSED]", r.URL.Path)
 	})
 	mux.HandleFunc("/ping", ping)
 	mux.HandleFunc("/status", status)
 	return mux
+}
+
+func checkOrigin(allowedOrigins string) func(r *http.Request) bool {
+	if allowedOrigins == "*" {
+		return func(r *http.Request) bool {
+			return true
+		}
+	}
+	originsList := strings.Split(allowedOrigins, ",")
+	return func(r *http.Request) bool {
+		origin := r.Header["Origin"]
+		if len(origin) == 0 {
+			return true
+		}
+		for _, o := range originsList {
+			if origin[0] == o {
+				return true
+			}
+		}
+		return false
+	}
 }
 
 func ping(w http.ResponseWriter, _ *http.Request) {
@@ -87,6 +115,7 @@ func showVersion() {
 func init() {
 	flag.StringVar(&listen, "listen", ":8080", "host and port to listen on")
 	flag.StringVar(&selenoidUri, "selenoid-uri", "http://localhost:4444", "selenoid uri to fetch data from")
+	flag.StringVar(&allowedOrigin, "allowed-origin", "", "comma separated list of allowed Origin headers (use * to allow all)")
 	flag.DurationVar(&timeout, "timeout", 3*time.Second, "response timeout, e.g. 5s or 1m")
 	flag.DurationVar(&period, "period", 5*time.Second, "data refresh period, e.g. 5s or 1m")
 	flag.BoolVar(&version, "version", false, "Show version and exit")
