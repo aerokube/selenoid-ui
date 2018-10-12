@@ -93,3 +93,11 @@ func TestStatusError(t *testing.T) {
 	AssertThat(t, rsp.Body, Is{Not{nil}})
 	AssertThat(t, rsp.Header.Get("Content-Type"), Is{"application/json"})
 }
+
+func TestCheckOrigin(t *testing.T) {
+	r, _ := http.NewRequest(http.MethodGet, "http://localhost", nil)
+	r.Header.Add("Origin", "some-host.example.com")
+	AssertThat(t, checkOrigin("*")(r), Is{true})
+	AssertThat(t, checkOrigin("some-host.example.com,another-host.example.com")(r), Is{true})
+	AssertThat(t, checkOrigin("missing-host.example.com,another-host.example.com")(r), Is{false})
+}
