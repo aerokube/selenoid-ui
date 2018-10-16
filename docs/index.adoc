@@ -136,7 +136,7 @@ an example of setup with right capabilities. Examples available for several lang
 .Capabilities
 image:img/capabilities.png[ui]
 
-=== LOGS & VNC
+=== Logs & VNC
 
 If you get browser from selenoid with `enableVNC=true` capability, you can see list of available at stats page. Notice `VNC` badge.
 
@@ -152,7 +152,7 @@ image:img/vnc-fs.png[ui]
 
 Please refer to http://aerokube.com/selenoid/latest/#_live_browser_screen[selenoid documentation] about VNC usage.
 
-==== LOGS
+==== Logs
 
 You can see logs of docker container for each session even without vnc and name (no any additional action required)
 
@@ -160,3 +160,37 @@ You can see logs of docker container for each session even without vnc and name 
 image:img/logs.png[logs]
 
 include::contributing.adoc[]
+
+=== CLI Flags
+
+The following flags are supported by `selenoid-ui` command:
+
+----
+  -allowed-origin string
+    	comma separated list of allowed Origin headers (use * to allow all)
+  -listen string
+    	host and port to listen on (default ":8080")
+  -period duration
+    	data refresh period, e.g. 5s or 1m (default 5s)
+  -selenoid-uri string
+    	selenoid uri to fetch data from (default "http://localhost:4444")
+  -timeout duration
+    	response timeout, e.g. 5s or 1m (default 3s)
+  -version
+    	Show version and exit
+----
+
+For example:
+```
+$ ./selenoid-ui -allowed-origin "*" -period 500ms
+```
+When using Selenoid UI inside Docker container these flags are passed like the following:
+
+[source,bash,subs="attributes+"]
+----
+# docker run -d --name selenoid-ui                  \
+    -p 8080:8080                                    \
+    --link selenoid                                 \
+    aerokube/selenoid-ui:latest-release             \
+    -allowed-origin "*" -period 100ms
+----
