@@ -529,7 +529,7 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community</span><br>
 <span id="revnumber">version latest,</span>
-<span id="revdate">2018-10-12</span>
+<span id="revdate">2018-10-16</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -545,9 +545,9 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_stats_and_sessions">2.1. Stats and sessions</a></li>
 <li><a href="#_capabilities">2.2. Capabilities</a></li>
-<li><a href="#_logs_vnc">2.3. LOGS &amp; VNC</a>
+<li><a href="#_logs_vnc">2.3. Logs &amp; VNC</a>
 <ul class="sectlevel3">
-<li><a href="#_logs">2.3.1. LOGS</a></li>
+<li><a href="#_logs">2.3.1. Logs</a></li>
 </ul>
 </li>
 </ul>
@@ -555,6 +555,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_contributing_development">3. Contributing &amp; Development</a>
 <ul class="sectlevel2">
 <li><a href="#_documentation">3.1. Documentation</a></li>
+<li><a href="#_cli_flags">3.2. CLI Flags</a></li>
 </ul>
 </li>
 </ul>
@@ -798,7 +799,7 @@ an example of setup with right capabilities. Examples available for several lang
 </div>
 </div>
 <div class="sect2">
-<h3 id="_logs_vnc"><a class="anchor" href="#_logs_vnc"></a>2.3. LOGS &amp; VNC</h3>
+<h3 id="_logs_vnc"><a class="anchor" href="#_logs_vnc"></a>2.3. Logs &amp; VNC</h3>
 <div class="paragraph">
 <p>If you get browser from selenoid with <code>enableVNC=true</code> capability, you can see list of available at stats page. Notice <code>VNC</code> badge.</p>
 </div>
@@ -820,7 +821,7 @@ an example of setup with right capabilities. Examples available for several lang
 <p>Please refer to <a href="http://aerokube.com/selenoid/latest/#_live_browser_screen">selenoid documentation</a> about VNC usage.</p>
 </div>
 <div class="sect3">
-<h4 id="_logs"><a class="anchor" href="#_logs"></a>2.3.1. LOGS</h4>
+<h4 id="_logs"><a class="anchor" href="#_logs"></a>2.3.1. Logs</h4>
 <div class="paragraph">
 <p>You can see logs of docker container for each session even without vnc and name (no any additional action required)</p>
 </div>
@@ -883,13 +884,55 @@ $ docker build -t selenoid-ui:latest .</code></pre>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_cli_flags"><a class="anchor" href="#_cli_flags"></a>3.2. CLI Flags</h3>
+<div class="paragraph">
+<p>The following flags are supported by <code>selenoid-ui</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  -allowed-origin string
+    	comma separated list of allowed Origin headers (use * to allow all)
+  -listen string
+    	host and port to listen on (default ":8080")
+  -period duration
+    	data refresh period, e.g. 5s or 1m (default 5s)
+  -selenoid-uri string
+    	selenoid uri to fetch data from (default "http://localhost:4444")
+  -timeout duration
+    	response timeout, e.g. 5s or 1m (default 3s)
+  -version
+    	Show version and exit</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ ./selenoid-ui -allowed-origin "*" -period 500ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When using Selenoid UI inside Docker container these flags are passed like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash"># docker run -d --name selenoid-ui                  \
+    -p 8080:8080                                    \
+    --link selenoid                                 \
+    aerokube/selenoid-ui:latest-release             \
+    -allowed-origin &quot;*&quot; -period 100ms</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2018-10-12 06:37:55 UTC
+Last updated 2018-10-16 12:41:55 UTC
 </div>
 </div>
 <!-- Yandex.Metrika counter -->
