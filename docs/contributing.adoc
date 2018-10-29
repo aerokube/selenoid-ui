@@ -1,8 +1,6 @@
 == Contributing & Development
 
-1) Ensure you have https://github.com/yarnpkg/yarn[yarn] and https://github.com/elazarl/go-bindata-assetfs[go-bindata-assetfs] installed
-
- - Get deps with `go get -u github.com/golang/dep/cmd/dep && dep ensure`
+1) Ensure you have https://github.com/yarnpkg/yarn[yarn] and https://github.com/elazarl/go-bindata-assetfs[go-bindata-assetfs] installed.
 
 2) Generate static resources:
 
@@ -11,7 +9,7 @@
 $ go generate ./web ./...
 ----
 
-3) Build:
+3) Build (requires Golang 1.11 and above):
 
 [source,bash]
 ----
