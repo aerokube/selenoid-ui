@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import PropTypes from 'prop-types';
 import "./style.scss";
 
-import Quota from "components/Quota";
-import Queue from "components/Queue";
-import Browsers from "components/Browsers";
+import Quota from "../../components/Quota";
+import Queue from "../../components/Queue";
+import Browsers from "../../components/Browsers";
 
 export default class Stats extends Component {
     static propTypes = {

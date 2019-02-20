@@ -1,26 +1,15 @@
-import React, {Component} from "react";
-import {withRouter} from 'react-router-dom'
+import React, { Component } from "react";
+import { withRouter } from 'react-router-dom'
 
 import SessionInfo from "./SessionInfo";
 import VncCard from "../VncCard";
 import Log from "../Log";
 import "./style.scss";
-import {rxConnect, mapActionCreators} from "rx-connect";
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import { mapActionCreators, rxConnect } from "rx-connect";
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 
-@rxConnect(props$ => {
-    const actions = {
-        onVNCFullscreenChange$: new Subject()
-    };
-
-    return Observable.merge(
-        props$,
-        mapActionCreators(actions),
-        actions.onVNCFullscreenChange$.map(isLogHidden => ({isLogHidden}))
-    );
-})
 class Session extends Component {
     componentDidUpdate({browser}) {
         const {history} = this.props;
@@ -59,7 +48,19 @@ class Session extends Component {
     }
 }
 
-export default withRouter(Session);
+export default withRouter(
+  rxConnect(props$ => {
+    const actions = {
+      onVNCFullscreenChange$: new Subject()
+    };
+
+    return Observable.merge(
+      props$,
+      mapActionCreators(actions),
+      actions.onVNCFullscreenChange$.map(isLogHidden => ({isLogHidden}))
+    );
+  })(Session)
+);
 
 function VncContainer({origin, session, browser = {}, onVNCFullscreenChange}) {
     if (browser.caps && !browser.caps.enableVNC) {

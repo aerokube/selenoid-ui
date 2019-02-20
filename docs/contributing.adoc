@@ -1,12 +1,12 @@
 == Contributing & Development
 
-1) Ensure you have https://github.com/yarnpkg/yarn[yarn] and https://github.com/elazarl/go-bindata-assetfs[go-bindata-assetfs] installed.
+1) Ensure you have https://github.com/yarnpkg/yarn[yarn] and https://github.com/rakyll/statik[statik] installed.
 
 2) Generate static resources:
 
 [source,bash]
 ----
-$ go generate ./web ./...
+$ go generate ./ui ./...
 ----
 
 3) Build (requires Golang 1.11 and above):
