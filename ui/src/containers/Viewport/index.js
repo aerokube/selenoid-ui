@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {HashRouter, Route} from "react-router-dom"
+import {HashRouter as Router, Route} from "react-router-dom";
 import {validate} from "jsonschema";
 import {rxConnect} from "rx-connect";
 import {Observable} from 'rxjs/Observable';
@@ -124,14 +124,13 @@ class Viewport extends Component {
             {href: "/capabilities/", title: "CAPABILITIES", exact: true},
         ];
 
-        /*
-         // can be checked offline with simple*/
+         // can be checked offline with simple
          // const {origin, sse, status, state, browsers = {}, sessions = {}} = require("../../sse-example.json");
 
         const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
 
         return (
-            <HashRouter>
+            <Router>
                 <div className="viewport">
                     <div className="top-bar">
                         <div className="connection-status">
@@ -162,7 +161,7 @@ class Viewport extends Component {
                                  browser={sessions[match.params.session]}/>
                     )}/>
                 </div>
-            </HashRouter>
+            </Router>
         );
     }
 }
