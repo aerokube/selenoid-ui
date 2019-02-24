@@ -1,15 +1,16 @@
 sudo: required
 language: node_js
 node_js:
- - "7"
+ - "11"
 
 services:
   - docker
 
 script:
   - export GO111MODULE="on"
-  - go generate ./web ./...
+  - go generate ./ui ./...
   - go test -race -v -coverprofile=coverage.txt -covermode=atomic ./...
+  - yarn --cwd ui test
   - gox -os "linux darwin windows" -arch "amd64" -osarch="windows/386"  -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`"
   - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build  -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`" # for docker
 
@@ -25,8 +26,7 @@ before_install:
   - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.11.x bash)"
 
 install:
-  - go get -u github.com/jteeuwen/go-bindata/...
-  - go get -u github.com/elazarl/go-bindata-assetfs/...
+  - go get -u github.com/rakyll/statik
   - go get -u github.com/mitchellh/gox # cross compile
   - npm install cross-env
 
@@ -71,4 +71,4 @@ deploy:
 cache:
   yarn: true
   directories:
-    - web/node_modules
+    - ui/node_modules

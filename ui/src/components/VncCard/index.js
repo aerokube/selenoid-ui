@@ -71,6 +71,7 @@ function Connection(props) {
     const {connection} = props;
     const icon = function (connection) {
         switch (connection) {
+            default:
             case 'disconnected': {
                 return 'dripicons-document-delete';
             }

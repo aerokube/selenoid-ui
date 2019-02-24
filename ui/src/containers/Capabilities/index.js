@@ -5,7 +5,6 @@ import Highlight from "react-highlight";
 import "highlight.js/styles/sunburst.css";
 
 import Select from "react-select";
-import "react-select/dist/react-select.css";
 
 import "./select.scss";
 import "./style.scss";

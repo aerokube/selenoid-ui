@@ -8,6 +8,7 @@ import (
 	"github.com/aerokube/selenoid-ui/selenoid"
 	"github.com/aerokube/util/sse"
 	"github.com/koding/websocketproxy"
+	"github.com/rakyll/statik/fs"
 	"log"
 	"net/http"
 	"net/url"
@@ -16,9 +17,11 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	_ "github.com/aerokube/selenoid-ui/statik"
 )
 
-//go:generate go-bindata-assetfs data/...
+//go:generate statik -src=./ui/build
 
 var (
 	listen        string
@@ -36,9 +39,12 @@ var (
 
 func mux(sse *sse.SseBroker) http.Handler {
 	mux := http.NewServeMux()
-	static := http.FileServer(assetFS())
 
-	mux.Handle("/", static)
+	if statik, err := fs.New(); err == nil {
+		static := http.FileServer(statik)
+		mux.Handle("/", static)
+	}
+
 	mux.Handle("/events", sse)
 
 	parsedUri, err := url.Parse(selenoidUri)

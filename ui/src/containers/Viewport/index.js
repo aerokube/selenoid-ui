@@ -11,13 +11,12 @@ import 'event-source-polyfill'
 
 import "./style.scss";
 
-import Navigation from "components/Navigation";
-import Stats from "containers/Stats";
-import Capabilities from "containers/Capabilities";
-import Status from "components/Status";
-import Sessions from "components/Sessions";
-import Session from "components/Session";
-
+import Navigation from "../../components/Navigation";
+import Stats from "../../containers/Stats";
+import Capabilities from "../../containers/Capabilities";
+import Status from "../../components/Status";
+import Sessions from "../../components/Sessions";
+import Session from "../../components/Session";
 
 const schema = {
     "id": "/selenoid",
@@ -117,88 +116,17 @@ const schema = {
     ]
 };
 
-@rxConnect(() => {
-    const open = new Subject();
-    const errors = new Subject();
 
-    return Observable
-        .merge(
-            Observable
-                .defer(() => Observable.create(observer => {
-                    const sse = new EventSource('/events');
-                    sse.onmessage = x => observer.next(x.data);
-                    sse.onerror = x => observer.error(x);
-                    sse.onopen = x => open.next(x);
-
-                    return () => {
-                        sse.close();
-                    };
-                }))
-                .map(event => JSON.parse(event))
-                .merge(Observable.ajax('/status').map(result => result.response))
-                .map(event => {
-                    if (event.errors && event.errors.length) {
-                        return {
-                            ...event,
-                            status: "error",
-                        };
-                    }
-
-                    const validation = validate(event.state, schema);
-                    if (validation.valid) {
-                        return {
-                            ...event,
-                            status: "ok",
-                        };
-                    } else {
-                        console.error("Wrong data from backend", validation.errors);
-                        return {
-                            ...event,
-                            status: "error",
-                            errors: validation.errors
-                        };
-                    }
-                })
-                .retryWhen(errs => errs
-                    .do(err => {
-                        console.error('Error connecting to SSE', err.target ? err.target.url : err);
-                        errors.next({
-                            sse: "error",
-                            status: "unknown"
-                        });
-                    })
-                    .delayWhen(val => Observable.timer(3000))
-                ),
-            Observable.merge(
-                open.map(event => ({
-                    sse: "ok"
-                })),
-                errors
-            )
-        )
-        .startWith({
-            sse: "unknown",
-            status: "unknown",
-            state: {
-                "total": 0,
-                "used": 0,
-                "queued": 0,
-                "pending": 0,
-                "browsers": {}
-            }
-        });
-})
-export default class Viewport extends Component {
+class Viewport extends Component {
     render() {
         const links = [
             {href: "/", title: "STATS", exact: true},
             {href: "/capabilities/", title: "CAPABILITIES", exact: true},
         ];
 
-        /*
          // can be checked offline with simple
-         const {origin, sse, status, state, browsers = {}, sessions = {}} = require("../../../sse-example.json");
-         */
+         // const {origin, sse, status, state, browsers = {}, sessions = {}} = require("../../sse-example.json");
+
         const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
 
         return (
@@ -237,3 +165,81 @@ export default class Viewport extends Component {
         );
     }
 }
+
+export default rxConnect(() => {
+    const open = new Subject();
+    const errors = new Subject();
+
+    return Observable
+      .merge(
+        Observable
+          .defer(() => Observable.create(observer => {
+              const sse = new EventSource('/events');
+              sse.onmessage = x => observer.next(x.data);
+              sse.onerror = x => observer.error(x);
+              sse.onopen = x => open.next(x);
+
+              return () => {
+                  sse.close();
+              };
+          }))
+          .map(event => JSON.parse(event))
+          .merge(Observable.ajax('/status').map(result => result.response))
+          .map(event => {
+              if (!event) {
+                  return {
+                      status: "error"
+                  };
+              }
+
+              if (event.errors && event.errors.length) {
+                  return {
+                      ...event,
+                      status: "error",
+                  };
+              }
+
+              const validation = validate(event.state, schema);
+              if (validation.valid) {
+                  return {
+                      ...event,
+                      status: "ok",
+                  };
+              } else {
+                  console.error("Wrong data from backend", validation.errors);
+                  return {
+                      ...event,
+                      status: "error",
+                      errors: validation.errors
+                  };
+              }
+          })
+          .retryWhen(errs => errs
+            .do(err => {
+                console.error('Error connecting to SSE', err.target ? err.target.url : err);
+                errors.next({
+                    sse: "error",
+                    status: "unknown"
+                });
+            })
+            .delayWhen(val => Observable.timer(3000))
+          ),
+        Observable.merge(
+          open.map(event => ({
+              sse: "ok"
+          })),
+          errors
+        )
+      )
+      .startWith({
+          sse: "unknown",
+          status: "unknown",
+          state: {
+              "total": 0,
+              "used": 0,
+              "queued": 0,
+              "pending": 0,
+              "browsers": {}
+          }
+      });
+})(Viewport)
