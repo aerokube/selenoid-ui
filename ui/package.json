@@ -23,7 +23,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@novnc|highlight.js|xterm)/)'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -34,5 +34,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "eventsourcemock": "^2.0.0",
+    "http-proxy-middleware": "^0.19.1",
+    "mutationobserver-shim": "^0.3.3"
+  }
 }
