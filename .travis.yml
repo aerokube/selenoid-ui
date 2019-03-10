@@ -1,7 +1,7 @@
 sudo: required
 language: node_js
 node_js:
- - "11"
+ - "11.10.1"
 
 services:
   - docker
