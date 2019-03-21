@@ -1,4 +1,4 @@
-= Selenoid UI. Reference Guide
+= Selenoid UI
 :revdate: {docdate}
 :toc: left
 :toclevels: 3
@@ -9,6 +9,7 @@
 :icons: font
 :source-highlighter: coderay
 :docinfo: shared
+:favicon: img/favicon.png
 
 This reference for version: _{revnumber}_
 
