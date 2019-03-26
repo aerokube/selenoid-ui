@@ -2,7 +2,7 @@ $border-stats-color: #3d444c;
 $border-section-color: #353b42;
 
 .stats {
-  height: 200px;
+  min-height: 200px;
   width: 100%;
   min-width: 360px;
   display: flex;
