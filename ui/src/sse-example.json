@@ -59,7 +59,16 @@
   },
   "origin": "http://localhost:4444",
   "browsers": {
-    "firefox": 3
+    "firefox": 3,
+    "chrome": 3,
+    "opera": 3,
+    "internet explorer": 3,
+    "edge": 4,
+    "edge45": 1,
+    "edge13": 4,
+    "MY_Personal_WEB_BROWSER": 2,
+    "Seems_that_its_YANDEX_BROWSER": 4,
+    "Thats unknown Br0vvSeR": 1
   },
   "sessions": {
     "dcf57935-ba86-4c33-949a-7a6f34b6150f": {
