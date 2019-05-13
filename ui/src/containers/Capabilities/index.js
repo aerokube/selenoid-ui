@@ -26,7 +26,7 @@ enableVideo: false
                 "platform":"ANY",
                 "enableVNC": true,
                 "name": "this.test.is.launched.by.curl",
-                "sessionTimeout": 30
+                "sessionTimeout": "30s"
             }
         }'
 `,
