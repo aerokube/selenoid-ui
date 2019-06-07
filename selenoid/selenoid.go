@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"encoding/xml"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -143,6 +144,36 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 	return json.Marshal(toUI(state, baseUrl))
 }
 
+
+func Video(ctx context.Context, baseUrl string, video string) ([]byte, error) {
+	var respVideo []byte
+
+	req, err := http.NewRequest("GET", baseUrl+videosPath+"/"+video, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = httpDo(ctx, req.WithContext(ctx), func(resp *http.Response, err error) error {
+		if err != nil {
+			return err
+		}
+		defer resp.Body.Close()
+
+		respVideo,err = ioutil.ReadAll(resp.Body)
+
+		if err != nil {
+			return err
+		}
+
+		return nil
+
+	}); err != nil {
+		return nil, err
+	}
+
+
+	return respVideo, err
+}
 
 func toUI(state State, baseUrl string) result {
 	browsers := make(map[string]int)

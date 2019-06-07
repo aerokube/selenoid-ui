@@ -21,7 +21,7 @@ import (
 	_ "github.com/aerokube/selenoid-ui/statik"
 )
 
-//go:generate statik -src=./ui/build
+//go:generate statik -src=./ui/build -f
 
 var (
 	listen        string
@@ -65,8 +65,11 @@ func mux(sse *sse.SseBroker) http.Handler {
 		wsProxy.ServeHTTP(w, r)
 		log.Printf("[WS_PROXY] [%s] [CLOSED]", r.URL.Path)
 	})
+
+
 	mux.HandleFunc("/ping", ping)
 	mux.HandleFunc("/status", status)
+	mux.HandleFunc("/video/", video)
 	return mux
 }
 
@@ -111,6 +114,23 @@ func status(w http.ResponseWriter, req *http.Request) {
 	}
 
 	w.Write(status)
+}
+
+func video(w http.ResponseWriter, req *http.Request) {
+	req.URL.Path = strings.TrimPrefix(req.URL.Path, "/video")
+	log.Printf("[PROXY_VID] [/video%s]", req.URL.Path)
+
+
+	vid, err := selenoid.Video(req.Context(), selenoidUri,req.URL.Path)
+	if err != nil {
+		log.Printf("can't get status (%s)\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{ "errors": [{"msg": "can't get video"}] }`))
+		return
+	}
+
+
+	w.Write(vid)
 }
 
 func showVersion() {

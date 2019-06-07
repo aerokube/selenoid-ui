@@ -5,7 +5,7 @@ import "./style.scss";
 
 
 const Videos = (props) => {
-    const {videos, origin} = props;
+    const {videos} = props;
     const list = Object.keys(videos);
 
     return (
@@ -16,7 +16,7 @@ const Videos = (props) => {
             </div>
             <TransitionGroup className={`videos__list videos__list_count-${list.length}`}>
                 {list.length && list.map(video => {
-                        let src = origin+"/video/"+videos[video];
+                        let src = "/video/"+videos[video];
                         return (
 
                             <CSSTransition
@@ -50,7 +50,7 @@ const Videos = (props) => {
                 >
                     <div className="videos__no-any">
                         <div title="No any" className="icon dripicons-hourglass"/>
-                        <div className="nosession-any-text">NO Videos YET :'(</div>
+                        <div className="nosession-any-text">NO VIDEOS YET :'(</div>
                     </div>
                 </CSSTransition>
             )}

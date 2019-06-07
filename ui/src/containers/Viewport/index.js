@@ -164,7 +164,7 @@ class Viewport extends Component {
                     )}/>
 
                     <Route exact={true} path="/videos" render={() => (
-                        <Videos videos={state.videos.name} origin={origin}/>
+                        <Videos videos={state.videos.name} />
                     )}/>
 
                     <Route exact={true} path="/capabilities" render={() => (
