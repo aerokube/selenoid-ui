@@ -1,0 +1,48 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  $bg-color: #30363C;
+
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0 auto;
+  background: $bg-color;
+  font-weight: 100;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+.viewport {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: relative;
+  padding-top: 60px;
+  flex-direction: column;
+}
+
+.top-bar {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  z-index: 1;
+  display: inline-flex;
+  justify-content: space-between;
+}
+
+$menu-border-bottom-color: #353b42;
+
+.connection-status {
+  display: flex;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-bottom: 1px solid $menu-border-bottom-color;
+}

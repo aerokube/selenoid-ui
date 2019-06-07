@@ -1,0 +1,162 @@
+$color-accent: #59a781;
+$color-session-name: #555f6a;
+$border-section-color: #353b42;
+$small-screen: 900px;
+$big-screen: 1280px;
+
+.sessions {
+  width: 100%;
+
+  &__section-title {
+    color: #666;
+    position: relative;
+    top: 0;
+    left: 0;
+    padding-left: 5%;
+    border-bottom: 1px solid $border-section-color;
+    width: 95%;
+    letter-spacing: 1px;
+    font-size: 10px;
+    line-height: 20px;
+    margin-bottom: 20px;
+  }
+
+  &__no-any {
+    color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.2em;
+    justify-content: center;
+
+    .nosession-any-text {
+      margin: 10px;
+    }
+
+    // don't show until all sessions are gone
+    &_state-enter-active {
+      display: none;
+    }
+  }
+}
+
+.sessions__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: 94%;
+  padding-left: 3%;
+  padding-right: 3%;
+
+  &_count-0, &_count-1, &_count-2 {
+    justify-content: center;
+  }
+
+  &_count-3 {
+    @media screen and (max-width: $big-screen) {
+      justify-content: flex-start;
+    }
+
+    @media screen and (min-width: $big-screen + 1) {
+      justify-content: center;
+    }
+  }
+
+  .session-container {
+    flex: 0 0 auto;
+    transition: all 0.5s;
+
+    @media screen and (max-width: $small-screen) {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+
+    @media screen and (min-width: $small-screen + 1) and (max-width: $big-screen) {
+      flex-basis: 50%;
+      max-width: 50%;
+    }
+
+    @media screen and (min-width: $big-screen + 1) {
+      flex-basis: 33.333%;
+      max-width: 33.333%;
+    }
+
+    //TRANSITIONS
+    &_state-enter {
+      opacity: 0.01;
+    }
+
+    &_state-enter-active {
+      opacity: 1;
+      transition: opacity 500ms ease-in;
+    }
+
+    &_state-exit {
+      opacity: 1;
+    }
+
+    &_state-exit-active {
+      opacity: 0.01;
+      transition: opacity 500ms ease-out;
+    }
+  }
+
+  .session-link {
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
+    margin: 5px;
+    background-color: #222;
+    min-width: 350px;
+
+    .session-link-browser {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 60px;
+
+      &__name {
+        text-transform: uppercase;
+        font-weight: 200;
+        margin-left: 20px;
+        margin-right: 10px;
+      }
+
+      &__version {
+        font-weight: 300;
+        text-transform: lowercase;
+        font-size: 0.8em;
+        color: #999;
+      }
+    }
+
+    .session-cap {
+      height: 30px;
+      line-height: 30px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
+      margin: -3px 5px 0;
+      padding: 0 5px;
+
+      &__name {
+        overflow: hidden;
+        background-color: $color-session-name;
+        font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
+
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 13px;
+      }
+
+      &__with-vnc {
+        background-color: $color-accent;
+        padding: 0 10px;
+        line-height: 30px;
+        width: 45px;
+        text-align: center;
+      }
+    }
+  }
+}

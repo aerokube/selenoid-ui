@@ -1,0 +1,74 @@
+sudo: required
+language: node_js
+node_js:
+ - "11.10.1"
+
+services:
+  - docker
+
+script:
+  - export GO111MODULE="on"
+  - go generate ./ui ./...
+  - go test -race -v -coverprofile=coverage.txt -covermode=atomic ./...
+  - yarn --cwd ui test
+  - gox -os "linux darwin windows" -arch "amd64" -osarch="windows/386"  -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`"
+  - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build  -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`" # for docker
+
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH=$HOME/.yarn/bin:$PATH
+  - export GOPATH=$HOME/gopath
+  - export PATH=$HOME/gopath/bin:$PATH
+  - mkdir -p $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
+  - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}/
+  - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
+  - cd $HOME/gopath/src/github.com/${TRAVIS_REPO_SLUG}
+  - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.11.x bash)"
+
+install:
+  - go get -u github.com/rakyll/statik
+  - go get -u github.com/mitchellh/gox # cross compile
+  - npm install cross-env
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+
+deploy:
+  - provider: releases
+    api-key: $GITHUB_TOKEN
+    file_glob: true
+    file: dist/*
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: script
+    script: travis/docker-push.sh latest
+    skip_cleanup: true
+    on:
+      branch: master
+  - provider: script
+    script: travis/docker-push.sh $TRAVIS_TAG
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: script
+    script: travis/docker-push.sh latest-release
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: script
+    script: travis/docs.sh latest
+    skip_cleanup: true
+    on:
+      branch: master
+  - provider: script
+    script: travis/docs.sh $TRAVIS_TAG
+    skip_cleanup: true
+    on:
+      tags: true
+
+
+cache:
+  yarn: true
+  directories:
+    - ui/node_modules

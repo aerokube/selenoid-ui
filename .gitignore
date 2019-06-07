@@ -1,0 +1,18 @@
+# IDEA Files
+.idea
+*.iml
+*.ipr
+*.iws
+
+node_modules
+node
+etc
+
+statik
+selenoid-ui
+data
+coverage.txt
+
+.DS_Store
+dist/**
+docs/output/*.html

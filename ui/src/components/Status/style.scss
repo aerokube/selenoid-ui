@@ -1,0 +1,47 @@
+.status {
+  position: relative;
+  text-transform: uppercase;
+  color: #fff;
+  margin-left: 50px;
+}
+
+.indicator {
+  line-height: 30px;
+  transition: color 0.5s ease-out 0s;
+
+  &:before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border: 1px solid #fff;
+    position: absolute;
+    border-radius: 50%;
+    left: -20px;
+    top: 8px;
+    transition: border-color 0.5s ease-out 0s, box-shadow 0.5s ease-out 0.2s
+  }
+
+  &_ok {
+    $main-green: #59a781;
+    $bright-green: #57ff76;
+
+    color: $main-green;
+
+    &:before {
+      box-shadow: 0 0 10px $bright-green;
+      border-color: $main-green;
+    }
+  }
+
+  &_error {
+    $bright-red: #fc4022;
+    $main-red: #cf3223;
+
+    color: $main-red;
+
+    &:before {
+      box-shadow: 0 0 10px $bright-red;
+      border-color: $main-red;
+    }
+  }
+}
