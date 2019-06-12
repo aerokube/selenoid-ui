@@ -113,7 +113,8 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 	}
 
 	var state State
-	var videos Videos
+
+	videos := &Videos{Name:nil}
 
 	if err = httpDo(ctx, req.WithContext(ctx), func(resp *http.Response, err error) error {
 		if err != nil {
@@ -125,21 +126,22 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 		return nil, err
 	}
 
+
 	req, err = http.NewRequest("GET", baseUrl+videosPath, nil)
 	if err != nil {
 		return nil, err
 	}
-	if err = httpDo(ctx, req.WithContext(ctx), func(resp *http.Response, err error) error {
+
+	//if no video enpoint just return empty
+	_ = httpDo(ctx, req.WithContext(ctx), func(resp *http.Response, err error) error {
 		if err != nil {
 			return err
 		}
 		defer resp.Body.Close()
 		return xml.NewDecoder(resp.Body).Decode(&videos)
-	}); err != nil {
-		return nil, err
-	}
+	})
 
-	state.Videos = videos
+	state.Videos = *videos
 
 	return json.Marshal(toUI(state, baseUrl))
 }

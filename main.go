@@ -123,7 +123,7 @@ func video(w http.ResponseWriter, req *http.Request) {
 
 	vid, err := selenoid.Video(req.Context(), selenoidUri,req.URL.Path)
 	if err != nil {
-		log.Printf("can't get status (%s)\n", err)
+		log.Printf("can't get video status (%s)\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(`{ "errors": [{"msg": "can't get video"}] }`))
 		return
