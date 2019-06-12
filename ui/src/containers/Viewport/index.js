@@ -111,12 +111,9 @@ const schema = {
             "type": "object",
             "properties": {
                 "name": {
-                    "type": "array",
+                    "type": ["array","null"],
                 }
-            },
-            "required": [
-                "name"
-            ]
+            }
         }
     },
     "required": [
@@ -164,7 +161,7 @@ class Viewport extends Component {
                     )}/>
 
                     <Route exact={true} path="/videos" render={() => (
-                        <Videos videos={state.videos.name} />
+                        <Videos videos={state.videos.name || []} />
                     )}/>
 
                     <Route exact={true} path="/capabilities" render={() => (
