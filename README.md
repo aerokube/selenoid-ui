@@ -41,4 +41,3 @@ Can be found at http://aerokube.com/selenoid-ui/latest/
 This UI is designed for debug purposes for one selenoid node. If you need
 monitoring capabilities on more than one selenoid, consider
 to use [external monitoring system](http://aerokube.com/selenoid/latest/#_sending_statistics_to_external_systems)
-

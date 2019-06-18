@@ -21,7 +21,7 @@ import (
 	_ "github.com/aerokube/selenoid-ui/statik"
 )
 
-//go:generate statik -src=./ui/build -f
+//go:generate statik -src=./ui/build
 
 var (
 	listen        string
