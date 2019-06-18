@@ -40,7 +40,13 @@ func mockStatus(w http.ResponseWriter, _ *http.Request) {
         
       }
     }
-  }
+  },
+	"videos": {
+		"name": [
+			"test_chrome.mp4"
+			]
+		}
+
 }`))
 }
 
@@ -82,6 +88,16 @@ func TestStatus(t *testing.T) {
 	AssertThat(t, rsp, Code{http.StatusOK})
 	AssertThat(t, rsp.Body, Is{Not{nil}})
 	AssertThat(t, rsp.Header.Get("Content-Type"), Is{"application/json"})
+}
+
+func TestVideo(t *testing.T) {
+	selenoid := httptest.NewServer(selenoidApi())
+	selenoidUri = selenoid.URL
+	rsp, err := http.Get(withUrl("/video/test_chrome.mp4"))
+
+	AssertThat(t, err, Is{nil})
+	AssertThat(t, rsp, Code{http.StatusOK})
+	AssertThat(t, rsp.Body, Is{Not{nil}})
 }
 
 func TestStatusError(t *testing.T) {
