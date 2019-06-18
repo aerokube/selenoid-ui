@@ -147,21 +147,26 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 }
 
 
-func Video(ctx context.Context, baseUrl string, video string) ([]byte, error) {
+func Video(orig *http.Request, baseUrl string, video string) ([]byte,*http.Response,error) {
 	var respVideo []byte
+
+	r:= &http.Response{}
 
 	req, err := http.NewRequest("GET", baseUrl+videosPath+"/"+video, nil)
 	if err != nil {
-		return nil, err
+		return nil, r,err
 	}
 
-	if err = httpDo(ctx, req.WithContext(ctx), func(resp *http.Response, err error) error {
+	req.Header = orig.Header
+
+	if err = httpDo(orig.Context(), req.WithContext(orig.Context()), func(resp *http.Response, err error) error {
 		if err != nil {
 			return err
 		}
 		defer resp.Body.Close()
 
 		respVideo,err = ioutil.ReadAll(resp.Body)
+		r = resp
 
 		if err != nil {
 			return err
@@ -170,11 +175,11 @@ func Video(ctx context.Context, baseUrl string, video string) ([]byte, error) {
 		return nil
 
 	}); err != nil {
-		return nil, err
+		return nil,r ,err
 	}
 
 
-	return respVideo, err
+	return respVideo, r,err
 }
 
 func toUI(state State, baseUrl string) result {

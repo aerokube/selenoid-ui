@@ -117,11 +117,12 @@ func status(w http.ResponseWriter, req *http.Request) {
 }
 
 func video(w http.ResponseWriter, req *http.Request) {
+
 	req.URL.Path = strings.TrimPrefix(req.URL.Path, "/video")
-	log.Printf("[PROXY_VID] [/video%s]", req.URL.Path)
+	log.Printf("[PROXY_VID] [/video/%s]", req.URL.Path)
 
 
-	vid, err := selenoid.Video(req.Context(), selenoidUri,req.URL.Path)
+	vid, r, err := selenoid.Video(req , selenoidUri,req.URL.Path)
 	if err != nil {
 		log.Printf("can't get video status (%s)\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -129,6 +130,9 @@ func video(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	for name, values := range r.Header {
+		w.Header()[name] = values
+	}
 
 	w.Write(vid)
 }
