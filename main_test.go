@@ -101,14 +101,12 @@ func TestVideo(t *testing.T) {
 }
 
 func TestVideoFail(t *testing.T) {
-	selenoids := httptest.NewServer(selenoidApi())
 	selenoidUri = "http://localhost:1"
+	rsp, err :=  http.Get(withUrl("/video/test_chrome1.mp4"))
 
-	rsp, err := selenoids.Client().Get(withUrl("/video/test_chrome1.mp4"))
-
-	AssertThat(t, err, Not{nil})
+	AssertThat(t, err, Is{nil})
 	AssertThat(t, rsp, Code{http.StatusInternalServerError})
-	AssertThat(t, rsp.Body, Is{Is{nil}})
+	AssertThat(t, rsp.Body, Not{Is{nil}})
 }
 
 func TestStatusError(t *testing.T) {
