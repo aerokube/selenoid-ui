@@ -130,7 +130,6 @@ class Viewport extends Component {
     render() {
         const links = [
             {href: "/", title: "STATS", exact: true},
-            {href: "/videos", title: "VIDEOS", exact: true},
             {href: "/capabilities/", title: "CAPABILITIES", exact: true},
         ];
 
@@ -138,6 +137,11 @@ class Viewport extends Component {
          // const {origin, sse, status, state, browsers = {}, sessions = {}} = require("../../sse-example.json");
 
         const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
+
+        if (state.videos.name.length > 0){
+            links.push({href: "/videos", title: "VIDEOS", exact: true})
+        }
+
         return (
             <Router>
                 <div className="viewport">
