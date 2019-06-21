@@ -41,12 +41,8 @@ func mockStatus(w http.ResponseWriter, _ *http.Request) {
       }
     }
   },
-	"videos": {
-		"name": [
-			"test_chrome.mp4"
-			]
-		}
-
+	"videos":["test_chrome.mp4"]
+	
 }`))
 }
 

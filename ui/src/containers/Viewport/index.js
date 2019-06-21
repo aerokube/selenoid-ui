@@ -108,12 +108,7 @@ const schema = {
             },
         },
         "videos": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": ["array","null"],
-                }
-            }
+            "type": ["array","null"],
         }
     },
     "required": [
@@ -138,7 +133,7 @@ class Viewport extends Component {
 
         const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
 
-        if (state.videos.name){
+        if (state.videos){
             links.push({href: "/videos", title: "VIDEOS", exact: true})
         }
 
@@ -165,7 +160,7 @@ class Viewport extends Component {
                     )}/>
 
                     <Route exact={true} path="/videos" render={() => (
-                        <Videos videos={state.videos.name || []} />
+                        <Videos videos={state.videos || []} />
                     )}/>
 
                     <Route exact={true} path="/capabilities" render={() => (
@@ -256,7 +251,7 @@ export default rxConnect(() => {
               "used": 0,
               "queued": 0,
               "pending": 0,
-              "videos": {"name":[]},
+              "videos": [],
               "browsers": {}
           }
       });

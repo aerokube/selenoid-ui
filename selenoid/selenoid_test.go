@@ -77,11 +77,7 @@ func selenoidState() State {
       "44.0": {}
     }
   },
-	"videos": {
-		"name": [
-			"test_chrome.mp4"
-			]
-	}
+	"videos":["test_chrome.mp4"]
 }`), &state)
 	return state
 }

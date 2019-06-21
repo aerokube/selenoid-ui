@@ -3,7 +3,6 @@ package selenoid
 import (
 	"context"
 	"encoding/json"
-	"encoding/xml"
 	"io/ioutil"
 	"net/http"
 )
@@ -51,14 +50,11 @@ type State struct {
 	Queued   int      `json:"queued"`
 	Pending  int      `json:"pending"`
 	Browsers Browsers `json:"browsers"`
-	Videos Videos `json:"videos"`
+	Videos 	 Videos   `json:"videos"`
 }
 
-// Videos -
-type Videos struct{
-	Name []string	`xml:"a" json:"name"`
-}
 
+type Videos []string
 
 
 /* ------^------- *
@@ -103,7 +99,7 @@ func httpDo(ctx context.Context, req *http.Request, handle func(*http.Response, 
 
 const (
 	statusPath = "/status"
-	videosPath = "/video?json"
+	videosPath = "/video"
 )
 
 func Status(ctx context.Context, baseUrl string) ([]byte, error) {
@@ -113,8 +109,7 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 	}
 
 	var state State
-
-	videos := &Videos{Name:nil}
+	var videos []string
 
 	if err = httpDo(ctx, req.WithContext(ctx), func(resp *http.Response, err error) error {
 		if err != nil {
@@ -127,7 +122,7 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 	}
 
 
-	req, err = http.NewRequest("GET", baseUrl+videosPath, nil)
+	req, err = http.NewRequest("GET", baseUrl+videosPath+"?json", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -137,10 +132,10 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 			return err
 		}
 		defer resp.Body.Close()
-		return xml.NewDecoder(resp.Body).Decode(&videos)
+		return json.NewDecoder(resp.Body).Decode(&videos)
 	})
 
-	state.Videos = *videos
+	state.Videos = videos
 
 	return json.Marshal(toUI(state, baseUrl))
 }
