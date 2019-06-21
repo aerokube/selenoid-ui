@@ -31,7 +31,7 @@ const Videos = (props) => {
                                          title={videos[video]}>
                                         {videos[video]}
                                     </div>
-                                    <video controls preload="auto">
+                                    <video controls preload="none">
                                         <source src={src} type="video/mp4" />
                                     </video>
                                 </div>

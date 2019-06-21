@@ -103,7 +103,7 @@ func httpDo(ctx context.Context, req *http.Request, handle func(*http.Response, 
 
 const (
 	statusPath = "/status"
-	videosPath = "/video"
+	videosPath = "/video?json"
 )
 
 func Status(ctx context.Context, baseUrl string) ([]byte, error) {
@@ -132,7 +132,6 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 		return nil, err
 	}
 
-	//if no video enpoint just return empty
 	_ = httpDo(ctx, req.WithContext(ctx), func(resp *http.Response, err error) error {
 		if err != nil {
 			return err

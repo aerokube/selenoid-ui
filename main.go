@@ -119,7 +119,7 @@ func status(w http.ResponseWriter, req *http.Request) {
 func video(w http.ResponseWriter, req *http.Request) {
 
 	req.URL.Path = strings.TrimPrefix(req.URL.Path, "/video")
-	log.Printf("[PROXY_VID] [/video/%s]", req.URL.Path)
+	log.Printf("[PROXY_VID] [/video%s]", req.URL.Path)
 
 
 	vid, r, err := selenoid.Video(req , selenoidUri,req.URL.Path)
