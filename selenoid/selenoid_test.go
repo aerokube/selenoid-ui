@@ -98,14 +98,3 @@ func TestStatus(t *testing.T) {
 	AssertThat(t, err, Is{nil})
 	AssertThat(t, data, Not{nil})
 }
-func TestVideo(t *testing.T) {
-	srv := httptest.NewServer(selenoidApi())
-	req, err := http.NewRequest("GET", "http://localhost"+videosPath+"/"+"test_chrome.mp4", nil)
-	if err != nil {
-		return
-	}
-	data, resp, err := Video(req, srv.URL,"test_chrome.mp4")
-	AssertThat(t, err, Is{nil})
-	AssertThat(t, data, Not{nil})
-	AssertThat(t, resp, Not{nil})
-}

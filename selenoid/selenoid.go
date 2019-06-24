@@ -3,7 +3,6 @@ package selenoid
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -50,12 +49,10 @@ type State struct {
 	Queued   int      `json:"queued"`
 	Pending  int      `json:"pending"`
 	Browsers Browsers `json:"browsers"`
-	Videos 	 Videos   `json:"videos"`
+	Videos   Videos   `json:"videos"`
 }
 
-
 type Videos []string
-
 
 /* ------^------- *
  * SELENOID TYPES *
@@ -121,7 +118,6 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 		return nil, err
 	}
 
-
 	req, err = http.NewRequest("GET", baseUrl+videosPath+"?json", nil)
 	if err != nil {
 		return nil, err
@@ -138,42 +134,6 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 	state.Videos = videos
 
 	return json.Marshal(toUI(state, baseUrl))
-}
-
-
-func Video(orig *http.Request, baseUrl string, video string) ([]byte,*http.Response,error) {
-	var respVideo []byte
-
-	r:= &http.Response{}
-
-	req, err := http.NewRequest("GET", baseUrl+videosPath+"/"+video, nil)
-	if err != nil {
-		return nil, r,err
-	}
-
-	req.Header = orig.Header
-
-	if err = httpDo(orig.Context(), req.WithContext(orig.Context()), func(resp *http.Response, err error) error {
-		if err != nil {
-			return err
-		}
-		defer resp.Body.Close()
-
-		respVideo,err = ioutil.ReadAll(resp.Body)
-		r = resp
-
-		if err != nil {
-			return err
-		}
-
-		return nil
-
-	}); err != nil {
-		return nil,r ,err
-	}
-
-
-	return respVideo, r,err
 }
 
 func toUI(state State, baseUrl string) result {
