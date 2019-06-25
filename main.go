@@ -128,7 +128,6 @@ func video(w http.ResponseWriter, req *http.Request) {
 	proxy := &httputil.ReverseProxy{
 		Director: func(r *http.Request) {
 			r.URL = u
-
 		},
 	}
 
