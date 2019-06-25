@@ -11,6 +11,7 @@ import (
 	"github.com/rakyll/statik/fs"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"os/signal"
@@ -66,7 +67,6 @@ func mux(sse *sse.SseBroker) http.Handler {
 		log.Printf("[WS_PROXY] [%s] [CLOSED]", r.URL.Path)
 	})
 
-
 	mux.HandleFunc("/ping", ping)
 	mux.HandleFunc("/status", status)
 	mux.HandleFunc("/video/", video)
@@ -119,10 +119,21 @@ func status(w http.ResponseWriter, req *http.Request) {
 func video(w http.ResponseWriter, req *http.Request) {
 
 	req.URL.Path = strings.TrimPrefix(req.URL.Path, "/video")
-	log.Printf("[PROXY_VID] [/video%s]", req.URL.Path)
+	log.Printf("[VIDEO_PROXY] [/video%s]", req.URL.Path)
 
+	u, _ := url.Parse(selenoidUri + "/video" + req.URL.Path)
 
-	vid, r, err := selenoid.Video(req , selenoidUri,req.URL.Path)
+	req, err := http.NewRequest("GET", u.RequestURI(), nil)
+
+	proxy := &httputil.ReverseProxy{
+		Director: func(r *http.Request) {
+			r.URL = u
+
+		},
+	}
+
+	proxy.ServeHTTP(w, req)
+
 	if err != nil {
 		log.Printf("can't get video status (%s)\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -130,11 +141,6 @@ func video(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	for name, values := range r.Header {
-		w.Header()[name] = values
-	}
-
-	w.Write(vid)
 }
 
 func showVersion() {
