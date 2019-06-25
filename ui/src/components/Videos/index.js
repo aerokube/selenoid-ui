@@ -16,7 +16,7 @@ const Videos = (props) => {
             </div>
             <TransitionGroup className={`videos__list videos__list_count-${list.length}`}>
                 {list.length && list.map(video => {
-                        let src = "/video/"+videos[video];
+                        const src = "/video/"+videos[video];
                         return (
 
                             <CSSTransition

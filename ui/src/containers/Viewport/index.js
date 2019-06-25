@@ -133,7 +133,7 @@ class Viewport extends Component {
 
         const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
 
-        if (state.videos){
+        if (state.videos) {
             links.push({href: "/videos", title: "VIDEOS", exact: true})
         }
 
