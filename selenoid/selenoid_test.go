@@ -76,7 +76,8 @@ func selenoidState() State {
     "opera": {
       "44.0": {}
     }
-  }
+  },
+	"videos":["test_chrome.mp4"]
 }`), &state)
 	return state
 }

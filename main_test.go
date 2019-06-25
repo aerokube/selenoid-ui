@@ -26,7 +26,6 @@ func selenoidApi() http.Handler {
 	mux.HandleFunc("/status", mockStatus)
 	return mux
 }
-
 func mockStatus(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(`{
@@ -40,8 +39,21 @@ func mockStatus(w http.ResponseWriter, _ *http.Request) {
         
       }
     }
-  }
+  },
+	"videos":["test_chrome.mp4"]
+	
 }`))
+}
+
+func videoApi() http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/video/", mockVideo)
+	return mux
+}
+
+func mockVideo(w http.ResponseWriter, _ *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("im a video"))
 }
 
 func withUrl(path string) string {
@@ -82,6 +94,27 @@ func TestStatus(t *testing.T) {
 	AssertThat(t, rsp, Code{http.StatusOK})
 	AssertThat(t, rsp.Body, Is{Not{nil}})
 	AssertThat(t, rsp.Header.Get("Content-Type"), Is{"application/json"})
+}
+
+func TestVideo(t *testing.T) {
+
+	video := httptest.NewServer(videoApi())
+	selenoidUri = video.URL
+	rsp, err := http.Get(withUrl("/video/test_chrome.mp4"))
+
+	AssertThat(t, err, Is{nil})
+	AssertThat(t, rsp, Code{http.StatusOK})
+	AssertThat(t, rsp.Body, Is{Not{nil}})
+}
+
+func TestVideoFail(t *testing.T) {
+
+	selenoidUri = "http://localhost:1"
+	rsp, err := http.Get(withUrl("/video/test_chrome1.mp4"))
+
+	AssertThat(t, err, Is{nil})
+	AssertThat(t, rsp, Code{http.StatusBadGateway})
+	AssertThat(t, rsp.Body, Not{Is{nil}})
 }
 
 func TestStatusError(t *testing.T) {

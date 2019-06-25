@@ -17,6 +17,7 @@ import Capabilities from "../../containers/Capabilities";
 import Status from "../../components/Status";
 import Sessions from "../../components/Sessions";
 import Session from "../../components/Session";
+import Videos from "../../components/Videos";
 
 const schema = {
     "id": "/selenoid",
@@ -106,6 +107,9 @@ const schema = {
                 },
             },
         },
+        "videos": {
+            "type": ["array","null"],
+        }
     },
     "required": [
         "total",
@@ -129,6 +133,10 @@ class Viewport extends Component {
 
         const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
 
+        if (state.videos) {
+            links.push({href: "/videos", title: "VIDEOS", exact: true})
+        }
+
         return (
             <Router>
                 <div className="viewport">
@@ -149,6 +157,10 @@ class Viewport extends Component {
 
                     <Route exact={true} path="/" render={() => (
                         <Sessions sessions={sessions}/>
+                    )}/>
+
+                    <Route exact={true} path="/videos" render={() => (
+                        <Videos videos={state.videos || []} />
                     )}/>
 
                     <Route exact={true} path="/capabilities" render={() => (
@@ -239,6 +251,7 @@ export default rxConnect(() => {
               "used": 0,
               "queued": 0,
               "pending": 0,
+              "videos": [],
               "browsers": {}
           }
       });
