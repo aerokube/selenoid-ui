@@ -1,0 +1,41 @@
+{
+  "android": {
+    "default": "8.1",
+    "versions": {
+      "6.0": {
+        "image": "registry.aerokube.com/selenoid/android:6.0",
+        "port": "4444"
+      },
+      "8.1": {
+        "image": "registry.aerokube.com/selenoid/android:8.1",
+        "port": "4444"
+      }
+    }
+  },
+  "chrome": {
+    "default": "66.0",
+    "versions": {
+      "66.0": {
+        "image": "selenoid/chrome:66.0",
+        "port": "4444",
+        "path": "/",
+        "tmpfs": {
+          "/tmp": "size=128m"
+        }
+      }
+    }
+  },
+    "firefox": {
+      "default": "60.0",
+      "versions": {
+        "60.0": {
+          "image": "selenoid/firefox:60.0",
+          "port": "4444",
+          "path": "/wd/hub",
+          "tmpfs": {
+            "/tmp": "size=128m"
+          }
+        }
+      }
+    }
+}

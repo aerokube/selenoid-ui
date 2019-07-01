@@ -70,6 +70,7 @@ func mux(sse *sse.SseBroker) http.Handler {
 	mux.HandleFunc("/ping", ping)
 	mux.HandleFunc("/status", status)
 	mux.HandleFunc("/video/", video)
+	mux.HandleFunc("/webdriver/", webdriver)
 	return mux
 }
 
@@ -141,6 +142,22 @@ func video(w http.ResponseWriter, req *http.Request) {
 	}
 
 }
+
+func webdriver(w http.ResponseWriter, req *http.Request) {
+	u, err := url.Parse(selenoidUri)
+	if err != nil {
+		log.Printf("can't proxy webdriver requests to %v: %v", selenoidUri, err)
+	}
+	u.Path = "/wd/hub/session"
+	proxy := &httputil.ReverseProxy{
+		Director: func(r *http.Request) {
+			r.URL = u
+		},
+	}
+	proxy.ServeHTTP(w, req)
+
+}
+
 
 func showVersion() {
 	fmt.Printf("Git Revision: %s\n", gitRevision)
