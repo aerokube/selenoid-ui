@@ -6,9 +6,20 @@ import Viewport from "./containers/Viewport";
 const theme = createMuiTheme({
     palette: {
       primary: {
-        main: '#4a9722'
+        main: '#59a781',
       }
-    }
+    },
+    overrides: {
+      MuiButton: {
+        outlined: {
+          '&$disabled': {
+            color: '#818386',
+            borderColor: '#818386',
+          },
+        },
+
+      },
+    },
   },
 )
 class App extends Component {
@@ -22,3 +33,4 @@ class App extends Component {
 }
 
 export default App;
+

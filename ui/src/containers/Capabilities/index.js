@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 import {Observable} from 'rxjs/Observable';
 import { of } from 'rxjs';
@@ -10,6 +11,7 @@ import "highlight.js/styles/sunburst.css";
 
 import Select from "react-select";
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import "./select.scss";
 import "./style.scss";
@@ -98,11 +100,15 @@ defer driver.Quit()
     }
 };
 
-export default class Capabilities extends Component {
+class Capabilities extends Component {
     static propTypes = {
         state: PropTypes.object,
         origin: PropTypes.string
     };
+
+    state = {
+      disabled: false,
+    }
 
     onBrowserChange = (browser) => {
         this.setState({browser})
@@ -118,6 +124,7 @@ export default class Capabilities extends Component {
         "desiredCapabilities": {
           "browserName": `${browser.name}`,
           "version": `${browser.version}`,
+          "enableVNC": true,
         }
       })
       const session = Observable.ajax({
@@ -127,20 +134,31 @@ export default class Capabilities extends Component {
       })
 
       session.subscribe(
-        res => console.error(res),
-        err => console.error(err),
+        res => {
+          console.error(res);
+          this.setState({disabled: false})
+          this.props.history.push(`/sessions/${res.response.sessionId}`)
+        },
+        err => {
+          console.error(err)
+          this.setState({disabled: false})
+        },
       );
     }
 
     createSession = () => {
         if (this.state && this.state.browser) {
             const {browser} = this.state
+            this.setState({disabled: true})
 
             const newJson = JSON.stringify({
               "capabilities": {
                 "alwaysMatch": {
                   "browserName": `${browser.name}`,
                   "browserVersion": `${browser.version}`,
+                  "selenoid:options" : {
+                    "enableVNC": true,
+                  },
                 },
                 "firstMatch": []
               }
@@ -156,6 +174,9 @@ export default class Capabilities extends Component {
                 res => {
                   if (res.status !== 200) {
                     this.requestOldJson()
+                  } else {
+                    this.setState({disabled: false})
+                    this.props.history.push(`/sessions/${res.response.sessionId}`)
                   }
                 },
                 err => {
@@ -200,8 +221,8 @@ export default class Capabilities extends Component {
                         clearable={false}
                         noResultsText="No information about browsers"
                     />
-                    <Button variant="outlined" color="primary" onClick={this.createSession}>
-                      Create Session
+                    <Button variant="outlined" color="primary" onClick={this.createSession} disabled={this.state.disabled}>
+                      {this.state.disabled ? <CircularProgress size={24} color='#818386' /> : <>Create Session</>}
                     </Button>
                 </div>
                 <Highlight className={lang}>
@@ -227,3 +248,5 @@ export default class Capabilities extends Component {
         );
     }
 }
+
+export default withRouter(Capabilities)
