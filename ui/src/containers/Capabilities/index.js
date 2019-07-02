@@ -1,10 +1,15 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
+import {Observable} from 'rxjs/Observable';
+import { of } from 'rxjs';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/dom/ajax';
 
 import Highlight from "react-highlight";
 import "highlight.js/styles/sunburst.css";
 
 import Select from "react-select";
+import Button from '@material-ui/core/Button';
 
 import "./select.scss";
 import "./style.scss";
@@ -107,6 +112,60 @@ export default class Capabilities extends Component {
         this.setState({lang})
     };
 
+    requestOldJson = () => {
+      const {browser} = this.state
+      const oldJson = JSON.stringify({
+        "desiredCapabilities": {
+          "browserName": `${browser.name}`,
+          "version": `${browser.version}`,
+        }
+      })
+      const session = Observable.ajax({
+        url: '/webdriver/',
+        method: 'POST',
+        body: oldJson,
+      })
+
+      session.subscribe(
+        res => console.error(res),
+        err => console.error(err),
+      );
+    }
+
+    createSession = () => {
+        if (this.state && this.state.browser) {
+            const {browser} = this.state
+
+            const newJson = JSON.stringify({
+              "capabilities": {
+                "alwaysMatch": {
+                  "browserName": `${browser.name}`,
+                  "browserVersion": `${browser.version}`,
+                },
+                "firstMatch": []
+              }
+            })
+
+            const session = Observable.ajax({
+              url: '/webdriver/',
+              method: 'POST',
+              body: newJson,
+            })
+
+            session.subscribe(
+                res => {
+                  if (res.status !== 200) {
+                    this.requestOldJson()
+                  }
+                },
+                err => {
+                  console.error(err)
+                  this.requestOldJson()
+                }
+            );
+        }
+    }
+
     render() {
         const {state = {browsers: {}}, origin} = this.props;
         const {browser = {}, lang = 'yaml'} = this.state || {};
@@ -133,7 +192,7 @@ export default class Capabilities extends Component {
                     <Select
                         className="capabilities-browser-select"
                         name="browsers"
-                        value={value}
+                        value={browsers.find(item => item.value === value )}
                         options={browsers}
                         onChange={this.onBrowserChange}
                         placeholder="Select browser..."
@@ -141,6 +200,9 @@ export default class Capabilities extends Component {
                         clearable={false}
                         noResultsText="No information about browsers"
                     />
+                    <Button variant="outlined" color="primary" onClick={this.createSession}>
+                      Create Session
+                    </Button>
                 </div>
                 <Highlight className={lang}>
                     {caps[lang]}
