@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 import {Observable} from 'rxjs/Observable';
-import { of } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/dom/ajax';
 
@@ -118,70 +117,47 @@ class Capabilities extends Component {
         this.setState({lang})
     };
 
-    requestOldJson = () => {
-      const {browser} = this.state
-      const oldJson = JSON.stringify({
-        "desiredCapabilities": {
-          "browserName": `${browser.name}`,
-          "version": `${browser.version}`,
-          "enableVNC": true,
-        }
-      })
-      const session = Observable.ajax({
-        url: '/webdriver/',
-        method: 'POST',
-        body: oldJson,
-      })
-
-      session.subscribe(
-        res => {
-          console.error(res);
-          this.setState({disabled: false})
-          this.props.history.push(`/sessions/${res.response.sessionId}`)
-        },
-        err => {
-          console.error(err)
-          this.setState({disabled: false})
-        },
-      );
-    }
-
     createSession = () => {
         if (this.state && this.state.browser) {
             const {browser} = this.state
             this.setState({disabled: true})
 
             const newJson = JSON.stringify({
-              "capabilities": {
-                "alwaysMatch": {
-                  "browserName": `${browser.name}`,
-                  "browserVersion": `${browser.version}`,
-                  "selenoid:options" : {
-                    "enableVNC": true,
-                  },
+              "desiredCapabilities":
+                {
+                  "browserName":`${browser.name}`,
+                  "version":`${browser.version}`,
+                  "enableVNC":true,
+                  "sessionTimeout": "60m"
                 },
-                "firstMatch": []
-              }
+                "capabilities":
+                  {
+                    "alwaysMatch":
+                      {
+                        "browserName": `${browser.name}`,
+                        "browserVersion": `${browser.version}`,
+                        "selenoid:options" : {"enableVNC": true, "sessionTimeout": "60m"}
+                      },
+                    "firstMatch": []
+                  }
             })
 
             const session = Observable.ajax({
-              url: '/webdriver/',
+              url: '/wd/hub/session',
               method: 'POST',
               body: newJson,
             })
 
             session.subscribe(
                 res => {
-                  if (res.status !== 200) {
-                    this.requestOldJson()
-                  } else {
+                  if (res.status === 200) {
                     this.setState({disabled: false})
                     this.props.history.push(`/sessions/${res.response.sessionId}`)
                   }
                 },
                 err => {
+                  this.setState({disabled: false})
                   console.error(err)
-                  this.requestOldJson()
                 }
             );
         }
