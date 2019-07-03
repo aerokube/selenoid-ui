@@ -1,13 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import {Link} from "react-router-dom";
-
-import "./style.scss";
-
+import DeleteIcon from '@material-ui/icons/Delete'
 import {CSSTransition, TransitionGroup,} from 'react-transition-group';
+import { Observable } from "rxjs";
+import "./style.scss";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Sessions = (props) => {
     const {sessions = {}} = props;
     const list = Object.keys(sessions);
+
+    const [loading, setLoading] = useState([])
+
+    const deleteSession = (e, id) => {
+      e.preventDefault()
+      e.stopPropagation()
+      setLoading([...loading, id])
+
+      const deleteSession = Observable.ajax({
+        url: `/wd/hub/session/${id}`,
+        method: 'DELETE',
+      })
+
+      deleteSession.subscribe(
+        res => {
+          console.log(res)
+        },
+        err => {
+          console.error(err)
+          const index = loading.indexOf(id);
+          if (index !== -1) {
+            loading.splice(index, 1);
+          }
+          setLoading(loading)
+        }
+      );
+    }
 
     return (
         <div className="sessions">
@@ -39,6 +67,14 @@ const Sessions = (props) => {
                                                 {sessions[session].caps.name}
                                             </div>
                                         )}
+                                        <button className="session__delete" onClick={(e) => deleteSession(e, session)}>
+                                          { loading.indexOf(session) > -1 ?
+                                            <CircularProgress size={18} color="secondary" />
+                                            :
+                                            <DeleteIcon htmlColor="#fff" fontSize="small" />
+                                          }
+                                        </button>
+
                                         {sessions[session].caps.enableVNC && (
                                             <div className="session-cap session-cap__with-vnc">
                                                 <span title="With VNC" className="icon dripicons-device-desktop"/>&nbsp;

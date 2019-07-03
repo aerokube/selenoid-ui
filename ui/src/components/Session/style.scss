@@ -95,4 +95,23 @@ $background-color-lighter: #3d444c;
       }
     }
   }
+  &__delete {
+    margin-top: -3px;
+    margin-left: auto;
+    margin-right: 0px;
+    height: 30px;
+    width: 25px;
+    background: rgb(232, 120, 111);
+    border: none;
+    padding: 3px;
+    text-align: center;
+    cursor: pointer;
+
+    .MuiCircularProgress-colorSecondary {
+       margin: 0 auto;
+    }
+    &:focus {
+      outline: none!important;
+    }
+  }
 }
