@@ -26,10 +26,10 @@
     }
   },
     "firefox": {
-      "default": "60.0",
+      "default": "63.0",
       "versions": {
-        "60.0": {
-          "image": "selenoid/firefox:60.0",
+        "63.0": {
+          "image": "selenoid/firefox:63.0",
           "port": "4444",
           "path": "/wd/hub",
           "tmpfs": {
