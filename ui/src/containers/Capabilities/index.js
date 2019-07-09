@@ -119,7 +119,7 @@ class Capabilities extends Component {
                 "desiredCapabilities":
                     {
                         "browserName": `${browser.name}`,
-                        // "version": `${browser.version}`,
+                        "version": `${browser.version}`,
                         "enableVNC": true,
                         "sessionTimeout": "60m"
                     },
@@ -128,7 +128,7 @@ class Capabilities extends Component {
                         "alwaysMatch":
                             {
                                 "browserName": `${browser.name}`,
-                                // "browserVersion": `${browser.version}`,
+                                "browserVersion": `${browser.version}`,
                                 "selenoid:options": { "enableVNC": true, "sessionTimeout": "60m" }
                             },
                         "firstMatch": []
