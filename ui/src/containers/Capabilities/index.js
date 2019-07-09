@@ -1,5 +1,9 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/dom/ajax';
 
 import Highlight from "react-highlight";
 import "highlight.js/styles/sunburst.css";
@@ -93,7 +97,7 @@ defer driver.Quit()
     }
 };
 
-export default class Capabilities extends Component {
+class Capabilities extends Component {
     static propTypes = {
         state: PropTypes.object,
         origin: PropTypes.string
@@ -105,6 +109,52 @@ export default class Capabilities extends Component {
 
     onLanguageChange = (lang) => {
         this.setState({lang})
+    };
+
+    createSession = () => {
+        if (this.state && this.state.browser) {
+            const {browser} = this.state;
+
+            const newJson = {
+                "desiredCapabilities":
+                    {
+                        "browserName": `${browser.name}`,
+                        "version": `${browser.version}`,
+                        "enableVNC": true,
+                        "sessionTimeout": "60m"
+                    },
+                "capabilities":
+                    {
+                        "alwaysMatch":
+                            {
+                                "browserName": `${browser.name}`,
+                                "browserVersion": `${browser.version}`,
+                                "selenoid:options": { "enableVNC": true, "sessionTimeout": "60m" }
+                            },
+                        "firstMatch": []
+                    }
+            };
+
+            const session = Observable.ajax({
+                url: '/wd/hub/session',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: newJson,
+            });
+
+            session.subscribe(
+                res => {
+                  if (res.status === 200) {
+                    this.props.history.push(`/sessions/${res.response.value.sessionId}`)
+                  }
+                },
+                err => {
+                  console.error(err)
+                }
+            );
+        }
     };
 
     render() {
@@ -133,7 +183,7 @@ export default class Capabilities extends Component {
                     <Select
                         className="capabilities-browser-select"
                         name="browsers"
-                        value={value}
+                        value={browsers.find(item => item.value === value )}
                         options={browsers}
                         onChange={this.onBrowserChange}
                         placeholder="Select browser..."
@@ -141,6 +191,10 @@ export default class Capabilities extends Component {
                         clearable={false}
                         noResultsText="No information about browsers"
                     />
+
+                    <button onClick={this.createSession} className={`capabilities__new-session capabilities__new-session_disabled-${!name}`}>
+                        Create Session
+                    </button>
                 </div>
                 <Highlight className={lang}>
                     {caps[lang]}
@@ -165,3 +219,5 @@ export default class Capabilities extends Component {
         );
     }
 }
+
+export default withRouter(Capabilities)

@@ -157,6 +157,22 @@ $big-screen: 1280px;
         width: 45px;
         text-align: center;
       }
+
+      &__session-delete {
+        margin-left: auto;
+        margin-right: 0;
+        color: #fff;
+        height: 30px;
+        width: 25px;
+        background: rgb(232, 120, 111);
+        border: none;
+        padding: 3px;
+        text-align: center;
+        cursor: pointer;
+        &:focus {
+          outline: none;
+        }
+      }
     }
   }
 }
