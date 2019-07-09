@@ -1,7 +1,7 @@
-import React, {Component} from "react";
-import {withRouter} from "react-router-dom";
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/dom/ajax';
 
@@ -9,8 +9,6 @@ import Highlight from "react-highlight";
 import "highlight.js/styles/sunburst.css";
 
 import Select from "react-select";
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import "./select.scss";
 import "./style.scss";
@@ -105,10 +103,6 @@ class Capabilities extends Component {
         origin: PropTypes.string
     };
 
-    state = {
-      disabled: false,
-    }
-
     onBrowserChange = (browser) => {
         this.setState({browser})
     };
@@ -119,49 +113,49 @@ class Capabilities extends Component {
 
     createSession = () => {
         if (this.state && this.state.browser) {
-            const {browser} = this.state
-            this.setState({disabled: true})
+            const {browser} = this.state;
 
-            const newJson = JSON.stringify({
-              "desiredCapabilities":
-                {
-                  "browserName":`${browser.name}`,
-                  "version":`${browser.version}`,
-                  "enableVNC":true,
-                  "sessionTimeout": "60m"
-                },
-                "capabilities":
-                  {
-                    "alwaysMatch":
-                      {
+            const newJson = {
+                "desiredCapabilities":
+                    {
                         "browserName": `${browser.name}`,
-                        "browserVersion": `${browser.version}`,
-                        "selenoid:options" : {"enableVNC": true, "sessionTimeout": "60m"}
-                      },
-                    "firstMatch": []
-                  }
-            })
+                        // "version": `${browser.version}`,
+                        "enableVNC": true,
+                        "sessionTimeout": "60m"
+                    },
+                "capabilities":
+                    {
+                        "alwaysMatch":
+                            {
+                                "browserName": `${browser.name}`,
+                                // "browserVersion": `${browser.version}`,
+                                "selenoid:options": { "enableVNC": true, "sessionTimeout": "60m" }
+                            },
+                        "firstMatch": []
+                    }
+            };
 
             const session = Observable.ajax({
-              url: '/wd/hub/session',
-              method: 'POST',
-              body: newJson,
-            })
+                url: '/wd/hub/session',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: newJson,
+            });
 
             session.subscribe(
                 res => {
                   if (res.status === 200) {
-                    this.setState({disabled: false})
-                    this.props.history.push(`/sessions/${res.response.sessionId}`)
+                    this.props.history.push(`/sessions/${res.response.value.sessionId}`)
                   }
                 },
                 err => {
-                  this.setState({disabled: false})
                   console.error(err)
                 }
             );
         }
-    }
+    };
 
     render() {
         const {state = {browsers: {}}, origin} = this.props;
@@ -197,9 +191,10 @@ class Capabilities extends Component {
                         clearable={false}
                         noResultsText="No information about browsers"
                     />
-                    <Button variant="outlined" color="primary" onClick={this.createSession} disabled={this.state.disabled}>
-                      {this.state.disabled ? <CircularProgress size={24} color='#818386' /> : <>Create Session</>}
-                    </Button>
+
+                    <button onClick={this.createSession} className={`capabilities__new-session capabilities__new-session_disabled-${!name}`}>
+                        Create Session
+                    </button>
                 </div>
                 <Highlight className={lang}>
                     {caps[lang]}

@@ -1,6 +1,8 @@
 $border-langs-color: #3d444c;
 $border-section-color: #353b42;
+$unselected-color: #376e52;
 $selected-color: #59a781;
+$gray-color: #666;
 
 .capabilities {
   width: 100%;
@@ -11,7 +13,7 @@ $selected-color: #59a781;
   position: relative;
 
   &__section-title {
-    color: #666;
+    color: $gray-color;
     position: relative;
     top: 0;
     left: 0;
@@ -30,6 +32,7 @@ $selected-color: #59a781;
     button {
       width: 100%;
       margin-top: 10px;
+      cursor: pointer;
     }
   }
 
@@ -37,6 +40,33 @@ $selected-color: #59a781;
     height: 160px;
     margin-left: 50px;
     margin-top: 20px;
+  }
+
+  &__new-session {
+    height: 2rem;
+    border: 1px solid $unselected-color;
+    border-radius: 3px;
+    background-color: $border-section-color;
+    color: $selected-color;
+    text-transform: uppercase;
+    font-size: 1.1em;
+    outline: none;
+
+    &:hover {
+      border-color: $selected-color;
+      background-color: $border-langs-color;
+    }
+
+    &_disabled-true {
+      border-color: $border-langs-color;
+      background-color: $border-langs-color;
+      color: $gray-color;
+
+      &:hover {
+        border-color: $border-langs-color;
+        cursor: default;
+      }
+    }
   }
 
 }

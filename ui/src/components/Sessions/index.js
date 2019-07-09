@@ -1,33 +1,32 @@
 import React, { useState } from "react";
-import {Link} from "react-router-dom";
-import DeleteIcon from '@material-ui/icons/Delete'
-import {CSSTransition, TransitionGroup,} from 'react-transition-group';
+import { Link } from "react-router-dom";
+import { CSSTransition, TransitionGroup, } from 'react-transition-group';
 import { Observable } from "rxjs";
 import "./style.scss";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { BeatLoader } from 'react-spinners';
 
 const Sessions = (props) => {
     const {sessions = {}} = props;
     const list = Object.keys(sessions);
 
-    const [loading, setLoading] = useState([])
+    const [loading, setLoading] = useState([]);
 
     const deleteSession = (e, id) => {
-      e.preventDefault()
-      e.stopPropagation()
-      setLoading([...loading, id])
+      e.preventDefault();
+      e.stopPropagation();
+      setLoading([...loading, id]);
 
       const deleteSession = Observable.ajax({
         url: `/wd/hub/session/${id}`,
         method: 'DELETE',
-      })
+      });
 
       deleteSession.subscribe(
         res => {
           console.log(res)
         },
         err => {
-          console.error(err)
+          console.error(err);
           const index = loading.indexOf(id);
           if (index !== -1) {
             loading.splice(index, 1);
@@ -35,7 +34,7 @@ const Sessions = (props) => {
           setLoading(loading)
         }
       );
-    }
+    };
 
     return (
         <div className="sessions">
@@ -67,12 +66,12 @@ const Sessions = (props) => {
                                                 {sessions[session].caps.name}
                                             </div>
                                         )}
-                                        <button className="session__delete" onClick={(e) => deleteSession(e, session)}>
-                                          { loading.indexOf(session) > -1 ?
-                                            <CircularProgress size={18} color="secondary" />
-                                            :
-                                            <DeleteIcon htmlColor="#fff" fontSize="small" />
-                                          }
+                                        <button className="session-cap session-cap__session-delete" onClick={(e) => deleteSession(e, session)}>
+                                            {loading.indexOf(session) > -1 ?
+                                                <BeatLoader size={2} color={'#fff'}/>
+                                                :
+                                                <span title="Delete" className="icon dripicons-power"/>
+                                            }
                                         </button>
 
                                         {sessions[session].caps.enableVNC && (
