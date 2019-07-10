@@ -7,7 +7,7 @@ import "./style.scss";
 const Videos = (props) => {
     const {videos} = props;
     const list = Object.keys(videos);
-
+    const preloadVal = list.length > 100 ? "none" : "auto";
     return (
 
         <div className="videos">
@@ -27,11 +27,12 @@ const Videos = (props) => {
                             >
 
                                 <div className="videos-container">
+
                                     <div className="video-cap video-cap__name"
                                          title={videos[video]}>
                                         {videos[video]}
                                     </div>
-                                    <video controls preload="auto">
+                                    <video controls preload={preloadVal}>
                                         <source src={src} type="video/mp4" />
                                     </video>
                                 </div>
