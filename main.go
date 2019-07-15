@@ -126,13 +126,7 @@ func video(w http.ResponseWriter, req *http.Request) {
 
 	req, err := http.NewRequest("GET", u.RequestURI(), nil)
 
-	proxy := &httputil.ReverseProxy{
-		Director: func(r *http.Request) {
-			r.URL = u
-		},
-	}
-
-	proxy.ServeHTTP(w, req)
+	httputil.NewSingleHostReverseProxy(u).ServeHTTP(w, req)
 
 	if err != nil {
 		log.Printf("can't get video status (%s)\n", err)
@@ -148,15 +142,7 @@ func webdriver(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Printf("can't proxy webdriver requests to %v: %v", selenoidUri, err)
 	}
-
-	u.Path = req.URL.Path
-
-	proxy := &httputil.ReverseProxy{
-		Director: func(r *http.Request) {
-			r.URL = u
-		},
-	}
-	proxy.ServeHTTP(w, req)
+	httputil.NewSingleHostReverseProxy(u).ServeHTTP(w, req)
 }
 
 func showVersion() {
