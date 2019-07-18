@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"net/url"
 )
 
 /* -------------- *
@@ -99,8 +100,8 @@ const (
 	videosPath = "/video"
 )
 
-func Status(ctx context.Context, baseUrl string) ([]byte, error) {
-	req, err := http.NewRequest("GET", baseUrl+statusPath, nil)
+func Status(ctx context.Context, statusURI *url.URL) ([]byte, error) {
+	req, err := http.NewRequest("GET", statusURI.String()+statusPath, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +119,7 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 		return nil, err
 	}
 
-	req, err = http.NewRequest("GET", baseUrl+videosPath+"?json", nil)
+	req, err = http.NewRequest("GET", statusURI.String()+videosPath+"?json", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -133,10 +134,10 @@ func Status(ctx context.Context, baseUrl string) ([]byte, error) {
 
 	state.Videos = videos
 
-	return json.Marshal(toUI(state, baseUrl))
+	return json.Marshal(toUI(state, statusURI))
 }
 
-func toUI(state State, baseUrl string) result {
+func toUI(state State, statusURI *url.URL) result {
 	browsers := make(map[string]int)
 	sessions := make(map[string]sessionInfo)
 
@@ -160,7 +161,7 @@ func toUI(state State, baseUrl string) result {
 
 	return result{
 		State:    state,
-		Origin:   baseUrl,
+		Origin:   statusURI.String(),
 		Browsers: browsers,
 		Sessions: sessions,
 		Errors:   make([]interface{}, 0),

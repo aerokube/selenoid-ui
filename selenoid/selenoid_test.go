@@ -6,6 +6,7 @@ import (
 	. "github.com/aandryashin/matchers"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 )
 
@@ -83,7 +84,8 @@ func selenoidState() State {
 }
 
 func TestToUI(t *testing.T) {
-	ui := toUI(selenoidState(), "http://localhost")
+	statusURI, _ := url.Parse("http://localhost")
+	ui := toUI(selenoidState(), statusURI)
 	data, err := json.MarshalIndent(ui, "", " ")
 	AssertThat(t, err, Is{nil})
 	AssertThat(t, data, Is{Not{nil}})
@@ -94,7 +96,8 @@ func TestToUI(t *testing.T) {
 
 func TestStatus(t *testing.T) {
 	srv := httptest.NewServer(selenoidApi())
-	data, err := Status(context.Background(), srv.URL)
+	statusURI, _ := url.Parse(srv.URL)
+	data, err := Status(context.Background(), statusURI)
 	AssertThat(t, err, Is{nil})
 	AssertThat(t, data, Not{nil})
 }

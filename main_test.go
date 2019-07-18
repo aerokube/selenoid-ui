@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 )
 
@@ -87,7 +88,7 @@ func TestPing(t *testing.T) {
 
 func TestStatus(t *testing.T) {
 	selenoid := httptest.NewServer(selenoidApi())
-	selenoidUri = selenoid.URL
+	statusURI, _ = url.Parse(selenoid.URL)
 	rsp, err := http.Get(withUrl("/status"))
 
 	AssertThat(t, err, Is{nil})
@@ -97,9 +98,8 @@ func TestStatus(t *testing.T) {
 }
 
 func TestVideo(t *testing.T) {
-
 	video := httptest.NewServer(videoApi())
-	selenoidUri = video.URL
+	statusURI, _ = url.Parse(video.URL)
 	rsp, err := http.Get(withUrl("/video/test_chrome.mp4"))
 
 	AssertThat(t, err, Is{nil})
@@ -108,8 +108,7 @@ func TestVideo(t *testing.T) {
 }
 
 func TestVideoFail(t *testing.T) {
-
-	selenoidUri = "http://localhost:1"
+	statusURI, _ = url.Parse("http://localhost:1")
 	rsp, err := http.Get(withUrl("/video/test_chrome1.mp4"))
 
 	AssertThat(t, err, Is{nil})
@@ -118,7 +117,7 @@ func TestVideoFail(t *testing.T) {
 }
 
 func TestStatusError(t *testing.T) {
-	selenoidUri = "http://localhost:1"
+	statusURI, _ = url.Parse("http://localhost:1")
 	rsp, err := http.Get(withUrl("/status"))
 
 	AssertThat(t, err, Is{nil})
