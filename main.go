@@ -25,13 +25,19 @@ import (
 //go:generate statik -src=./ui/build
 
 var (
-	listen        string
-	selenoidUri   string
-	allowedOrigin string
-	timeout       time.Duration
-	period        time.Duration
+	listen             string
+	selenoidUri        string
+	webdriverUriString string
+	statusUriString    string
+	allowedOrigin      string
+	timeout            time.Duration
+	period             time.Duration
 
 	startTime = time.Now()
+
+	statik       http.FileSystem
+	webdriverURI *url.URL
+	statusURI    *url.URL
 
 	version     bool
 	gitRevision = "HEAD"
@@ -40,38 +46,32 @@ var (
 
 func mux(sse *sse.SseBroker) http.Handler {
 	mux := http.NewServeMux()
-
-	if statik, err := fs.New(); err == nil {
-		static := http.FileServer(statik)
-		mux.Handle("/", static)
-	}
-
+	mux.Handle("/", http.FileServer(statik))
 	mux.Handle("/events", sse)
-
-	parsedUri, err := url.Parse(selenoidUri)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	mux.HandleFunc("/ws/", func(w http.ResponseWriter, r *http.Request) {
-		r.URL.Path = strings.TrimPrefix(r.URL.Path, "/ws")
-		ws := &url.URL{Scheme: "ws", Host: parsedUri.Host, Path: r.URL.Path}
-		log.Printf("[WS_PROXY] [/ws%s] [%s]", r.URL.Path, ws)
-		wsProxy := websocketproxy.NewProxy(ws)
-
-		if allowedOrigin != "" {
-			upgrader := websocketproxy.DefaultUpgrader
-			upgrader.CheckOrigin = checkOrigin(allowedOrigin)
-		}
-		wsProxy.ServeHTTP(w, r)
-		log.Printf("[WS_PROXY] [%s] [CLOSED]", r.URL.Path)
-	})
-
+	mux.HandleFunc("/ws/", ws)
 	mux.HandleFunc("/ping", ping)
 	mux.HandleFunc("/status", status)
-	mux.HandleFunc("/video/", video)
-	mux.HandleFunc("/wd/hub/", webdriver)
+	mux.HandleFunc("/video/", func(w http.ResponseWriter, r *http.Request) {
+		reverseProxy(statusURI).ServeHTTP(w, r)
+	})
+	mux.HandleFunc("/wd/hub/", func(w http.ResponseWriter, r *http.Request) {
+		reverseProxy(webdriverURI).ServeHTTP(w, r)
+	})
 	return mux
+}
+
+func ws(w http.ResponseWriter, r *http.Request) {
+	r.URL.Path = strings.TrimPrefix(r.URL.Path, "/ws")
+	ws := &url.URL{Scheme: "ws", Host: statusURI.Host, Path: r.URL.Path}
+	log.Printf("[WS_PROXY] [/ws%s] [%s]", r.URL.Path, ws)
+	wsProxy := websocketproxy.NewProxy(ws)
+
+	if allowedOrigin != "" {
+		upgrader := websocketproxy.DefaultUpgrader
+		upgrader.CheckOrigin = checkOrigin(allowedOrigin)
+	}
+	wsProxy.ServeHTTP(w, r)
+	log.Printf("[WS_PROXY] [%s] [CLOSED]", r.URL.Path)
 }
 
 func checkOrigin(allowedOrigins string) func(r *http.Request) bool {
@@ -106,9 +106,9 @@ func ping(w http.ResponseWriter, _ *http.Request) {
 func status(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 
-	status, err := selenoid.Status(req.Context(), selenoidUri)
+	status, err := selenoid.Status(req.Context(), statusURI)
 	if err != nil {
-		log.Printf("can't get status (%s)\n", err)
+		log.Printf("[ERROR] [Can't get status: %v]", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
 		return
@@ -117,32 +117,13 @@ func status(w http.ResponseWriter, req *http.Request) {
 	w.Write(status)
 }
 
-func video(w http.ResponseWriter, req *http.Request) {
-
-	req.URL.Path = strings.TrimPrefix(req.URL.Path, "/video")
-	log.Printf("[VIDEO_PROXY] [/video%s]", req.URL.Path)
-
-	u, _ := url.Parse(selenoidUri + "/video" + req.URL.Path)
-
-	req, err := http.NewRequest("GET", u.RequestURI(), nil)
-
-	httputil.NewSingleHostReverseProxy(u).ServeHTTP(w, req)
-
-	if err != nil {
-		log.Printf("can't get video status (%s)\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{ "errors": [{"msg": "can't get video"}] }`))
-		return
+func reverseProxy(u *url.URL) http.Handler {
+	rp := httputil.NewSingleHostReverseProxy(u)
+	rp.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
+		log.Printf("[ERROR] [Failed to proxy to %s: %v]", r.URL.String(), err)
+		w.WriteHeader(http.StatusBadGateway)
 	}
-
-}
-
-func webdriver(w http.ResponseWriter, req *http.Request) {
-	u, err := url.Parse(selenoidUri)
-	if err != nil {
-		log.Printf("can't proxy webdriver requests to %v: %v", selenoidUri, err)
-	}
-	httputil.NewSingleHostReverseProxy(u).ServeHTTP(w, req)
+	return rp
 }
 
 func showVersion() {
@@ -153,11 +134,38 @@ func showVersion() {
 func init() {
 	flag.StringVar(&listen, "listen", ":8080", "host and port to listen on")
 	flag.StringVar(&selenoidUri, "selenoid-uri", "http://localhost:4444", "selenoid uri to fetch data from")
+	flag.StringVar(&webdriverUriString, "webdriver-uri", "", "webdriver uri used to create new sessions")
+	flag.StringVar(&statusUriString, "status-uri", "", "status uri to fetch data from")
 	flag.StringVar(&allowedOrigin, "allowed-origin", "", "comma separated list of allowed Origin headers (use * to allow all)")
 	flag.DurationVar(&timeout, "timeout", 3*time.Second, "response timeout, e.g. 5s or 1m")
 	flag.DurationVar(&period, "period", 5*time.Second, "data refresh period, e.g. 5s or 1m")
 	flag.BoolVar(&version, "version", false, "Show version and exit")
 	flag.Parse()
+
+	if webdriverUriString == "" {
+		webdriverUriString = selenoidUri
+	}
+	if statusUriString == "" {
+		statusUriString = selenoidUri
+	}
+
+	st, err := fs.New()
+	if err != nil {
+		log.Fatalf("[INIT] [Missing static content: %v]", err)
+	}
+	statik = st
+
+	su, err := url.Parse(statusUriString)
+	if err != nil {
+		log.Fatalf("[INIT] [Invalid status URI: %v]", err)
+	}
+	statusURI = su
+
+	wu, err := url.Parse(webdriverUriString)
+	if err != nil {
+		log.Fatalf("[INIT] [Invalid WebDriver URI: %v]", err)
+	}
+	webdriverURI = wu
 
 	if version {
 		showVersion()
@@ -173,15 +181,15 @@ func main() {
 	go sse.Tick(broker, func(ctx context.Context, br sse.Broker) {
 		timedCtx, cancel := context.WithTimeout(ctx, timeout)
 		defer cancel()
-		status, err := selenoid.Status(timedCtx, selenoidUri)
+		status, err := selenoid.Status(timedCtx, statusURI)
 		if err != nil {
-			log.Printf("can't get status (%s)\n", err)
+			log.Printf("[ERROR] [Can't get status: %v]", err)
 			br.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
 			return
 		}
 		br.Notify(status)
 	}, period, stop)
 
-	log.Printf("Listening on %s\n", listen)
+	log.Printf("[INIT] [Listening on %s]", listen)
 	log.Fatal(http.ListenAndServe(listen, mux(broker)))
 }
