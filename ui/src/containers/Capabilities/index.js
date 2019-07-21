@@ -97,6 +97,10 @@ defer driver.Quit()
     }
 };
 
+export const sessionIdFrom = (res) => {
+    return res.response.sessionId || (res.response.value && res.response.value.sessionId) || '';
+};
+
 class Capabilities extends Component {
     static propTypes = {
         state: PropTypes.object,
@@ -147,7 +151,7 @@ class Capabilities extends Component {
             session.subscribe(
                 res => {
                   if (res.status === 200) {
-                    this.props.history.push(`/sessions/${res.response.value.sessionId}`)
+                    this.props.history.push(`/sessions/${sessionIdFrom(res)}`)
                   }
                 },
                 err => {
