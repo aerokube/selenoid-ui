@@ -134,8 +134,7 @@ class Capabilities extends Component {
                                 "browserName": `${browser.name}`,
                                 "browserVersion": `${browser.version}`,
                                 "selenoid:options": { "enableVNC": true, "sessionTimeout": "60m" }
-                            },
-                        "firstMatch": []
+                            }
                     }
             };
 
