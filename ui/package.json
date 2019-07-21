@@ -23,7 +23,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@novnc|highlight.js|xterm)/)'",
+    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@novnc|highlight.js|xterm)/)' --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
