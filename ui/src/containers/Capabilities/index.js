@@ -98,7 +98,7 @@ defer driver.Quit()
 };
 
 export const sessionIdFrom = (res) => {
-    return res.response.sessionId || res.response.value && res.response.value.sessionId || '';
+    return res.response.sessionId || (res.response.value && res.response.value.sessionId) || '';
 };
 
 class Capabilities extends Component {
