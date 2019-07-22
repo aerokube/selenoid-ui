@@ -1,9 +1,9 @@
-import React, {Component} from "react";
-import {HashRouter as Router, Route} from "react-router-dom";
-import {validate} from "jsonschema";
-import {rxConnect} from "rx-connect";
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import React from "react";
+import { HashRouter as Router, Route } from "react-router-dom";
+import { validate } from "jsonschema";
+import { rxConnect } from "rx-connect";
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/dom/ajax';
 
@@ -108,7 +108,7 @@ const schema = {
             },
         },
         "videos": {
-            "type": ["array","null"],
+            "type": ["array", "null"],
         }
     },
     "required": [
@@ -121,62 +121,58 @@ const schema = {
 };
 
 
-class Viewport extends Component {
-    render() {
-        const links = [
-            {href: "/", title: "STATS", exact: true},
-            {href: "/capabilities/", title: "CAPABILITIES", exact: true},
-        ];
+const Viewport = ({ origin, sse, status, state, browsers = {}, sessions = {} }) => {
+    // can be checked offline with simple
+    // const {origin, sse, status, state, browsers = {}, sessions = {}} = require("../../sse-example.json");
 
-         // can be checked offline with simple
-         // const {origin, sse, status, state, browsers = {}, sessions = {}} = require("../../sse-example.json");
+    const links = [
+        { href: "/", title: "STATS", exact: true },
+        { href: "/capabilities/", title: "CAPABILITIES", exact: true },
+    ];
 
-        const {origin, sse, status, state, browsers = {}, sessions = {}} = this.props;
-
-        if (state.videos) {
-            links.push({href: "/videos", title: "VIDEOS", exact: true})
-        }
-
-        return (
-            <Router>
-                <div className="viewport">
-                    <div className="top-bar">
-                        <div className="connection-status">
-                            <Status status={sse} title="sse"/>
-                            <Status status={status} title="selenoid"/>
-                        </div>
-                        <Navigation links={links}/>
-                    </div>
-
-                    <Route exact={true} path="/" render={() => (
-                        <Stats {...{
-                            state,
-                            browsers
-                        }}/>
-                    )}/>
-
-                    <Route exact={true} path="/" render={() => (
-                        <Sessions sessions={sessions}/>
-                    )}/>
-
-                    <Route exact={true} path="/videos" render={() => (
-                        <Videos videos={state.videos || []} />
-                    )}/>
-
-                    <Route exact={true} path="/capabilities" render={() => (
-                        <Capabilities state={state} origin={origin}/>
-                    )}/>
-
-                    <Route path="/sessions/:session" render={({match}) => (
-                        <Session session={match.params.session}
-                                 origin={origin}
-                                 browser={sessions[match.params.session]}/>
-                    )}/>
-                </div>
-            </Router>
-        );
+    if (state.videos) {
+        links.push({ href: "/videos", title: "VIDEOS", exact: true })
     }
-}
+
+    return (
+        <Router>
+            <div className="viewport">
+                <div className="top-bar">
+                    <div className="connection-status">
+                        <Status status={sse} title="sse"/>
+                        <Status status={status} title="selenoid"/>
+                    </div>
+                    <Navigation links={links}/>
+                </div>
+
+                <Route exact={true} path="/" render={() => (
+                    <Stats {...{
+                        state,
+                        browsers
+                    }}/>
+                )}/>
+
+                <Route exact={true} path="/" render={() => (
+                    <Sessions sessions={sessions}/>
+                )}/>
+
+                <Route exact={true} path="/videos" render={() => (
+                    <Videos videos={state.videos || []}/>
+                )}/>
+
+                <Route exact={true} path="/capabilities" render={() => (
+                    <Capabilities state={state} origin={origin}/>
+                )}/>
+
+                <Route path="/sessions/:session" render={({ match }) => (
+                    <Session session={match.params.session}
+                             origin={origin}
+                             browser={sessions[match.params.session]}/>
+                )}/>
+            </div>
+        </Router>
+    );
+};
 
 export default rxConnect(() => {
     const open = new Subject();
