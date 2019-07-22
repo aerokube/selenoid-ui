@@ -5,35 +5,34 @@ import { Observable } from "rxjs";
 import "./style.scss";
 import { BeatLoader } from 'react-spinners';
 
-const Sessions = (props) => {
-    const {sessions = {}} = props;
+const Sessions = ({ sessions = {} }) => {
     const list = Object.keys(sessions);
 
     const [loading, setLoading] = useState([]);
 
     const deleteSession = (e, id) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setLoading([...loading, id]);
+        e.preventDefault();
+        e.stopPropagation();
+        setLoading([...loading, id]);
 
-      const deleteSession = Observable.ajax({
-        url: `/wd/hub/session/${id}`,
-        method: 'DELETE',
-      });
+        const deleteSession = Observable.ajax({
+            url: `/wd/hub/session/${id}`,
+            method: 'DELETE',
+        });
 
-      deleteSession.subscribe(
-        res => {
-          console.log(res)
-        },
-        err => {
-          console.error(err);
-          const index = loading.indexOf(id);
-          if (index !== -1) {
-            loading.splice(index, 1);
-          }
-          setLoading(loading)
-        }
-      );
+        deleteSession.subscribe(
+            res => {
+                console.log(res)
+            },
+            err => {
+                console.error(err);
+                const index = loading.indexOf(id);
+                if (index !== -1) {
+                    loading.splice(index, 1);
+                }
+                setLoading(loading)
+            }
+        );
     };
 
     return (
@@ -66,7 +65,8 @@ const Sessions = (props) => {
                                                 {sessions[session].caps.name}
                                             </div>
                                         )}
-                                        <button className="session-cap session-cap__session-delete" onClick={(e) => deleteSession(e, session)}>
+                                        <button className="session-cap session-cap__session-delete"
+                                                onClick={(e) => deleteSession(e, session)}>
                                             {loading.indexOf(session) > -1 ?
                                                 <BeatLoader size={2} color={'#fff'}/>
                                                 :

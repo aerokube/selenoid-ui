@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Observable } from 'rxjs/Observable';
@@ -97,11 +97,11 @@ defer driver.Quit()
     }
 };
 
-export const sessionIdFrom = (res) => {
-    return res.response.sessionId || (res.response.value && res.response.value.sessionId) || '';
+export const sessionIdFrom = ({response}) => {
+    return response.sessionId || (response.value && response.value.sessionId) || '';
 };
 
-class Capabilities extends Component {
+class Capabilities extends React.Component {
     static propTypes = {
         state: PropTypes.object,
         origin: PropTypes.string

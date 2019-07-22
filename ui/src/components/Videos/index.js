@@ -1,11 +1,10 @@
 import React from "react";
-import {CSSTransition, TransitionGroup} from "react-transition-group";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import "./style.scss";
 
 
-const Videos = (props) => {
-    const {videos} = props;
+const Videos = ({ videos }) => {
     const list = Object.keys(videos);
     const preloadVal = list.length > 100 ? "none" : "auto";
     return (
@@ -16,7 +15,7 @@ const Videos = (props) => {
             </div>
             <TransitionGroup className={`videos__list videos__list_count-${list.length}`}>
                 {list.length && list.map(video => {
-                        const src = "/video/"+videos[video];
+                        const src = "/video/" + videos[video];
                         return (
 
                             <CSSTransition
@@ -33,7 +32,7 @@ const Videos = (props) => {
                                         {videos[video]}
                                     </div>
                                     <video controls preload={preloadVal}>
-                                        <source src={src} type="video/mp4" />
+                                        <source src={src} type="video/mp4"/>
                                     </video>
                                 </div>
                             </CSSTransition>

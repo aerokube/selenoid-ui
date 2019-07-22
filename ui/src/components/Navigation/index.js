@@ -1,12 +1,10 @@
 import React from "react";
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import "./style.scss";
 
 
-const Navigation = (props) => {
-    const {links} = props;
-
+const Navigation = ({ links }) => {
     return (
         <div className="nav">
             {
