@@ -31,7 +31,8 @@ install:
   - npm install cross-env
 
 after_success:
-- bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash) -F go
+- bash <(curl -s https://codecov.io/bash) -f ./ui/coverage/coverage-final.json -F ui
 
 deploy:
   - provider: releases
