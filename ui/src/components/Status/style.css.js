@@ -1,9 +1,15 @@
-.status {
+import styled from 'styled-components/macro'
+
+const mainGreen = '#59a781';
+const brightGreen = '#57ff76';
+const brightRed = '#fc4022';
+const mainRed = '#cf3223';
+
+export const StyledStatus = styled.div`
   position: relative;
   text-transform: uppercase;
   color: #fff;
   margin-left: 50px;
-}
 
 .indicator {
   line-height: 30px;
@@ -22,26 +28,21 @@
   }
 
   &_ok {
-    $main-green: #59a781;
-    $bright-green: #57ff76;
-
-    color: $main-green;
+    color: ${mainGreen};
 
     &:before {
-      box-shadow: 0 0 10px $bright-green;
-      border-color: $main-green;
+      box-shadow: 0 0 10px ${brightGreen};
+      border-color: ${mainGreen};
     }
   }
 
   &_error {
-    $bright-red: #fc4022;
-    $main-red: #cf3223;
-
-    color: $main-red;
+    color: ${mainRed};
 
     &:before {
-      box-shadow: 0 0 10px $bright-red;
-      border-color: $main-red;
+      box-shadow: 0 0 10px ${brightRed};
+      border-color: ${mainRed};
     }
   }
 }
+`;

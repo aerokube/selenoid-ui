@@ -1,15 +1,13 @@
 import React from "react";
-import "./style.scss";
+import { StyledQueue } from "./style.css";
 
 
 const Queue = ({ queued }) => {
     return (
-        <div className="queue">
-            <div className="queue-title">QUEUED</div>
-            <div className="queue-queued">
-                {queued}
-            </div>
-        </div>
+        <StyledQueue>
+            <div className="title">QUEUED</div>
+            <div className="queued">{queued}</div>
+        </StyledQueue>
     );
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.scss";
+import { StyledBrowser } from "./style.css";
 
 /**
  * Color depending on percentage
@@ -43,22 +43,19 @@ function countColor(percentile) {
 }
 
 
-const Browser = (props) => {
-
-    const { name, used, totalUsed } = props;
-
+const Browser = ({ name, used, totalUsed }) => {
     const perc = totalUsed > 0 ? (used / totalUsed * 100).toFixed() : 0;
 
     return (
-        <div className="browser">
-            <div className="browser-stats">
-                <div className="browser-stats__percent">{perc}%</div>
-                <div className="browser-stats__count">{used}</div>
-                <div className="browser-stats__name">{name}</div>
+        <StyledBrowser>
+            <div className="stats">
+                <div className="stats__percent">{perc}%</div>
+                <div className="stats__count">{used}</div>
+                <div className="stats__name">{name}</div>
             </div>
-            <div className="browser-usage-bar"
+            <div className="usage-bar"
                  style={{ width: `${perc}%`, borderBottomColor: countColor(perc) }}/>
-        </div>
+        </StyledBrowser>
     );
 };
 

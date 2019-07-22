@@ -10,8 +10,7 @@ import "highlight.js/styles/sunburst.css";
 
 import Select from "react-select";
 
-import "./select.scss";
-import "./style.scss";
+import {StyledCapabilities} from "./style.css";
 
 
 const code = (browser = 'UNKNOWN', version = '', origin = 'http://selenoid-uri:4444') => {
@@ -178,11 +177,11 @@ class Capabilities extends React.Component {
         const caps = code(name, version, origin);
 
         return (
-            <div className="capabilities">
-                <div className="capabilities__section-title">
+            <StyledCapabilities>
+                <div className="section-title">
                     Capabilities
                 </div>
-                <div className="capabilities__setup">
+                <div className="setup">
                     <Select
                         className="capabilities-browser-select"
                         name="browsers"
@@ -195,7 +194,7 @@ class Capabilities extends React.Component {
                         noResultsText="No information about browsers"
                     />
 
-                    <button onClick={this.createSession} className={`capabilities__new-session capabilities__new-session_disabled-${!name}`}>
+                    <button onClick={this.createSession} className={`new-session new-session_disabled-${!name}`}>
                         Create Session
                     </button>
                 </div>
@@ -203,7 +202,7 @@ class Capabilities extends React.Component {
                     {caps[lang]}
                 </Highlight>
 
-                <div className="capabilities__lang-selector">
+                <div className="lang-selector">
                     <div className="capabilities-langs">
                         {
                             Object.keys(caps)
@@ -218,7 +217,7 @@ class Capabilities extends React.Component {
                     </div>
                 </div>
 
-            </div>
+            </StyledCapabilities>
         );
     }
 }

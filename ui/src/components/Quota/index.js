@@ -1,23 +1,23 @@
 import React from "react";
-import "./style.scss";
+import {StyledQuota} from "./style.css";
 
 
 const Quota = ({ used, pending, total }) => {
     const perc = total > 0 ? ((used + pending) / total * 100).toFixed() : 0;
 
     return (
-        <div className="quota">
-            <div className="quota-title">QUOTA</div>
-            <div className="quota-numbers">
-                <div className="quota-numbers__used">{used} <span className="quota-numbers__pending">+ {pending}</span>
+        <StyledQuota>
+            <div className="title">QUOTA</div>
+            <div className="numbers">
+                <div className="numbers__used">{used} <span className="quota-numbers__pending">+ {pending}</span>
                 </div>
-                <div className="quota-numbers__total">{total}</div>
+                <div className="numbers__total">{total}</div>
             </div>
-            <div className="quota-percents">
+            <div className="percents">
                 {perc}
-                <span className="quota-percents_small">%</span>
+                <span className="percents_small">%</span>
             </div>
-        </div>
+        </StyledQuota>
     );
 };
 

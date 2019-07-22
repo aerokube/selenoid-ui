@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import SessionInfo from "./SessionInfo";
 import VncCard from "../VncCard";
 import Log from "../Log";
-import "./style.scss";
+import {StyledSession} from "./style.css";
 import { mapActionCreators, rxConnect } from "rx-connect";
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -22,13 +22,13 @@ class Session extends Component {
         const {origin, session, browser, onVNCFullscreenChange, isLogHidden} = this.props;
 
         return (
-            <div className="session">
+            <StyledSession>
                 <SessionInfo {...{
                     session,
                     browser
                 }}/>
 
-                {browser && (<div className="session__interactive">
+                {browser && (<div className="interactive">
                     <VncContainer {... {
                         origin,
                         session,
@@ -43,7 +43,7 @@ class Session extends Component {
                         }} hidden={isLogHidden}/>
                     </div>
                 </div>)}
-            </div>
+            </StyledSession>
         );
     }
 }

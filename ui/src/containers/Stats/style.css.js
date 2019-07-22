@@ -1,7 +1,9 @@
-$border-stats-color: #3d444c;
-$border-section-color: #353b42;
+import styled from 'styled-components/macro'
 
-.stats {
+const borderStatsColor = '#3d444c';
+const borderSectionColor = '#353b42';
+
+export const StyledStats = styled.div`
   min-height: 200px;
   width: 100%;
   min-width: 360px;
@@ -13,13 +15,13 @@ $border-section-color: #353b42;
   padding-top: 40px;
   flex-shrink: 0;
 
-  &__section-title {
+  .section-title {
     color: #666;
     position: absolute;
     top: 0;
     left: 0;
     padding-left: 5%;
-    border-bottom: 1px solid $border-section-color;
+    border-bottom: 1px solid ${borderSectionColor};
     width: 95%;
     letter-spacing: 1px;
     font-size: 10px;
@@ -27,8 +29,8 @@ $border-section-color: #353b42;
   }
 
 
-  &__quota {
-    border-right: 1px dashed $border-stats-color;
+  .quota {
+    border-right: 1px dashed ${borderStatsColor};
     margin-right: 10px;
   }
-}
+`;

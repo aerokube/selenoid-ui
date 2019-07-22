@@ -1,6 +1,9 @@
-$background-color-lighter: #3d444c;
+import styled from 'styled-components/macro'
 
-.session {
+const backgroundColorLighter = '#3d444c';
+const colorSessionName = '#555f6a';
+
+export const StyledSession = styled.div`
   flex: 1;
   width: 100%;
   display: flex;
@@ -8,7 +11,7 @@ $background-color-lighter: #3d444c;
   align-items: center;
   justify-content: center;
 
-  &__interactive {
+  .interactive {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -39,7 +42,7 @@ $background-color-lighter: #3d444c;
       align-items: center;
       justify-content: space-between;
       min-width: 350px;
-      border-bottom: 1px dashed $background-color-lighter;
+      border-bottom: 1px dashed ${backgroundColorLighter};
       margin: 15px 0;
       flex-shrink: 0;
 
@@ -56,7 +59,7 @@ $background-color-lighter: #3d444c;
           margin-right: 3px;
           margin-left: 3px;
           font-size: 1.5em;
-          color: $background-color-lighter;
+          color: ${backgroundColorLighter};
         }
 
         &__version {
@@ -78,14 +81,14 @@ $background-color-lighter: #3d444c;
     &__additional {
       .custom-capabilities {
         &__name {
-          $color-session-name: #555f6a;
+          
           height: 25px;
           line-height: 25px;
           box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
           margin: -3px 5px 0;
           padding: 0 5px;
 
-          background-color: $color-session-name;
+          background-color: ${colorSessionName};
           font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
 
           -webkit-font-smoothing: antialiased;
@@ -95,4 +98,4 @@ $background-color-lighter: #3d444c;
       }
     }
   }
-}
+`;

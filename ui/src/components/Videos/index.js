@@ -1,16 +1,15 @@
 import React from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-import "./style.scss";
-
+import {StyledVideos} from "./style.css";
 
 const Videos = ({ videos }) => {
     const list = Object.keys(videos);
     const preloadVal = list.length > 100 ? "none" : "auto";
     return (
 
-        <div className="videos">
-            <div className="videos__section-title">
+        <StyledVideos>
+            <div className="section-title">
                 Videos
             </div>
             <TransitionGroup className={`videos__list videos__list_count-${list.length}`}>
@@ -48,14 +47,14 @@ const Videos = ({ videos }) => {
                     classNames="videos__no-any_state"
                     unmountOnExit
                 >
-                    <div className="videos__no-any">
+                    <div className="no-any">
                         <div title="No any" className="icon dripicons-hourglass"/>
                         <div className="nosession-any-text">NO VIDEOS YET :'(</div>
                     </div>
                 </CSSTransition>
             )}
 
-        </div>
+        </StyledVideos>
     );
 
 };

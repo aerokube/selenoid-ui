@@ -1,12 +1,11 @@
 import React from "react";
-import "./style.scss";
-
+import { StyledStatus } from "./style.css";
 
 const Status = ({ status, title }) => {
     return (
-        <div className="status">
+        <StyledStatus>
             <div className={`indicator indicator_${status}`}>{title}</div>
-        </div>
+        </StyledStatus>
     );
 };
 
