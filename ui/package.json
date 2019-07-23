@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@novnc/novnc": "^1.0.0",
+    "@novnc/novnc": "^1.1.0",
     "ansi-256-colors": "^1.1.0",
     "event-source-polyfill": "^1.0.5",
     "jsonschema": "^1.2.4",
