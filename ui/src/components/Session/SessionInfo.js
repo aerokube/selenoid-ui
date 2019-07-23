@@ -1,9 +1,9 @@
 import React from "react";
+import PropTypes from 'prop-types';
+
 import { BeatLoader } from 'react-spinners';
 
-const SessionInfo = (props) => {
-    const {session = "", browser = { caps: {}}} = props;
-
+const SessionInfo = ({session = "", browser = { caps: {}}}) => {
     return (
         <div className="session-info">
 
@@ -34,6 +34,19 @@ const SessionInfo = (props) => {
             </div>
         </div>
     );
+};
+
+SessionInfo.propTypes = {
+    session: PropTypes.string,
+    browser: PropTypes.shape({
+        quota: PropTypes.string,
+        caps: PropTypes.shape({
+            browserName: PropTypes.string.isRequired,
+            version: PropTypes.string.isRequired,
+            screenResolution: PropTypes.string,
+            name: PropTypes.string,
+        }).isRequired,
+    }).isRequired,
 };
 
 export default SessionInfo;

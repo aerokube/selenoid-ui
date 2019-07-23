@@ -1,6 +1,6 @@
 import React from "react";
 import { HashRouter as Router, Route } from "react-router-dom";
-import { validate } from "jsonschema";
+import PropTypes from 'prop-types';
 import { rxConnect } from "rx-connect";
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -18,108 +18,6 @@ import Status from "../../components/Status";
 import Sessions from "../../components/Sessions";
 import Session from "../../components/Session";
 import Videos from "../../components/Videos";
-
-const schema = {
-    "id": "/selenoid",
-    "type": "object",
-    "properties": {
-        "total": {
-            "type": "number"
-        },
-        "used": {
-            "type": "number"
-        },
-        "queued": {
-            "type": "number"
-        },
-        "pending": {
-            "type": "number"
-        },
-        "browsers": {
-            "id": "/browser",
-            "type": "object",
-            "patternProperties": {
-                ".*": {
-                    "id": "/version",
-                    "type": "object",
-                    "patternProperties": {
-                        ".*": {
-                            "id": "/quota",
-                            "type": "object",
-                            "patternProperties": {
-                                ".*": {
-                                    "type": "object",
-                                    "properties": {
-                                        "count": {
-                                            "type": "number"
-                                        },
-                                        "sessions": {
-                                            "type": "array",
-                                            "items": {
-                                                "id": "/session",
-                                                "type": "object",
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "string"
-                                                    },
-                                                    "container": {},
-                                                    "caps": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "browserName": {
-                                                                "type": "string"
-                                                            },
-                                                            "version": {
-                                                                "type": "string"
-                                                            },
-                                                            "screenResolution": {
-                                                                "type": "string"
-                                                            },
-                                                            "enableVNC": {
-                                                                "type": "boolean"
-                                                            },
-                                                            "name": {
-                                                                "type": "string"
-                                                            },
-                                                            "timeZone": {
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "browserName",
-                                                            "version"
-                                                        ]
-                                                    }
-                                                },
-                                                "required": [
-                                                    "id"
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "count"
-                                    ]
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-        "videos": {
-            "type": ["array", "null"],
-        }
-    },
-    "required": [
-        "total",
-        "used",
-        "pending",
-        "queued",
-        "browsers"
-    ]
-};
-
 
 const Viewport = ({ origin, sse, status, state, browsers = {}, sessions = {} }) => {
     // can be checked offline with simple
@@ -177,6 +75,21 @@ const Viewport = ({ origin, sse, status, state, browsers = {}, sessions = {} }) 
     );
 };
 
+Viewport.propTypes = {
+    status: PropTypes.string.isRequired,
+    sse: PropTypes.string.isRequired,
+    state: PropTypes.shape({
+        total: PropTypes.number.isRequired,
+        used: PropTypes.number.isRequired,
+        pending: PropTypes.number.isRequired,
+        queued: PropTypes.number.isRequired,
+        browsers: PropTypes.object.isRequired,
+        videos: PropTypes.array,
+    }).isRequired,
+    browsers: PropTypes.object,
+    sessions: PropTypes.object,
+};
+
 export default rxConnect(() => {
     const open = new Subject();
     const errors = new Subject();
@@ -210,18 +123,17 @@ export default rxConnect(() => {
                         };
                     }
 
-                    const validation = validate(event.state, schema);
-                    if (validation.valid) {
+                    if (event.state) {
                         return {
                             ...event,
                             status: "ok",
                         };
                     } else {
-                        console.error("Wrong data from backend", validation.errors);
+                        console.error("Wrong data from backend", event);
                         return {
                             ...event,
                             status: "error",
-                            errors: validation.errors
+                            errors: []
                         };
                     }
                 })

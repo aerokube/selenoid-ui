@@ -55,7 +55,8 @@
         },
         "57.0": {}
       }
-    }
+    },
+    "videos": ["22c2d63b-f76e-42da-a39c-5cd20384cba8.mp4", "3d9a342c-750d-4076-a5b6-fc42546cb155.mp4"]
   },
   "origin": "http://localhost:4444",
   "browsers": {
