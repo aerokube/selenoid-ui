@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {rxConnect} from "rx-connect";
-import "./style.scss";
+import {StyledBrowsers} from "./style.css";
 import Browser from "./Browser";
 
 class Browsers extends Component {
@@ -8,13 +8,13 @@ class Browsers extends Component {
         const {browsers, totalUsed} = this.props;
 
         return (
-            <div className="browsers">
+            <StyledBrowsers>
                 {browsers.map(browser =>
                     (
                         <Browser key={browser.name} totalUsed={totalUsed} {...browser}/>
                     )
                 )}
-            </div>
+            </StyledBrowsers>
         );
     }
 }

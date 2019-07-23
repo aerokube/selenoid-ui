@@ -1,8 +1,6 @@
 import React from "react";
 import { BeatLoader } from 'react-spinners';
 
-import "./style.scss";
-
 const SessionInfo = (props) => {
     const {session = "", browser = { caps: {}}} = props;
 

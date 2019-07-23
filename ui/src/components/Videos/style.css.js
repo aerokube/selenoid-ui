@@ -1,19 +1,20 @@
-$color-accent: #59a781;
-$color-session-name: #555f6a;
-$border-section-color: #353b42;
-$small-screen: 900px;
-$big-screen: 1280px;
+import styled from 'styled-components/macro'
 
-.videos {
+const colorSessionName = '#555f6a';
+const borderSectionColor = '#353b42';
+const smallScreen = '900px';
+const bigScreen = '1280px';
+
+export const StyledVideos = styled.div`
   width: 100%;
 
-  &__section-title {
+  .section-title {
     color: #666;
     position: relative;
     top: 0;
     left: 0;
     padding-left: 5%;
-    border-bottom: 1px solid $border-section-color;
+    border-bottom: 1px solid ${borderSectionColor};
     width: 95%;
     letter-spacing: 1px;
     font-size: 10px;
@@ -21,7 +22,7 @@ $big-screen: 1280px;
     margin-bottom: 20px;
   }
 
-  &__no-any {
+  .no-any {
     color: #fff;
     display: flex;
     flex-wrap: wrap;
@@ -54,11 +55,11 @@ $big-screen: 1280px;
   }
 
   &_count-3 {
-    @media screen and (max-width: $big-screen) {
+    @media screen and (max-width: ${bigScreen}) {
       justify-content: flex-start;
     }
 
-    @media screen and (min-width: $big-screen + 1) {
+    @media screen and (min-width: ${bigScreen} + 1) {
       justify-content: center;
     }
   }
@@ -67,17 +68,17 @@ $big-screen: 1280px;
     flex: 0 0 auto;
     transition: all 0.5s;
 
-    @media screen and (max-width: $small-screen) {
+    @media screen and (max-width: ${smallScreen}) {
       flex-basis: 100%;
       max-width: 100%;
     }
 
-    @media screen and (min-width: $small-screen + 1) and (max-width: $big-screen) {
+    @media screen and (min-width: ${smallScreen} + 1) and (max-width: ${bigScreen}) {
       flex-basis: 50%;
       max-width: 50%;
     }
 
-    @media screen and (min-width: $big-screen + 1) {
+    @media screen and (min-width: ${bigScreen} + 1) {
       flex-basis: 33.333%;
       max-width: 33.333%;
     }
@@ -95,7 +96,7 @@ $big-screen: 1280px;
 
       &__name {
         overflow: hidden;
-        background-color: $color-session-name;
+        background-color: ${colorSessionName};
         font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
 
         -webkit-font-smoothing: antialiased;
@@ -123,6 +124,4 @@ $big-screen: 1280px;
       transition: opacity 500ms ease-out;
     }
   }
-
-
-}
+`;

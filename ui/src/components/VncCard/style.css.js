@@ -1,17 +1,18 @@
-$color-disconnected: #ff6e59;
-$color-connecting: #6883d3;
-$color-disconnecting: #ca9eff;
-$color-base-control: #555f6a;
-$color-fullscreen: #59a781;
-$background-color-lighter: #3d444c;
+import styled from 'styled-components/macro'
 
-.vnc {
+const colorDisconnected = '#ff6e59';
+const colorConnecting =  '#6883d3';
+const colorDisconnecting = ' #ca9eff';
+const colorFullscreen =  '#59a781';
+const backgroundColorLighter = '#3d444c';
+
+export const StyledVNC = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
 
-  &_fullscreen {
+  &.fullscreen {
     position: absolute;
     height: 100%;
     width: 100%;
@@ -38,16 +39,16 @@ $background-color-lighter: #3d444c;
     }
 
     &_disconnected {
-      color: $color-disconnected;
+      color: ${colorDisconnected};
       &:before {
-        border-bottom-color: $color-disconnected;
+        border-bottom-color: ${colorDisconnected};
       }
     }
 
     &_connecting {
-      color: $color-connecting;
+      color: ${colorConnecting};
       &:before {
-        border-bottom-color: $color-connecting;
+        border-bottom-color: ${colorConnecting};
       }
     }
   }
@@ -75,14 +76,14 @@ $background-color-lighter: #3d444c;
       width: 100%;
       display: flex;
       align-items: center;
-      background-color: $background-color-lighter;
+      background-color: ${backgroundColorLighter};
 
       .control {
         width: 15px;
         height: 15px;
         line-height: 15px;
         border-radius: 50%;
-        background-color: $color-disconnected;
+        background-color: ${colorDisconnected};
         text-align: center;
         text-decoration: none;
         margin-left: 10px;
@@ -92,8 +93,8 @@ $background-color-lighter: #3d444c;
 
         &_fullscreen {
           cursor: pointer;
-          background-color: $color-fullscreen;
-          color: $color-fullscreen;
+          background-color: ${colorFullscreen};
+          color: ${colorFullscreen};
 
           &:hover {
             color: #fff;
@@ -102,8 +103,8 @@ $background-color-lighter: #3d444c;
 
         &_back {
           cursor: pointer;
-          background-color: $color-disconnected;
-          color: $color-disconnected;
+          background-color: ${colorDisconnected};
+          color: ${colorDisconnected};
 
           &:hover {
             color: #fff;
@@ -112,8 +113,8 @@ $background-color-lighter: #3d444c;
 
         &_lock {
           cursor: pointer;
-          background-color: $color-connecting;
-          color: $color-connecting;
+          background-color: ${colorConnecting};
+          color: ${colorConnecting};
 
           &:hover {
             color: #fff;
@@ -121,7 +122,7 @@ $background-color-lighter: #3d444c;
         }
 
         &_disconnected {
-          background-color: $color-disconnected;
+          background-color: ${colorDisconnected};
           height: 30px;
           width: 30px;
           line-height: 30px;
@@ -130,7 +131,7 @@ $background-color-lighter: #3d444c;
         }
 
         &_connecting {
-          background-color: $color-connecting;
+          background-color: ${colorConnecting};
           height: 30px;
           width: 30px;
           line-height: 30px;
@@ -143,7 +144,7 @@ $background-color-lighter: #3d444c;
         }
 
         &_disconnecting {
-          background-color: $color-disconnecting;
+          background-color: ${colorDisconnecting};
         }
       }
     }
@@ -160,4 +161,4 @@ $background-color-lighter: #3d444c;
       }
     }
   }
-}
+`;

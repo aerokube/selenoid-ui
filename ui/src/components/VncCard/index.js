@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 
 import VncScreen from "./VncScreen";
-import "./style.scss";
+import {StyledVNC} from "./style.css";
 
 
 export default class VncCard extends Component {
@@ -23,7 +23,7 @@ export default class VncCard extends Component {
     };
 
     render() {
-        const {origin, session, browser = {}} = this.props;
+        const {origin, session, browser = {}, className} = this.props;
         const {connection, fullscreen, unlocked} = this.state;
         const connected = connection === 'connected';
 
@@ -32,7 +32,7 @@ export default class VncCard extends Component {
         }
 
         return (
-            <div className={`vnc ${fullscreen && "vnc_fullscreen"}`}>
+            <StyledVNC className={`${className} ${fullscreen && "fullscreen"}`}>
                 <div className={`vnc-card ${!connected && "vnc-card_small"} ${fullscreen && "vnc-card_fullscreen"}`}>
                     <div className="vnc-card__controls">
                         <Back/>
@@ -56,7 +56,7 @@ export default class VncCard extends Component {
                 {!connected && (<div
                     className={`vnc-connection-status vnc-connection-status_${connection}`}>VNC {connection}</div>)}
 
-            </div>
+            </StyledVNC>
         );
     }
 }

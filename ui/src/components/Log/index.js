@@ -4,7 +4,7 @@ import urlTo from "../../util/urlTo";
 import isSecure from "../../util/isSecure"
 
 import "xterm/dist/xterm.css";
-import "./style.scss";
+import {StyledLog} from "./style.css";
 import colors from "ansi-256-colors";
 import Rx from "rxjs";
 import {Observable} from "rxjs/Observable";
@@ -95,10 +95,10 @@ export default class Log extends Component {
     }
 
     render() {
-        const {hidden} = this.props;
+        const {hidden, className} = this.props;
 
         return (
-            <div className={`log log_hidden-${hidden}`}>
+            <StyledLog className={`${className} hidden-${hidden}`}>
                 <div className="log-card">
                     <div className="log-card__content">
                         <div className="term" ref={term => {
@@ -106,7 +106,7 @@ export default class Log extends Component {
                         }}/>
                     </div>
                 </div>
-            </div>
+            </StyledLog>
         );
     }
 }

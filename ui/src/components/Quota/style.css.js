@@ -1,17 +1,19 @@
-.quota {
+import styled from 'styled-components/macro'
+
+export const StyledQuota = styled.div`
   width: 180px;
   color: #fff;
   display: flex;
   flex-wrap: wrap;
 
-  &-title {
+  .title {
     width: 100%;
     line-height: 20px;
     height: 20px;
     letter-spacing: 1px;
   }
 
-  &-percents {
+  .percents {
     font-size: 4em;
     font-weight: 100;
     text-align: right;
@@ -21,7 +23,7 @@
     }
   }
 
-  &-numbers {
+  .numbers {
     align-self: center;
     padding-right: 10px;
     text-align: center;
@@ -35,4 +37,4 @@
       color: #ccc;
     }
   }
-}
+`;

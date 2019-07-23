@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { CSSTransition, TransitionGroup, } from 'react-transition-group';
 import { Observable } from "rxjs";
-import "./style.scss";
+import {StyledSessions} from "./style.css";
 import { BeatLoader } from 'react-spinners';
 
 const Sessions = ({ sessions = {} }) => {
@@ -36,8 +36,8 @@ const Sessions = ({ sessions = {} }) => {
     };
 
     return (
-        <div className="sessions">
-            <div className="sessions__section-title">
+        <StyledSessions>
+            <div className="section-title">
                 Sessions
             </div>
             <TransitionGroup className={`sessions__list sessions__list_count-${list.length}`}>
@@ -95,14 +95,14 @@ const Sessions = ({ sessions = {} }) => {
                     classNames="sessions__no-any_state"
                     unmountOnExit
                 >
-                    <div className="sessions__no-any">
+                    <div className="no-any">
                         <div title="No any" className="icon dripicons-hourglass"/>
                         <div className="nosession-any-text">NO SESSIONS YET :'(</div>
                     </div>
                 </CSSTransition>
             )}
 
-        </div>
+        </StyledSessions>
     );
 };
 

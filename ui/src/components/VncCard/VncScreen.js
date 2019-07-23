@@ -3,8 +3,6 @@ import RFB from "@novnc/novnc/core/rfb";
 import urlTo from "../../util/urlTo"
 import isSecure from "../../util/isSecure"
 
-import "./style.scss";
-
 export default class VncScreen extends Component {
 
     static resizeVnc(rfb) {

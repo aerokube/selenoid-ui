@@ -1,20 +1,21 @@
-.browsers {
+import styled from 'styled-components/macro'
+
+export const StyledBrowsers = styled.div`
   color: #fff;
   display: flex;
   flex-direction: column;
   width: 30%;
   min-width: 150px;
-}
+`;
 
-.browser {
+export const StyledBrowser = styled.div`
   width: 100%;
   overflow: hidden;
   display: inline-flex;
   line-height: 30px;
   position: relative;
-}
 
-.browser-stats {
+.stats {
   display: flex;
 
   &__name {
@@ -35,10 +36,11 @@
   }
 }
 
-.browser-usage-bar {
+.usage-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   border-bottom: 1px dashed;
   transition: all 300ms ease-in;
 }
+`;

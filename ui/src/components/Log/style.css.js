@@ -1,19 +1,15 @@
-$color-disconnected: #ff6e59;
-$color-connecting: #6883d3;
-$color-disconnecting: #ca9eff;
-$color-fullscreen: #555f6a;
-$color-base-control: #59a781;
-$background-color-lighter: #3d444c;
-$term-bg: #151515;
-$light-font: #999;
+import styled from 'styled-components/macro'
 
-.log {
+const termBg = '#151515';
+const lightFont = '#999';
+
+export const StyledLog = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
 
-  &_hidden-true {
+  &.hidden-true {
     display: none;
   }
 
@@ -29,7 +25,7 @@ $light-font: #999;
       height: 100%;
       display: flex;
       flex-direction: column;
-      background-color: $term-bg;
+      background-color: ${termBg};
 
       .term {
         height: calc(100% - 30px);
@@ -45,7 +41,7 @@ $light-font: #999;
           -moz-osx-font-smoothing: grayscale;
 
           .xterm-viewport {
-            background-color: $term-bg;
+            background-color: ${termBg};
           }
         }
       }
@@ -58,7 +54,7 @@ $light-font: #999;
     justify-content: center;
     line-height: 20px;
     width: 200px;
-    color: $light-font;
+    color: ${lightFont};
 
     &__version-separator {
       margin-right: 4px;
@@ -70,8 +66,8 @@ $light-font: #999;
     &__session {
       line-height: 20px;
       font-size: 0.8em;
-      color: $light-font;
+      color: ${lightFont};
       text-align: center;
     }
   }
-}
+`;
