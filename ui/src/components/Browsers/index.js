@@ -1,34 +1,31 @@
-import React, {Component} from "react";
-import {rxConnect} from "rx-connect";
-import {StyledBrowsers} from "./style.css";
+import React from "react";
+
+import PropTypes from "prop-types"
+import { StyledBrowsers } from "./style.css";
 import Browser from "./Browser";
 
-class Browsers extends Component {
-    render() {
-        const {browsers, totalUsed} = this.props;
-
-        return (
-            <StyledBrowsers>
-                {browsers.map(browser =>
-                    (
-                        <Browser key={browser.name} totalUsed={totalUsed} {...browser}/>
-                    )
-                )}
-            </StyledBrowsers>
-        );
-    }
+function descendingCount(browsers) {
+    return Object.keys(browsers)
+        .sort((a, b) => browsers[b] - browsers[a])
+        .map(name => ({
+            name,
+            used: browsers[name]
+        }));
 }
 
-export default rxConnect(props$ => {
-    return props$.map(({totalUsed, browsers}) => {
-        return {
-            totalUsed: totalUsed,
-            browsers: Object.keys(browsers)
-              .sort((a, b) => browsers[b] - browsers[a])
-              .map(browser => ({
-                  name: browser,
-                  used: browsers[browser]
-              }))
-        };
-    });
-})(Browsers)
+const Browsers = ({ totalUsed, browsers }) => {
+    return (
+        <StyledBrowsers>
+            {descendingCount(browsers).map(browser => (
+                <Browser key={browser.name} totalUsed={totalUsed} {...browser}/>
+            ))}
+        </StyledBrowsers>
+    );
+};
+
+Browsers.propTypes = {
+    totalUsed: PropTypes.number.isRequired,
+    browsers: PropTypes.object.isRequired,
+};
+
+export default Browsers;

@@ -101,11 +101,6 @@ export const sessionIdFrom = ({response}) => {
 };
 
 class Capabilities extends React.Component {
-    static propTypes = {
-        state: PropTypes.object,
-        origin: PropTypes.string
-    };
-
     onBrowserChange = (browser) => {
         this.setState({browser})
     };
@@ -221,5 +216,10 @@ class Capabilities extends React.Component {
         );
     }
 }
+
+Capabilities.propTypes = {
+    state: PropTypes.object,
+    origin: PropTypes.string
+};
 
 export default withRouter(Capabilities)

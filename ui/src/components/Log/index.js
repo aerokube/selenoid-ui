@@ -1,13 +1,13 @@
-import React, {Component} from "react";
-import {Terminal} from "xterm";
+import React, { Component } from "react";
+import { Terminal } from "xterm";
 import urlTo from "../../util/urlTo";
 import isSecure from "../../util/isSecure"
 
 import "xterm/dist/xterm.css";
-import {StyledLog} from "./style.css";
+import { StyledLog } from "./style.css";
 import colors from "ansi-256-colors";
-import Rx from "rxjs";
-import {Observable} from "rxjs/Observable";
+import { BehaviorSubject, defer, fromEvent, Observable } from "rxjs";
+import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, tap } from "rxjs/operators";
 import * as fit from 'xterm/lib/addons/fit/fit';
 
 export default class Log extends Component {
@@ -27,7 +27,7 @@ export default class Log extends Component {
                 background: '#151515'
             }
         });
-        this.props$ = new Rx.BehaviorSubject(props);
+        this.props$ = new BehaviorSubject(props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -38,53 +38,57 @@ export default class Log extends Component {
     componentDidMount() {
         this.term.open(this.termel);
 
-        this.resize = Rx.Observable.fromEvent(window, 'resize')
-            .debounceTime(100)
-            .startWith({})
-            .do(() => this.term.fit())
+        this.resize = fromEvent(window, 'resize')
+            .pipe(
+                debounceTime(100),
+                startWith({}),
+                tap(() => this.term.fit())
+            )
             .subscribe();
         this.term.writeln(colors.fg.getRgb(2, 3, 4) + "Initialize...\n\r" + colors.reset);
 
         this.subscription = this.props$
-            .filter(it => it && it.session && it.origin && it.browser)
-            .distinctUntilChanged((prev, {origin}) => prev.origin === origin)
-            .map(({session}) => {
-                const wsProxyUrl = urlTo(window.location.href);
-                return `${isSecure(wsProxyUrl) ? 'wss' : 'ws'}://${wsProxyUrl.host}/ws/logs/${session}`;
-            })
-            .switchMap(ws => {
-                return Rx.Observable.defer(() => {
-                    this.term.clear();
+            .pipe(
+                filter(it => it && it.session && it.origin && it.browser),
+                distinctUntilChanged((prev, { origin }) => prev.origin === origin),
+                map(({ session }) => {
+                    const wsProxyUrl = urlTo(window.location.href);
+                    return `${isSecure(wsProxyUrl) ? 'wss' : 'ws'}://${wsProxyUrl.host}/ws/logs/${session}`;
+                }),
+                switchMap(ws => {
+                    return defer(() => {
+                        this.term.clear();
 
-                    return Observable.create(observer => {
-                        observer.next(`Connecting to ${ws}...\n\r`);
+                        return new Observable(observer => {
+                            observer.next(`Connecting to ${ws}...\n\r`);
 
-                        const socket = new WebSocket(ws);
-                        const decoder = new TextDecoder('utf8');
+                            const socket = new WebSocket(ws);
+                            const decoder = new TextDecoder('utf8');
 
-                        socket.binaryType = 'arraybuffer';
-                        socket.onmessage = event => {
-                            if (event) {
-                                observer.next(decoder.decode(event.data) + '\r');
-                            }
-                        };
+                            socket.binaryType = 'arraybuffer';
+                            socket.onmessage = event => {
+                                if (event) {
+                                    observer.next(decoder.decode(event.data) + '\r');
+                                }
+                            };
 
-                        socket.onopen = () => {
-                            observer.next(colors.fg.getRgb(0, 2, 0) + "Connected!\n\r" + colors.reset);
-                        };
+                            socket.onopen = () => {
+                                observer.next(colors.fg.getRgb(0, 2, 0) + "Connected!\n\r" + colors.reset);
+                            };
 
-                        socket.onclose = () => {
-                            observer.next(colors.fg.getRgb(5, 1, 1) + "Disconnected\n\r" + colors.reset);
-                        };
+                            socket.onclose = () => {
+                                observer.next(colors.fg.getRgb(5, 1, 1) + "Disconnected\n\r" + colors.reset);
+                            };
 
-                        return () => {
-                            socket
-                            && socket.readyState !== WebSocket.CLOSED
-                            && socket.close();
-                        };
+                            return () => {
+                                socket
+                                && socket.readyState !== WebSocket.CLOSED
+                                && socket.close();
+                            };
+                        })
                     })
                 })
-            })
+            )
             .subscribe(msg => this.term.write(msg));
     }
 
@@ -95,7 +99,7 @@ export default class Log extends Component {
     }
 
     render() {
-        const {hidden, className} = this.props;
+        const { hidden, className } = this.props;
 
         return (
             <StyledLog className={`${className} hidden-${hidden}`}>
