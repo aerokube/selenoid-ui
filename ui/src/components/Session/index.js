@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { withRouter } from 'react-router-dom'
 
 import SessionInfo from "./SessionInfo";
@@ -6,12 +6,29 @@ import VncCard from "../VncCard";
 import Log from "../Log";
 import { StyledSession } from "./style.css";
 
-const Session = ({ origin, session, browser, history }) => {
+/**
+ * The ref object is a generic container whose current property is mutable
+ * and can hold any value, similar to an instance property on a class
+ */
+function usePrevious(value) {
+    const ref = useRef();
+
     useEffect(() => {
-        if (browser) { // if browser disappears only
-            history.push('/') //fixme prev state browser && !state.browser ?
+        ref.current = value;
+    }, [value]); // Only re-run if value changes
+
+    // Return previous value (happens before update in useEffect above)
+    return ref.current;
+}
+
+const Session = ({ origin, session, browser, history }) => {
+    const prevBrowser = usePrevious(browser);
+
+    useEffect(() => {
+        if (prevBrowser && !browser) { // if browser disappears only
+            history.push('/')
         }
-    }, [browser, history]);
+    }, [browser, history, prevBrowser]);
 
     const [isLogHidden, onVNCFullscreenChange] = useState(false);
 

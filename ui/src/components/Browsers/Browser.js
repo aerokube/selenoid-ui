@@ -49,9 +49,9 @@ const Browser = ({ name, used, totalUsed }) => {
     return (
         <StyledBrowser>
             <div className="stats">
-                <div className="stats__percent">{perc}%</div>
-                <div className="stats__count">{used}</div>
-                <div className="stats__name">{name}</div>
+                <div className="percent">{perc}%</div>
+                <div className="count">{used}</div>
+                <div className="name">{name}</div>
             </div>
             <div className="usage-bar"
                  style={{ width: `${perc}%`, borderBottomColor: countColor(perc) }}/>

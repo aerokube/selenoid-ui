@@ -37,6 +37,7 @@ export default class Log extends Component {
 
     componentDidMount() {
         this.term.open(this.termel);
+        this.term.writeln(colors.fg.getRgb(2, 3, 4) + "Initialize...\n\r" + colors.reset);
 
         this.resize = fromEvent(window, 'resize')
             .pipe(
@@ -45,7 +46,6 @@ export default class Log extends Component {
                 tap(() => this.term.fit())
             )
             .subscribe();
-        this.term.writeln(colors.fg.getRgb(2, 3, 4) + "Initialize...\n\r" + colors.reset);
 
         this.subscription = this.props$
             .pipe(

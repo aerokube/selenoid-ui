@@ -46,7 +46,7 @@ SessionInfo.propTypes = {
             screenResolution: PropTypes.string,
             name: PropTypes.string,
         }).isRequired,
-    }).isRequired,
+    }),
 };
 
 export default SessionInfo;

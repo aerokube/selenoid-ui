@@ -114,20 +114,20 @@ export const StyledSessions = styled.div`
     background-color: #222;
     min-width: 350px;
 
-    .session-link-browser {
+    .browser {
       display: flex;
       justify-content: center;
       align-items: center;
       line-height: 60px;
 
-      &__name {
+      .name {
         text-transform: uppercase;
         font-weight: 200;
         margin-left: 20px;
         margin-right: 10px;
       }
 
-      &__version {
+      .version {
         font-weight: 300;
         text-transform: lowercase;
         font-size: 0.8em;
@@ -135,7 +135,7 @@ export const StyledSessions = styled.div`
       }
     }
 
-    .session-cap {
+    .capability {
       height: 30px;
       line-height: 30px;
       box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);

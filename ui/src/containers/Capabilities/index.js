@@ -119,7 +119,8 @@ class Capabilities extends React.Component {
                         "browserName": `${browser.name}`,
                         "version": `${browser.version}`,
                         "enableVNC": true,
-                        "sessionTimeout": "60m"
+                        "sessionTimeout": "60m",
+                        "name": "Manual session"
                     },
                 "capabilities":
                     {

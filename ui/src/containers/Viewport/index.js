@@ -56,9 +56,6 @@ const Viewport = () => {
                         .pipe(
                             map(event => JSON.parse(event)),
                             map(event => {
-
-                                console.log(event);
-
                                 if (!event) {
                                     pushStatus({ status: "error" });
                                     return {};
