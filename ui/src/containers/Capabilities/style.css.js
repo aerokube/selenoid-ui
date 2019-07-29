@@ -4,6 +4,7 @@ const borderLangsColor = '#3d444c';
 const borderSectionColor = '#353b42';
 const unselectedColor = '#376e52';
 const selectedColor = '#59a781';
+const errorColor = '#ff6e59';
 const grayColor = '#666';
 
 const selectBgColor = '#30363C';
@@ -116,7 +117,7 @@ export const StyledCapabilities = styled.div`
       background-color: ${borderLangsColor};
     }
 
-    &_disabled-true {
+    &.disabled-true {
       border-color: ${borderLangsColor};
       background-color: ${borderLangsColor};
       color: ${grayColor};
@@ -125,6 +126,11 @@ export const StyledCapabilities = styled.div`
         border-color: ${borderLangsColor};
         cursor: default;
       }
+    }
+    
+     &.error-true {
+      border-color: ${errorColor};
+      color: ${errorColor};
     }
   }
 

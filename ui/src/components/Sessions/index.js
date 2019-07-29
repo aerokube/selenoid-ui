@@ -48,7 +48,7 @@ const Sessions = ({ sessions = {} }) => {
 };
 
 
-const Session = ({ id, session }) => {
+const Session = ({ id, session: { caps } }) => {
     const [deleting, onDeleting] = useState(false);
 
     const deleteSession = (e) => {
@@ -72,12 +72,12 @@ const Session = ({ id, session }) => {
         <div className="session-container">
             <Link className="session-link" to={deleting ? `#` : `/sessions/${id}`}>
                 <div className="browser">
-                    <span className="name">{session.caps.browserName}</span>
-                    <span className="version">{session.caps.version}</span>
+                    <span className="name">{caps.browserName}</span>
+                    <span className="version">{caps.version}</span>
                 </div>
-                {session.caps.name && (
-                    <div className="capability capability__name" title={session.caps.name}>
-                        {session.caps.name}
+                {caps.name && (
+                    <div className="capability capability__name" title={caps.name}>
+                        {caps.name}
                     </div>
                 )}
                 <button disabled={deleting} className="capability capability__session-delete" onClick={deleteSession}>
@@ -88,7 +88,7 @@ const Session = ({ id, session }) => {
                     }
                 </button>
 
-                {session.caps.enableVNC && (
+                {caps.enableVNC && (
                     <div className="capability capability__with-vnc">
                         <span title="With VNC" className="icon dripicons-device-desktop"/>&nbsp;
                         <sup>VNC</sup>
