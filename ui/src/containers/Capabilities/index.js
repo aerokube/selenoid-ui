@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { ajax } from 'rxjs/ajax';
-import { filter } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { catchError, filter, flatMap, tap } from 'rxjs/operators';
 
 import Highlight from "react-highlight";
 import "highlight.js/styles/sunburst.css";
@@ -11,6 +12,7 @@ import Select from "react-select";
 
 import { StyledCapabilities } from "./style.css";
 import { BeatLoader } from "react-spinners";
+import { useEventCallback } from "rxjs-hooks";
 
 
 const code = (browser = 'UNKNOWN', version = '', origin = 'http://selenoid-uri:4444') => {
@@ -161,60 +163,52 @@ const Capabilities = ({ state = { browsers: {} }, origin, history }) => {
 };
 
 const Launch = ({ browser: { name, version }, history }) => {
-    const ref = useRef();
-    useEffect(() => {
-        return () => {
-            ref.current && ref.current.unsubscribe();
-        }
-    }, []); // cancel the session request on leaving the page
-
     const [loading, onLoading] = useState(false);
     const [error, onError] = useState('');
 
-    const createSession = () => {
-        onError('');
-        onLoading(true);
-
-        const newJson = {
-            "desiredCapabilities": {
-                "browserName": `${name}`,
-                "version": `${version}`,
-                "enableVNC": true,
-                "sessionTimeout": "60m",
-                "name": "Manual session"
-            },
-            "capabilities": {
-                "alwaysMatch": {
-                    "browserName": `${name}`,
-                    "browserVersion": `${version}`,
-                    "selenoid:options": {
+    const [createSession] = useEventCallback((event$, inputs$) => combineLatest(event$, inputs$).pipe(
+        tap(() => {
+            onError('');
+            onLoading(true);
+        }),
+        flatMap(([_, [name, version, history]]) => {
+            return ajax({
+                url: '/wd/hub/session',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: {
+                    "desiredCapabilities": {
+                        "browserName": `${name}`,
+                        "version": `${version}`,
                         "enableVNC": true,
-                        "sessionTimeout": "60m"
+                        "sessionTimeout": "60m",
+                        "name": "Manual session"
+                    },
+                    "capabilities": {
+                        "alwaysMatch": {
+                            "browserName": `${name}`,
+                            "browserVersion": `${version}`,
+                            "selenoid:options": {
+                                "enableVNC": true,
+                                "sessionTimeout": "60m"
+                            }
+                        }
                     }
-                }
-            }
-        };
-
-        ref.current = ajax({
-            url: '/wd/hub/session',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: newJson,
-        }).pipe(
-            filter(({ status }) => status === 200)
-        ).subscribe(
-            res => {
-                history.push(`/sessions/${sessionIdFrom(res)}`)
-            },
-            err => {
-                console.error("Can't start session manually", err);
-                onError(err);
-                onLoading(false);
-            }
-        );
-    };
+                },
+            }).pipe(
+                filter(({ status }) => status === 200),
+                tap(res => history.push(`/sessions/${sessionIdFrom(res)}`)),
+            );
+        }),
+        catchError((err, caught) => {
+            console.error("Can't start session manually", err);
+            onError(err);
+            onLoading(false);
+            return caught;
+        })
+    ), [name, version, history], [name, version, history]);
 
     return (
         <button
@@ -224,7 +218,7 @@ const Launch = ({ browser: { name, version }, history }) => {
             onMouseLeave={() => onError('')}
             title={error}
         >
-            {loading ?  <BeatLoader size={3} color={'#fff'}/> : `Create Session`}
+            {loading ? <BeatLoader size={3} color={'#fff'}/> : `Create Session`}
         </button>
     );
 };
