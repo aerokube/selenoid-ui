@@ -11,7 +11,7 @@ import "highlight.js/styles/sunburst.css";
 import Select from "react-select";
 
 import { StyledCapabilities } from "./style.css";
-import { BeatLoader } from "react-spinners";
+import BeatLoader from "react-spinners/BeatLoader";
 import { useEventCallback } from "rxjs-hooks";
 
 
