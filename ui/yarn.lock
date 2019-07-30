@@ -11107,10 +11107,10 @@ xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.1:
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
   integrity sha1-pcbVMr5lbiPbgg77lDofBJmNY68=
 
-xterm@^3.11.0:
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/xterm/-/xterm-3.11.0.tgz#2c10da3e965db9170430aa7b68f8965de3ff004d"
-  integrity sha512-VB9+s2Fhig31pNBkbxPnz+/wdCvxdQ6JQ0HZmWDwpULV8iAggzxoyUonB4FR+WW3lj0LNVb/ZaD64rxbw+HB4A==
+xterm@^3.14.5:
+  version "3.14.5"
+  resolved "https://registry.yarnpkg.com/xterm/-/xterm-3.14.5.tgz#c9d14e48be6873aa46fb429f22f2165557fd2dea"
+  integrity sha512-DVmQ8jlEtL+WbBKUZuMxHMBgK/yeIZwkXB81bH+MGaKKnJGYwA+770hzhXPfwEIokK9On9YIFPRleVp/5G7z9g==
 
 "y18n@^3.2.1 || ^4.0.0", y18n@^4.0.0:
   version "4.0.0"
