@@ -1,87 +1,28 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { CSSTransition, TransitionGroup, } from 'react-transition-group';
-import { Observable } from "rxjs";
-import {StyledSessions} from "./style.css";
+import { ajax } from "rxjs/ajax";
+import { StyledSessions } from "./style.css";
 import { BeatLoader } from 'react-spinners';
 
 const Sessions = ({ sessions = {} }) => {
-    const list = Object.keys(sessions);
-
-    const [loading, setLoading] = useState([]);
-
-    const deleteSession = (e, id) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setLoading([...loading, id]);
-
-        const deleteSession = Observable.ajax({
-            url: `/wd/hub/session/${id}`,
-            method: 'DELETE',
-        });
-
-        deleteSession.subscribe(
-            res => {
-                console.log(res)
-            },
-            err => {
-                console.error(err);
-                const index = loading.indexOf(id);
-                if (index !== -1) {
-                    loading.splice(index, 1);
-                }
-                setLoading(loading)
-            }
-        );
-    };
+    const ids = Object.keys(sessions);
 
     return (
         <StyledSessions>
             <div className="section-title">
                 Sessions
             </div>
-            <TransitionGroup className={`sessions__list sessions__list_count-${list.length}`}>
-                {list.length && list.map(session => {
+            <TransitionGroup className={`sessions__list sessions__list_count-${ids.length}`}>
+                {ids.length && ids.map(id => {
                         return (
                             <CSSTransition
-                                key={session}
+                                key={id}
                                 timeout={500}
                                 classNames="session-container_state"
                                 unmountOnExit
                             >
-                                <div className="session-container">
-                                    <Link className="session-link" to={`/sessions/${session}`}>
-                                        <div className="session-link-browser">
-                                            <span className="session-link-browser__name">
-                                                {sessions[session].caps.browserName}
-                                            </span>
-                                            <span className="session-link-browser__version">
-                                                {sessions[session].caps.version}
-                                            </span>
-                                        </div>
-                                        {sessions[session].caps.name && (
-                                            <div className="session-cap session-cap__name"
-                                                 title={sessions[session].caps.name}>
-                                                {sessions[session].caps.name}
-                                            </div>
-                                        )}
-                                        <button className="session-cap session-cap__session-delete"
-                                                onClick={(e) => deleteSession(e, session)}>
-                                            {loading.indexOf(session) > -1 ?
-                                                <BeatLoader size={2} color={'#fff'}/>
-                                                :
-                                                <span title="Delete" className="icon dripicons-power"/>
-                                            }
-                                        </button>
-
-                                        {sessions[session].caps.enableVNC && (
-                                            <div className="session-cap session-cap__with-vnc">
-                                                <span title="With VNC" className="icon dripicons-device-desktop"/>&nbsp;
-                                                <sup>VNC</sup>
-                                            </div>
-                                        )}
-                                    </Link>
-                                </div>
+                                <Session id={id} session={sessions[id]}/>
                             </CSSTransition>
                         );
                     }
@@ -89,7 +30,7 @@ const Sessions = ({ sessions = {} }) => {
             </TransitionGroup>
             {(
                 <CSSTransition
-                    in={!list.length}
+                    in={!ids.length}
                     timeout={500}
                     exit={false}
                     classNames="sessions__no-any_state"
@@ -103,6 +44,58 @@ const Sessions = ({ sessions = {} }) => {
             )}
 
         </StyledSessions>
+    );
+};
+
+
+const Session = ({ id, session: { caps } }) => {
+    const [deleting, onDeleting] = useState(false);
+
+    const deleteSession = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onDeleting(true);
+
+        ajax({
+            url: `/wd/hub/session/${id}`,
+            method: 'DELETE',
+        }).subscribe(
+            () => {},
+            error => {
+                console.error("Can't delete session", id, error);
+                onDeleting(false);
+            }
+        );
+    };
+
+    return (
+        <div className="session-container">
+            <Link className="session-link" to={deleting ? `#` : `/sessions/${id}`}>
+                <div className="browser">
+                    <span className="name">{caps.browserName}</span>
+                    <span className="version">{caps.version}</span>
+                </div>
+                {caps.name && (
+                    <div className="capability capability__name" title={caps.name}>
+                        {caps.name}
+                    </div>
+                )}
+                <button disabled={deleting} className="capability capability__session-delete" onClick={deleteSession}>
+                    {deleting ?
+                        <BeatLoader size={2} color={'#fff'}/>
+                        :
+                        <span title="Delete" className="icon dripicons-power"/>
+                    }
+                </button>
+
+                {caps.enableVNC && (
+                    <div className="capability capability__with-vnc">
+                        <span title="With VNC" className="icon dripicons-device-desktop"/>&nbsp;
+                        <sup>VNC</sup>
+                    </div>
+                )}
+            </Link>
+        </div>
     );
 };
 

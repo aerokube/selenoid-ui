@@ -28,11 +28,11 @@ export const StyledQuota = styled.div`
     padding-right: 10px;
     text-align: center;
 
-    &__used {
+    .used {
       border-bottom: 1px solid #fff;
     }
 
-    &__pending {
+    .pending {
       font-size: 0.7em;
       color: #ccc;
     }

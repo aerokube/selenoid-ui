@@ -9,9 +9,9 @@ const Quota = ({ used, pending, total }) => {
         <StyledQuota>
             <div className="title">QUOTA</div>
             <div className="numbers">
-                <div className="numbers__used">{used} <span className="quota-numbers__pending">+ {pending}</span>
+                <div className="used">{used} <span className="pending">+ {pending}</span>
                 </div>
-                <div className="numbers__total">{total}</div>
+                <div className="total">{total}</div>
             </div>
             <div className="percents">
                 {perc}

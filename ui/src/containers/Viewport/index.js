@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { HashRouter as Router, Route } from "react-router-dom";
-import PropTypes from 'prop-types';
-import { rxConnect } from "rx-connect";
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/dom/ajax';
+import { merge, Observable, timer } from 'rxjs';
+import { delayWhen, flatMap, map, pluck, retryWhen, tap } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
 
-import {GlobalStyle, StyledViewport, StyledConnectionStatus, StyledTopBar} from "./styles.css"
+import { useObservable } from "rxjs-hooks";
+
+import { GlobalStyle, StyledConnectionStatus, StyledTopBar, StyledViewport } from "./styles.css"
 
 import 'event-source-polyfill'
 
@@ -19,18 +18,90 @@ import Sessions from "../../components/Sessions";
 import Session from "../../components/Session";
 import Videos from "../../components/Videos";
 
-const Viewport = ({ origin, sse, status, state, browsers = {}, sessions = {} }) => {
+const links = (videos) => {
+    return [
+        { href: "/", title: "STATS", exact: true },
+        { href: "/capabilities/", title: "CAPABILITIES", exact: true },
+        ...(videos ? [{ href: "/videos", title: "VIDEOS", exact: true }] : [])
+    ];
+};
+
+const Viewport = () => {
+    const [{ status, sse }, onStatus] = useState({ status: "unknown", sse: "unknown" });
+
+
     // can be checked offline with simple
     // const {origin, sse, status, state, browsers = {}, sessions = {}} = require("../../sse-example.json");
 
-    const links = [
-        { href: "/", title: "STATS", exact: true },
-        { href: "/capabilities/", title: "CAPABILITIES", exact: true },
-    ];
+    const { origin, state = {}, browsers = {}, sessions = {} } = useObservable(
+        (in$) => {
+            return in$.pipe(
+                flatMap(([pushStatus]) => merge(
+                    ajax('/status').pipe(
+                        pluck('response'),
+                        tap(() => pushStatus({ status: "ok" }))
+                    ),
 
-    if (state.videos) {
-        links.push({ href: "/videos", title: "VIDEOS", exact: true })
-    }
+                    new Observable(observer => {
+                        const sse = new EventSource('/events');
+
+                        sse.onmessage = x => observer.next(x.data);
+                        sse.onerror = x => observer.error(x);
+                        sse.onopen = () => pushStatus({ sse: "ok" });
+
+                        return () => {
+                            sse.close();
+                        };
+                    })
+                        .pipe(
+                            map(event => JSON.parse(event)),
+                            map(event => {
+                                if (!event) {
+                                    pushStatus({ status: "error" });
+                                    return {};
+                                }
+
+                                if (event.errors && event.errors.length) {
+                                    pushStatus({ status: "error" });
+                                    return event;
+                                }
+
+                                if (event.state) {
+                                    pushStatus({ status: "ok", sse: "ok" });
+                                    return event;
+                                } else {
+                                    console.error("Wrong data from backend", event);
+                                    pushStatus({ status: "error" });
+                                    return {
+                                        ...event,
+                                        errors: []
+                                    };
+                                }
+                            }),
+                            retryWhen(errs => errs.pipe(
+                                tap(err => {
+                                    console.error('Error connecting to SSE', err.target ? err.target.url : err);
+                                    pushStatus({
+                                        sse: "error",
+                                        status: "unknown"
+                                    });
+                                }),
+                                delayWhen(() => timer(3000))
+                            ))
+                        )
+                ))
+            );
+        },
+        {
+            state: {
+                "total": 0,
+                "used": 0,
+                "queued": 0,
+                "pending": 0,
+                "videos": [],
+                "browsers": {}
+            }
+        }, [onStatus]);
 
     return (
         <>
@@ -42,7 +113,7 @@ const Viewport = ({ origin, sse, status, state, browsers = {}, sessions = {} }) 
                             <Status status={sse} title="sse"/>
                             <Status status={status} title="selenoid"/>
                         </StyledConnectionStatus>
-                        <Navigation links={links}/>
+                        <Navigation links={links(state.videos)}/>
                     </StyledTopBar>
 
                     <Route exact={true} path="/" render={() => (
@@ -75,95 +146,4 @@ const Viewport = ({ origin, sse, status, state, browsers = {}, sessions = {} }) 
     );
 };
 
-Viewport.propTypes = {
-    status: PropTypes.string.isRequired,
-    sse: PropTypes.string.isRequired,
-    state: PropTypes.shape({
-        total: PropTypes.number.isRequired,
-        used: PropTypes.number.isRequired,
-        pending: PropTypes.number.isRequired,
-        queued: PropTypes.number.isRequired,
-        browsers: PropTypes.object.isRequired,
-        videos: PropTypes.array,
-    }).isRequired,
-    browsers: PropTypes.object,
-    sessions: PropTypes.object,
-};
-
-export default rxConnect(() => {
-    const open = new Subject();
-    const errors = new Subject();
-
-    return Observable
-        .merge(
-            Observable
-                .defer(() => Observable.create(observer => {
-                    const sse = new EventSource('/events');
-                    sse.onmessage = x => observer.next(x.data);
-                    sse.onerror = x => observer.error(x);
-                    sse.onopen = x => open.next(x);
-
-                    return () => {
-                        sse.close();
-                    };
-                }))
-                .map(event => JSON.parse(event))
-                .merge(Observable.ajax('/status').map(result => result.response))
-                .map(event => {
-                    if (!event) {
-                        return {
-                            status: "error"
-                        };
-                    }
-
-                    if (event.errors && event.errors.length) {
-                        return {
-                            ...event,
-                            status: "error",
-                        };
-                    }
-
-                    if (event.state) {
-                        return {
-                            ...event,
-                            status: "ok",
-                        };
-                    } else {
-                        console.error("Wrong data from backend", event);
-                        return {
-                            ...event,
-                            status: "error",
-                            errors: []
-                        };
-                    }
-                })
-                .retryWhen(errs => errs
-                    .do(err => {
-                        console.error('Error connecting to SSE', err.target ? err.target.url : err);
-                        errors.next({
-                            sse: "error",
-                            status: "unknown"
-                        });
-                    })
-                    .delayWhen(val => Observable.timer(3000))
-                ),
-            Observable.merge(
-                open.map(event => ({
-                    sse: "ok"
-                })),
-                errors
-            )
-        )
-        .startWith({
-            sse: "unknown",
-            status: "unknown",
-            state: {
-                "total": 0,
-                "used": 0,
-                "queued": 0,
-                "pending": 0,
-                "videos": [],
-                "browsers": {}
-            }
-        });
-})(Viewport)
+export default Viewport;

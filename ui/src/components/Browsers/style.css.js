@@ -18,17 +18,17 @@ export const StyledBrowser = styled.div`
 .stats {
   display: flex;
 
-  &__name {
+  .name {
     overflow: hidden;
     letter-spacing: 1px;
   }
 
-  &__count {
+  .count {
     font-size: 2em;
     width: 80px;
   }
 
-  &__percent {
+  .percent {
     font-size: 0.8em;
     line-height: 20px;
     width: 30px;

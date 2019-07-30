@@ -1,7 +1,7 @@
 import React from "react";
 import { StyledStatus } from "./style.css";
 
-const Status = ({ status, title }) => {
+const Status = ({ status = "unknown", title }) => {
     return (
         <StyledStatus>
             <div className={`indicator indicator_${status}`}>{title}</div>

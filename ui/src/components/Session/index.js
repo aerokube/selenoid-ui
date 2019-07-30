@@ -1,74 +1,72 @@
-import React, { Component } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { withRouter } from 'react-router-dom'
 
 import SessionInfo from "./SessionInfo";
 import VncCard from "../VncCard";
 import Log from "../Log";
-import {StyledSession} from "./style.css";
-import { mapActionCreators, rxConnect } from "rx-connect";
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/map';
+import { StyledSession } from "./style.css";
 
-class Session extends Component {
-    componentDidUpdate({browser}) {
-        const {history} = this.props;
-        if (browser && !this.props.browser) { // if browser disappears
-            history.push('/')
-        }
-    }
+/**
+ * The ref object is a generic container whose current property is mutable
+ * and can hold any value, similar to an instance property on a class
+ */
+function usePrevious(value) {
+    const ref = useRef();
 
-    render() {
-        const {origin, session, browser, onVNCFullscreenChange, isLogHidden} = this.props;
+    useEffect(() => {
+        ref.current = value;
+    }, [value]); // Only re-run if value changes
 
-        return (
-            <StyledSession>
-                <SessionInfo {...{
-                    session,
-                    browser
-                }}/>
-
-                {browser && (<div className="interactive">
-                    <VncContainer {... {
-                        origin,
-                        session,
-                        browser,
-                        onVNCFullscreenChange
-                    }}/>
-                    <div className="session-interactive-card">
-                        <Log {... {
-                            origin,
-                            session,
-                            browser
-                        }} hidden={isLogHidden}/>
-                    </div>
-                </div>)}
-            </StyledSession>
-        );
-    }
+    // Return previous value (happens before update in useEffect above)
+    return ref.current;
 }
 
-export default withRouter(
-  rxConnect(props$ => {
-    const actions = {
-      onVNCFullscreenChange$: new Subject()
-    };
+const Session = ({ origin, session, browser, history }) => {
+    const prevBrowser = usePrevious(browser);
 
-    return Observable.merge(
-      props$,
-      mapActionCreators(actions),
-      actions.onVNCFullscreenChange$.map(isLogHidden => ({isLogHidden}))
+    useEffect(() => {
+        if (prevBrowser && !browser) { // if browser disappears only
+            history.push('/')
+        }
+    }, [browser, history, prevBrowser]);
+
+    const [isLogHidden, onVNCFullscreenChange] = useState(false);
+
+    return (
+        <StyledSession>
+            <SessionInfo {...{
+                session,
+                browser
+            }}/>
+
+            {browser && (<div className="interactive">
+                <VncContainer {...{
+                    origin,
+                    session,
+                    browser,
+                    onVNCFullscreenChange
+                }}/>
+                <div className="session-interactive-card">
+                    <Log {...{
+                        origin,
+                        session,
+                        browser
+                    }} hidden={isLogHidden}/>
+                </div>
+            </div>)}
+        </StyledSession>
     );
-  })(Session)
-);
+};
 
-function VncContainer({origin, session, browser = {}, onVNCFullscreenChange}) {
+export default withRouter(Session);
+
+function VncContainer({ origin, session, browser = {}, onVNCFullscreenChange }) {
     if (browser.caps && !browser.caps.enableVNC) {
         return <span/>
     }
 
     return <div className="session-interactive-card">
-        <VncCard {... {
+        <VncCard {...{
             origin,
             session,
             browser,
