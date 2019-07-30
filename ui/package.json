@@ -13,7 +13,7 @@
     "react-is": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "react-select": "^2.4.1",
+    "react-select": "^3.0.4",
     "react-spinners": "^0.5.1",
     "react-transition-group": "^4.2.1",
     "rxjs": "^6.5.2",
