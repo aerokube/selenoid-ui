@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { CSSTransition, TransitionGroup, } from 'react-transition-group';
 import { ajax } from "rxjs/ajax";
 import { StyledSessions } from "./style.css";
-import { BeatLoader } from 'react-spinners';
+import BeatLoader from "react-spinners/BeatLoader";
 
 const Sessions = ({ sessions = {} }) => {
     const ids = Object.keys(sessions);
