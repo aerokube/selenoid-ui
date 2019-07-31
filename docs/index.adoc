@@ -125,6 +125,7 @@ services:
 Shows current quota usage, pending browsers and queue.
 Gets updates via SSE, so no need to refresh browser to see what happens.
 It will reconnect automatically on any temp failures.
+Each session on this screen can be closed.
 
 .Stats and sessions
 image:img/stats-sessions.png[ui]
@@ -136,6 +137,13 @@ an example of setup with right capabilities. Examples available for several lang
 
 .Capabilities
 image:img/capabilities.png[ui]
+
+==== Manual run
+
+With selection of the browser it could be launched manually right in the interface.
+
+NOTE: Protocol and the browser assumes that you will pass numerical value for the version.
+This way "latest" version won't work. Please setup your selenoid accordingly.
 
 === Logs & VNC
 
