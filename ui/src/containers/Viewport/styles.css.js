@@ -1,7 +1,7 @@
-import styled, {createGlobalStyle } from "styled-components/macro";
+import styled, { createGlobalStyle } from "styled-components/macro";
 
-const bgColor = '#30363C';
-const menuBorderBottomColor = '#353b42';
+const bgColor = "#30363C";
+const menuBorderBottomColor = "#353b42";
 
 export const GlobalStyle = createGlobalStyle`
 html,
@@ -49,5 +49,3 @@ export const StyledConnectionStatus = styled.div`
     padding-right: 10px;
     border-bottom: 1px solid ${menuBorderBottomColor};
 `;
-
-

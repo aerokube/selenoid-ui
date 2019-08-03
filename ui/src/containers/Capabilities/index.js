@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
-import { ajax } from 'rxjs/ajax';
-import { combineLatest } from 'rxjs';
-import { catchError, filter, flatMap, tap } from 'rxjs/operators';
+import { ajax } from "rxjs/ajax";
+import { combineLatest } from "rxjs";
+import { catchError, filter, flatMap, tap } from "rxjs/operators";
 
 import Highlight from "react-highlight";
 import "highlight.js/styles/sunburst.css";
@@ -14,8 +14,7 @@ import { StyledCapabilities } from "./style.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useEventCallback } from "rxjs-hooks";
 
-
-const code = (browser = 'UNKNOWN', version = '', origin = 'http://selenoid-uri:4444') => {
+const code = (browser = "UNKNOWN", version = "", origin = "http://selenoid-uri:4444") => {
     return {
         yaml: `# selenium: "${origin}"
 # please note that real accessible selenoid uri can be different        
@@ -75,7 +74,7 @@ var options = {
 };
 var client = webdriverio.remote(options);
 `,
-        "PHP": `$web_driver = RemoteWebDriver::create("${origin}/wd/hub",
+        PHP: `$web_driver = RemoteWebDriver::create("${origin}/wd/hub",
 array("version"=>"${version}", "browserName"=>"${browser}")
 );
 `,
@@ -94,138 +93,139 @@ if err != nil {
 	panic("create selenium session: %v\n", err)
 }
 defer driver.Quit()
-`
-    }
+`,
+    };
 };
 
 export const sessionIdFrom = ({ response }) => {
-    return response.sessionId || (response.value && response.value.sessionId) || '';
+    return response.sessionId || (response.value && response.value.sessionId) || "";
 };
 
 const Capabilities = ({ state = { browsers: {} }, origin, history }) => {
     const [browser, onBrowserChange] = useState({});
-    const [lang, onLanguageChange] = useState('yaml');
+    const [lang, onLanguageChange] = useState("yaml");
 
-    const browsers = [].concat(...Object.keys(state.browsers)
-        .map(name => Object.keys(state.browsers[name])
-            .map(version => {
+    const browsers = [].concat(
+        ...Object.keys(state.browsers).map(name =>
+            Object.keys(state.browsers[name]).map(version => {
                 return {
                     value: `${name}_${version}`,
                     label: `${name}: ${version}`,
                     name,
-                    version
-                }
-            })));
+                    version,
+                };
+            })
+        )
+    );
 
     const { name, version, value } = browser || {};
     const caps = code(name, version, origin);
 
     return (
         <StyledCapabilities>
-            <div className="section-title">
-                Capabilities
-            </div>
+            <div className="section-title">Capabilities</div>
             <div className="setup">
                 <Select
                     className="capabilities-browser-select"
                     name="browsers"
                     value={browsers.find(item => item.value === value)}
                     options={browsers}
-                    onChange={(browser) => onBrowserChange(browser)}
+                    onChange={browser => onBrowserChange(browser)}
                     placeholder="Select browser..."
                     isLoading={!origin}
                     clearable={false}
                     noResultsText="No information about browsers"
                 />
-                <Launch browser={browser} history={history}/>
+                <Launch browser={browser} history={history} />
             </div>
-            <Highlight className={lang}>
-                {caps[lang]}
-            </Highlight>
+            <Highlight className={lang}>{caps[lang]}</Highlight>
 
             <div className="lang-selector">
                 <div className="capabilities-langs">
-                    {
-                        Object.keys(caps)
-                            .map(next =>
-                                <div key={next}
-                                     className={`capabilities-lang ${next === lang && 'capabilities-lang_active'}`}
-                                     onClick={() => onLanguageChange(next)}>
-                                    {next}
-                                </div>
-                            )
-                    }
+                    {Object.keys(caps).map(next => (
+                        <div
+                            key={next}
+                            className={`capabilities-lang ${next === lang && "capabilities-lang_active"}`}
+                            onClick={() => onLanguageChange(next)}
+                        >
+                            {next}
+                        </div>
+                    ))}
                 </div>
             </div>
-
         </StyledCapabilities>
     );
 };
 
 const Launch = ({ browser: { name, version }, history }) => {
     const [loading, onLoading] = useState(false);
-    const [error, onError] = useState('');
+    const [error, onError] = useState("");
 
-    const [createSession] = useEventCallback((event$, inputs$) => combineLatest(event$, inputs$).pipe(
-        tap(() => {
-            onError('');
-            onLoading(true);
-        }),
-        flatMap(([_, [name, version, history]]) => {
-            return ajax({
-                url: '/wd/hub/session',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: {
-                    "desiredCapabilities": {
-                        "browserName": `${name}`,
-                        "version": `${version}`,
-                        "enableVNC": true,
-                        "sessionTimeout": "60m",
-                        "name": "Manual session"
-                    },
-                    "capabilities": {
-                        "alwaysMatch": {
-                            "browserName": `${name}`,
-                            "browserVersion": `${version}`,
-                            "selenoid:options": {
-                                "enableVNC": true,
-                                "sessionTimeout": "60m"
-                            }
-                        }
-                    }
-                },
-            }).pipe(
-                filter(({ status }) => status === 200),
-                tap(res => history.push(`/sessions/${sessionIdFrom(res)}`)),
-            );
-        }),
-        catchError((err, caught) => {
-            console.error("Can't start session manually", err);
-            onError(err);
-            onLoading(false);
-            return caught;
-        })
-    ), [name, version, history], [name, version, history]);
+    const [createSession] = useEventCallback(
+        (event$, inputs$) =>
+            combineLatest(event$, inputs$).pipe(
+                tap(() => {
+                    onError("");
+                    onLoading(true);
+                }),
+                flatMap(([_, [name, version, history]]) => {
+                    return ajax({
+                        url: "/wd/hub/session",
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: {
+                            desiredCapabilities: {
+                                browserName: `${name}`,
+                                version: `${version}`,
+                                enableVNC: true,
+                                sessionTimeout: "60m",
+                                name: "Manual session",
+                            },
+                            capabilities: {
+                                alwaysMatch: {
+                                    browserName: `${name}`,
+                                    browserVersion: `${version}`,
+                                    "selenoid:options": {
+                                        enableVNC: true,
+                                        sessionTimeout: "60m",
+                                    },
+                                },
+                            },
+                        },
+                    }).pipe(
+                        filter(({ status }) => status === 200),
+                        tap(res => history.push(`/sessions/${sessionIdFrom(res)}`))
+                    );
+                }),
+                catchError((err, caught) => {
+                    console.error("Can't start session manually", err);
+                    onError(err);
+                    onLoading(false);
+                    return caught;
+                })
+            ),
+        [name, version, history],
+        [name, version, history]
+    );
 
     return (
         <button
             onClick={createSession}
             disabled={!name || loading}
             className={`new-session disabled-${!name || loading} error-${!!error}`}
-            onMouseLeave={() => onError('')}
+            onMouseLeave={() => onError("")}
             title={error}
         >
-            {loading ? <BeatLoader size={3} color={'#fff'}/> : `Create Session`}
+            {loading ? <BeatLoader size={3} color={"#fff"} /> : `Create Session`}
         </button>
     );
 };
 
 Capabilities.propTypes = {
     state: PropTypes.object,
-    origin: PropTypes.string
+    origin: PropTypes.string,
 };
 
-export default withRouter(Capabilities)
+export default withRouter(Capabilities);

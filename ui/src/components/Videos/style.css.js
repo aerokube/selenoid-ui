@@ -1,9 +1,9 @@
-import styled from 'styled-components/macro'
+import styled from "styled-components/macro";
 
-const colorSessionName = '#555f6a';
-const borderSectionColor = '#353b42';
-const smallScreen = '900px';
-const bigScreen = '1280px';
+const colorSessionName = "#555f6a";
+const borderSectionColor = "#353b42";
+const smallScreen = "900px";
+const bigScreen = "1280px";
 
 export const StyledVideos = styled.div`
   width: 100%;

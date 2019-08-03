@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { withRouter } from 'react-router-dom'
+import { withRouter } from "react-router-dom";
 
 import SessionInfo from "./SessionInfo";
 import VncCard from "../VncCard";
@@ -25,8 +25,9 @@ const Session = ({ origin, session, browser, history }) => {
     const prevBrowser = usePrevious(browser);
 
     useEffect(() => {
-        if (prevBrowser && !browser) { // if browser disappears only
-            history.push('/')
+        if (prevBrowser && !browser) {
+            // if browser disappears only
+            history.push("/");
         }
     }, [browser, history, prevBrowser]);
 
@@ -34,26 +35,35 @@ const Session = ({ origin, session, browser, history }) => {
 
     return (
         <StyledSession>
-            <SessionInfo {...{
-                session,
-                browser
-            }}/>
-
-            {browser && (<div className="interactive">
-                <VncContainer {...{
-                    origin,
+            <SessionInfo
+                {...{
                     session,
                     browser,
-                    onVNCFullscreenChange
-                }}/>
-                <div className="session-interactive-card">
-                    <Log {...{
-                        origin,
-                        session,
-                        browser
-                    }} hidden={isLogHidden}/>
+                }}
+            />
+
+            {browser && (
+                <div className="interactive">
+                    <VncContainer
+                        {...{
+                            origin,
+                            session,
+                            browser,
+                            onVNCFullscreenChange,
+                        }}
+                    />
+                    <div className="session-interactive-card">
+                        <Log
+                            {...{
+                                origin,
+                                session,
+                                browser,
+                            }}
+                            hidden={isLogHidden}
+                        />
+                    </div>
                 </div>
-            </div>)}
+            )}
         </StyledSession>
     );
 };
@@ -62,16 +72,19 @@ export default withRouter(Session);
 
 function VncContainer({ origin, session, browser = {}, onVNCFullscreenChange }) {
     if (browser.caps && !browser.caps.enableVNC) {
-        return <span/>
+        return <span />;
     }
 
-    return <div className="session-interactive-card">
-        <VncCard {...{
-            origin,
-            session,
-            browser,
-            onVNCFullscreenChange
-        }}/>
-    </div>;
+    return (
+        <div className="session-interactive-card">
+            <VncCard
+                {...{
+                    origin,
+                    session,
+                    browser,
+                    onVNCFullscreenChange,
+                }}
+            />
+        </div>
+    );
 }
-
