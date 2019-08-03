@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import { Terminal } from "xterm";
 import urlTo from "../../util/urlTo";
-import isSecure from "../../util/isSecure"
+import isSecure from "../../util/isSecure";
 
 import "xterm/dist/xterm.css";
 import { StyledLog } from "./style.css";
 import colors from "ansi-256-colors";
 import { BehaviorSubject, defer, fromEvent, Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, tap } from "rxjs/operators";
-import * as fit from 'xterm/lib/addons/fit/fit';
+import * as fit from "xterm/lib/addons/fit/fit";
 
 export default class Log extends Component {
-
     constructor(props) {
         super(props);
 
@@ -24,8 +23,8 @@ export default class Log extends Component {
             fontSize: 13,
             lineHeight: 1,
             theme: {
-                background: '#151515'
-            }
+                background: "#151515",
+            },
         });
         this.props$ = new BehaviorSubject(props);
     }
@@ -34,12 +33,11 @@ export default class Log extends Component {
         this.props$.next(nextProps);
     }
 
-
     componentDidMount() {
         this.term.open(this.termel);
         this.term.writeln(colors.fg.getRgb(2, 3, 4) + "Initialize...\n\r" + colors.reset);
 
-        this.resize = fromEvent(window, 'resize')
+        this.resize = fromEvent(window, "resize")
             .pipe(
                 debounceTime(100),
                 startWith({}),
@@ -53,7 +51,7 @@ export default class Log extends Component {
                 distinctUntilChanged((prev, { origin }) => prev.origin === origin),
                 map(({ session }) => {
                     const wsProxyUrl = urlTo(window.location.href);
-                    return `${isSecure(wsProxyUrl) ? 'wss' : 'ws'}://${wsProxyUrl.host}/ws/logs/${session}`;
+                    return `${isSecure(wsProxyUrl) ? "wss" : "ws"}://${wsProxyUrl.host}/ws/logs/${session}`;
                 }),
                 switchMap(ws => {
                     return defer(() => {
@@ -63,12 +61,12 @@ export default class Log extends Component {
                             observer.next(`Connecting to ${ws}...\n\r`);
 
                             const socket = new WebSocket(ws);
-                            const decoder = new TextDecoder('utf8');
+                            const decoder = new TextDecoder("utf8");
 
-                            socket.binaryType = 'arraybuffer';
+                            socket.binaryType = "arraybuffer";
                             socket.onmessage = event => {
                                 if (event) {
-                                    observer.next(decoder.decode(event.data) + '\r');
+                                    observer.next(decoder.decode(event.data) + "\r");
                                 }
                             };
 
@@ -81,12 +79,10 @@ export default class Log extends Component {
                             };
 
                             return () => {
-                                socket
-                                && socket.readyState !== WebSocket.CLOSED
-                                && socket.close();
+                                socket && socket.readyState !== WebSocket.CLOSED && socket.close();
                             };
-                        })
-                    })
+                        });
+                    });
                 })
             )
             .subscribe(msg => this.term.write(msg));
@@ -105,13 +101,15 @@ export default class Log extends Component {
             <StyledLog className={`${className} hidden-${hidden}`}>
                 <div className="log-card">
                     <div className="log-card__content">
-                        <div className="term" ref={term => {
-                            this.termel = term;
-                        }}/>
+                        <div
+                            className="term"
+                            ref={term => {
+                                this.termel = term;
+                            }}
+                        />
                     </div>
                 </div>
             </StyledLog>
         );
     }
 }
-

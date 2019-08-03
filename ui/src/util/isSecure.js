@@ -1,3 +1,3 @@
-export default function isSecure({protocol}) {
+export default function isSecure({ protocol }) {
     return protocol === "https:";
 }

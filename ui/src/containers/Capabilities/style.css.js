@@ -1,13 +1,13 @@
-import styled from 'styled-components/macro'
+import styled from "styled-components/macro";
 
-const borderLangsColor = '#3d444c';
-const borderSectionColor = '#353b42';
-const unselectedColor = '#376e52';
-const selectedColor = '#59a781';
-const errorColor = '#ff6e59';
-const grayColor = '#666';
+const borderLangsColor = "#3d444c";
+const borderSectionColor = "#353b42";
+const unselectedColor = "#376e52";
+const selectedColor = "#59a781";
+const errorColor = "#ff6e59";
+const grayColor = "#666";
 
-const selectBgColor = '#30363C';
+const selectBgColor = "#30363C";
 
 export const StyledCapabilities = styled.div`
   width: 100%;

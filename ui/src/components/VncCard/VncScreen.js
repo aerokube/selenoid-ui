@@ -1,10 +1,9 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import RFB from "@novnc/novnc/core/rfb";
-import urlTo from "../../util/urlTo"
-import isSecure from "../../util/isSecure"
+import urlTo from "../../util/urlTo";
+import isSecure from "../../util/isSecure";
 
 export default class VncScreen extends Component {
-
     static resizeVnc(rfb) {
         if (rfb) {
             rfb.resizeSession = true;
@@ -12,7 +11,7 @@ export default class VncScreen extends Component {
         }
     }
 
-    static defaultPort({port, protocol}) {
+    static defaultPort({ port, protocol }) {
         return port || (protocol === "https:" ? "443" : "80");
     }
 
@@ -29,9 +28,8 @@ export default class VncScreen extends Component {
     };
 
     componentDidMount() {
-        const {session, origin} = this.props;
-        this.connection('connecting');
-
+        const { session, origin } = this.props;
+        this.connection("connecting");
 
         if (origin && session) {
             const link = urlTo(window.location.href);
@@ -44,7 +42,7 @@ export default class VncScreen extends Component {
 
     componentDidUpdate(prevProps) {
         const prevOrigin = prevProps.origin;
-        const {session, origin} = this.props;
+        const { session, origin } = this.props;
 
         if (origin && session && prevOrigin !== origin) {
             const link = urlTo(window.location.href);
@@ -62,15 +60,11 @@ export default class VncScreen extends Component {
     }
 
     createRFB(link, port, session, secure) {
-        const rfb = new RFB(
-            this.canvas,
-            `${secure ? 'wss' : 'ws'}://${link.hostname}:${port}/ws/vnc/${session}`,
-            {
-                credentials: {
-                    password: "selenoid"
-                }
-            }
-        );
+        const rfb = new RFB(this.canvas, `${secure ? "wss" : "ws"}://${link.hostname}:${port}/ws/vnc/${session}`, {
+            credentials: {
+                password: "selenoid",
+            },
+        });
 
         rfb.addEventListener("connect", this.onVNCConnect);
         rfb.addEventListener("disconnect", this.onVNCDisconnect);
@@ -88,18 +82,20 @@ export default class VncScreen extends Component {
     }
 
     disconnect(rfb) {
-        if (rfb && rfb._rfb_connection_state && rfb._rfb_connection_state !== 'disconnected') {
+        if (rfb && rfb._rfb_connection_state && rfb._rfb_connection_state !== "disconnected") {
             rfb.disconnect();
         }
     }
 
     render() {
         return (
-            <div className="vnc-screen" ref={screen => {
-                this.canvas = screen;
-                VncScreen.resizeVnc(this.rfb);
-            }}>
-            </div>
+            <div
+                className="vnc-screen"
+                ref={screen => {
+                    this.canvas = screen;
+                    VncScreen.resizeVnc(this.rfb);
+                }}
+            ></div>
         );
     }
 }

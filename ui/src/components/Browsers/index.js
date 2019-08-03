@@ -1,6 +1,6 @@
 import React from "react";
 
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 import { StyledBrowsers } from "./style.css";
 import Browser from "./Browser";
 
@@ -9,7 +9,7 @@ function descendingCount(browsers) {
         .sort((a, b) => browsers[b] - browsers[a])
         .map(name => ({
             name,
-            used: browsers[name]
+            used: browsers[name],
         }));
 }
 
@@ -17,7 +17,7 @@ const Browsers = ({ totalUsed, browsers }) => {
     return (
         <StyledBrowsers>
             {descendingCount(browsers).map(browser => (
-                <Browser key={browser.name} totalUsed={totalUsed} {...browser}/>
+                <Browser key={browser.name} totalUsed={totalUsed} {...browser} />
             ))}
         </StyledBrowsers>
     );

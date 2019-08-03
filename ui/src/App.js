@@ -1,12 +1,9 @@
-import React from 'react';
+import React from "react";
 
 import Viewport from "./containers/Viewport";
 
 const App = () => {
-    return (
-        <Viewport/>
-    );
+    return <Viewport />;
 };
 
 export default App;
-

@@ -9,11 +9,11 @@ import { StyledBrowser } from "./style.css";
 function countColor(percentile) {
     const pct = (percentile > 100 ? 100 : percentile) / 100;
     const percentColors = [
-        { pct: 0.0, color: { r: 0x41, g: 0x59, b: 0xD3 } }, //#4159D3
-        { pct: 0.3, color: { r: 0x66, g: 0x9D, b: 0x9E } }, //#F09876
-        { pct: 0.5, color: { r: 0x66, g: 0x9D, b: 0x9E } }, //#A44057
-        { pct: 0.7, color: { r: 0xEB, g: 0xA8, b: 0x98 } }, //#EBA898
-        { pct: 1.0, color: { r: 0xE8, g: 0x78, b: 0x6F } } //#E8786F
+        { pct: 0.0, color: { r: 0x41, g: 0x59, b: 0xd3 } }, //#4159D3
+        { pct: 0.3, color: { r: 0x66, g: 0x9d, b: 0x9e } }, //#F09876
+        { pct: 0.5, color: { r: 0x66, g: 0x9d, b: 0x9e } }, //#A44057
+        { pct: 0.7, color: { r: 0xeb, g: 0xa8, b: 0x98 } }, //#EBA898
+        { pct: 1.0, color: { r: 0xe8, g: 0x78, b: 0x6f } }, //#E8786F
     ];
 
     const color = {};
@@ -35,16 +35,13 @@ function countColor(percentile) {
         color.b = Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper);
     }
 
-    const colors = [color.r, color.g, color.b]
-        .map(col => col.toString(16))
-        .join('');
+    const colors = [color.r, color.g, color.b].map(col => col.toString(16)).join("");
 
     return `#${colors}`;
 }
 
-
 const Browser = ({ name, used, totalUsed }) => {
-    const perc = totalUsed > 0 ? (used / totalUsed * 100).toFixed() : 0;
+    const perc = totalUsed > 0 ? ((used / totalUsed) * 100).toFixed() : 0;
 
     return (
         <StyledBrowser>
@@ -53,8 +50,13 @@ const Browser = ({ name, used, totalUsed }) => {
                 <div className="count">{used}</div>
                 <div className="name">{name}</div>
             </div>
-            <div className="usage-bar"
-                 style={{ width: `${perc}%`, borderBottomColor: countColor(perc) }}/>
+            <div
+                className="usage-bar"
+                style={{
+                    width: `${perc}%`,
+                    borderBottomColor: countColor(perc),
+                }}
+            />
         </StyledBrowser>
     );
 };
