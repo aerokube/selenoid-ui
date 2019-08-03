@@ -8,6 +8,7 @@ services:
 
 script:
   - export GO111MODULE="on"
+  - export WD="$PWD"
   - go generate ./ui ./...
   - go test -race -v -coverprofile=coverage.txt -covermode=atomic ./...
   - yarn --cwd ui test
@@ -16,8 +17,8 @@ script:
   - gox -os "linux darwin windows" -arch "amd64" -osarch="windows/386"  -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`"
   - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build  -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`" # for docker
   - cd $GOPATH/pkg/mod
-  - find . -name 'LICENSE*' -exec cp --parents \{\} $HOME/licenses \;
-  - cd $HOME
+  - find . -name 'LICENSE*' -exec cp --parents \{\} $WD/licenses \;
+  - cd $WD
 
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
