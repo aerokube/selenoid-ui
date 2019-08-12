@@ -4,10 +4,41 @@ const colorSessionName = "#555f6a";
 const borderSectionColor = "#353b42";
 const smallScreen = "900px";
 const bigScreen = "1280px";
+const inputTextInactive = "#7881A1";
 
 export const StyledVideos = styled.div`
   width: 100%;
-
+  .filter{
+    position: relative;
+    top: 0;
+    left: 0;
+    padding-left: 5%;
+    border-bottom: 1px solid ${borderSectionColor};
+    width: 95%;
+    letter-spacing: 1px;
+    font-size: 12px;
+    line-height: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    border-radius: 2px;
+    padding: 1.4rem 2rem 1.6rem;
+    label{
+        color: #666;
+    }
+    
+     input {
+      flex-grow: 1;
+      color: $input-text-active;
+      line-height: 1.5rem;
+      font-size: 1.5rem;
+      vertical-align: middle;
+      &::-webkit-input-placeholder {
+        color: ${inputTextInactive};
+      }
+    }
+  }
   .section-title {
     color: #666;
     position: relative;
@@ -67,7 +98,10 @@ export const StyledVideos = styled.div`
   .videos-container {
     flex: 0 0 auto;
     transition: all 0.5s;
-
+    
+    flex-basis: 33.333%;
+    max-width: 33.333%;
+    
     @media screen and (max-width: ${smallScreen}) {
       flex-basis: 100%;
       max-width: 100%;
