@@ -1,47 +1,62 @@
-import React from "react";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
-
+import React, { Component } from "react";
 import { StyledVideos } from "./style.css";
+import SearchResults from "react-filter-search";
 
-const Videos = ({ videos }) => {
-    const list = Object.keys(videos);
-    const preloadVal = list.length > 100 ? "none" : "auto";
-    return (
-        <StyledVideos>
-            <TransitionGroup className={`videos__list videos__list_count-${list.length}`}>
-                {list.length &&
-                    list.map(video => {
-                        const src = "/video/" + videos[video];
-                        return (
-                            <CSSTransition key={video} timeout={500} classNames="videos-container_state" unmountOnExit>
-                                <div className="videos-container">
-                                    <div className="video-cap video-cap__name" title={videos[video]}>
-                                        {videos[video]}
+export default class Videos extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [],
+            value: "",
+        };
+    }
+
+    componentWillMount() {
+        const vids = [];
+        this.props.videos.forEach(function(item, index) {
+            vids.push({ name: item });
+        });
+
+        this.setState({ data: vids });
+    }
+
+    handleChange = event => {
+        const { value } = event.target;
+        this.setState({ value });
+    };
+
+    render() {
+        const { data, value } = this.state;
+        const preloadVal = data.length > 100 ? "none" : "auto";
+        return (
+            <StyledVideos>
+                <div className="section-title">Videos</div>
+                <div className="filter">
+                    <label>
+                        Filter:
+                        <input type="text" value={value} onChange={this.handleChange} />
+                    </label>
+                </div>
+                <SearchResults
+                    value={value}
+                    data={data}
+                    renderResults={results => (
+                        <div className={`videos__list videos__list_count-${data.length}`}>
+                            {results.length &&
+                                results.map(el => (
+                                    <div className="videos-container">
+                                        <div className="video-cap video-cap__name" title={el.name}>
+                                            <span>{el.name}</span>
+                                        </div>
+                                        <video controls preload={preloadVal}>
+                                            <source src={"/video/" + el.name} type="video/mp4" />
+                                        </video>
                                     </div>
-                                    <video controls preload={preloadVal}>
-                                        <source src={src} type="video/mp4" />
-                                    </video>
-                                </div>
-                            </CSSTransition>
-                        );
-                    })}
-            </TransitionGroup>
-            {
-                <CSSTransition
-                    in={!list.length}
-                    timeout={500}
-                    exit={false}
-                    classNames="videos__no-any_state"
-                    unmountOnExit
-                >
-                    <div className="no-any">
-                        <div title="No any" className="icon dripicons-hourglass" />
-                        <div className="nosession-any-text">NO VIDEOS YET :'(</div>
-                    </div>
-                </CSSTransition>
-            }
-        </StyledVideos>
-    );
-};
-
-export default Videos;
+                                ))}
+                        </div>
+                    )}
+                />
+            </StyledVideos>
+        );
+    }
+}
