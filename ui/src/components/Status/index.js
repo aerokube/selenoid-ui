@@ -42,6 +42,7 @@ const StyledStatus = styled.div`
 
         .status {
             flex: 1;
+            font-weight: 300;
         }
     }
 `;
