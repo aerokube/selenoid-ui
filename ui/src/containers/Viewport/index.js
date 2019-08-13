@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { HashRouter as Router, Route } from "react-router-dom";
-import { merge, Observable, timer, of } from "rxjs";
-import { delayWhen, flatMap, map, pluck, retryWhen, tap, catchError } from "rxjs/operators";
+import { merge, Observable, of, timer } from "rxjs";
+import { catchError, delayWhen, flatMap, map, pluck, retryWhen, tap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 
 import { useObservable } from "rxjs-hooks";
 
-import { GlobalStyle, StyledConnectionStatus, StyledTopBar, StyledViewport } from "./styles.css";
+import styled from "styled-components/macro";
+import { GlobalStyle, StyledTopBar, StyledViewport } from "./styles.css";
 
 import "event-source-polyfill";
 
@@ -118,12 +119,14 @@ const Viewport = () => {
         <>
             <GlobalStyle />
             <Router>
+                <StatsBar>
+                    <Logo>&nbsp;</Logo>
+
+                    <Status status={sse} title="sse" />
+                    <Status status={status} title="selenoid" />
+                </StatsBar>
                 <StyledViewport>
                     <StyledTopBar>
-                        <StyledConnectionStatus>
-                            <Status status={sse} title="sse" />
-                            <Status status={status} title="selenoid" />
-                        </StyledConnectionStatus>
                         <Navigation links={links(state.videos)} />
                     </StyledTopBar>
 
@@ -167,3 +170,36 @@ const Viewport = () => {
 };
 
 export default Viewport;
+
+const StatsBar = styled.div`
+    height: 80px;
+    background-color: #272727;
+    box-shadow: inset 0 -5px 5px 0 rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+`;
+
+const aerokubeColor = "#4195d3";
+const aerokubeColorBright = "#00c6f4";
+
+const Logo = styled.div`
+    line-height: 30px;
+    transition: color 0.5s ease-out 0s;
+    color: ${aerokubeColor};
+    flex: 1;
+    margin-left: 55px;
+    position: relative;
+
+    &:before {
+        content: "";
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        border-radius: 5%;
+        left: -30px;
+        top: 3px;
+        transition: border-color 0.5s ease-out 0s, box-shadow 0.5s ease-out 0.2s;
+        box-shadow: 0 0 10px ${aerokubeColorBright};
+        border: 2px solid ${aerokubeColor};
+    }
+`;
