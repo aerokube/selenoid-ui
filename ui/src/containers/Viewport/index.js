@@ -14,10 +14,14 @@ import "event-source-polyfill";
 import Navigation from "../../components/Navigation";
 import Stats from "../../containers/Stats";
 import Capabilities from "../../containers/Capabilities";
-import Status from "../../components/Status";
+import Status from "../../components/Stats/Status";
 import Sessions from "../../components/Sessions";
 import Session from "../../components/Session";
 import Videos from "../../components/Videos";
+import Quota from "../../components/Stats/Quota";
+import Queue from "../../components/Stats/Queue";
+import Used from "../../components/Stats/Used";
+import Separator from "../../components/Stats/Separator";
 
 const links = videos => {
     return [
@@ -124,6 +128,14 @@ const Viewport = () => {
 
                     <Status status={sse} title="sse" />
                     <Status status={status} title="selenoid" />
+
+                    <Separator>&nbsp;</Separator>
+
+                    <Used total={state.total} used={state.used} pending={state.pending} />
+                    <Separator>&nbsp;</Separator>
+                    <Queue queued={state.queued} />
+                    <Separator>&nbsp;</Separator>
+                    <Quota total={state.total} used={state.used} pending={state.pending} />
                 </StatsBar>
                 <StyledViewport>
                     <StyledTopBar>
@@ -185,21 +197,24 @@ const aerokubeColorBright = "#00c6f4";
 const Logo = styled.div`
     line-height: 30px;
     transition: color 0.5s ease-out 0s;
-    color: ${aerokubeColor};
+    color: ${aerokubeColorBright};
     flex: 1;
     margin-left: 55px;
     position: relative;
+    font-weight: 400;
+    font-size: 16px;
+    min-width: 50px;
 
     &:before {
         content: "";
         width: 20px;
         height: 20px;
         position: absolute;
-        border-radius: 5%;
+        border-radius: 1px;
         left: -30px;
-        top: 3px;
-        transition: border-color 0.5s ease-out 0s, box-shadow 0.5s ease-out 0.2s;
-        box-shadow: 0 0 10px ${aerokubeColorBright};
-        border: 2px solid ${aerokubeColor};
+        top: 0;
+        box-shadow: 0 0 10px 5px ${aerokubeColor};
+        border: 5px solid #272727;
+        background-color: ${aerokubeColorBright};
     }
 `;

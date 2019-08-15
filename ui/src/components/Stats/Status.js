@@ -1,20 +1,18 @@
 import React from "react";
 import styled from "styled-components/macro";
+import { StatsElement } from "./StatsElement";
 
 const brightGreen = "#57ff76";
 const brightRed = "#FF5757";
 
-const StyledStatus = styled.div`
+const StyledStatus = styled(StatsElement)`
     .indicator {
         height: 80px;
         transition: all 0.5s ease-out 0.2s;
         text-transform: uppercase;
-        color: #fff;
-        width: 80px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        margin-right: 15px;
 
         box-shadow: inset 0px -8px 5px -10px #ffffff;
 
@@ -32,12 +30,6 @@ const StyledStatus = styled.div`
             }
 
             box-shadow: inset 0px -10px 5px -10px ${brightRed};
-        }
-
-        .title {
-            padding-top: 10px;
-            font-size: 0.8em;
-            flex: 1;
         }
 
         .status {

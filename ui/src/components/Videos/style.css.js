@@ -67,6 +67,7 @@ export const StyledVideos = styled.div`
   .videos-container {
     flex: 0 0 auto;
     transition: all 0.5s;
+    max-width: 100%;
 
     @media screen and (max-width: ${smallScreen}) {
       flex-basis: 100%;
