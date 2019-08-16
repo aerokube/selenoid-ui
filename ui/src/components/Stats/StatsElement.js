@@ -9,6 +9,7 @@ export const StatsElement = styled.div`
     flex-direction: column;
     justify-content: center;
     margin-right: 15px;
+    margin-left: 15px;
 
     .title {
         padding-top: 10px;

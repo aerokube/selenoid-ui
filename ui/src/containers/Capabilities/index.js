@@ -30,7 +30,7 @@ enableVideo: false
                 "platform":"ANY",
                 "enableVNC": true,
                 "name": "this.test.is.launched.by.curl",
-                "sessionTimeout": "30s"
+                "sessionTimeout": "120s"
             }
         }'
 `,
@@ -180,6 +180,7 @@ const Launch = ({ browser: { name, version }, history }) => {
                                 browserName: `${name}`,
                                 version: `${version}`,
                                 enableVNC: true,
+                                labels: { manual: "true" },
                                 sessionTimeout: "60m",
                                 name: "Manual session",
                             },
@@ -190,6 +191,7 @@ const Launch = ({ browser: { name, version }, history }) => {
                                     "selenoid:options": {
                                         enableVNC: true,
                                         sessionTimeout: "60m",
+                                        labels: { manual: "true" },
                                     },
                                 },
                             },

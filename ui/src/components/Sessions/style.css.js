@@ -3,8 +3,6 @@ import styled from "styled-components/macro";
 const colorAccent = "#59a781";
 const colorSessionName = "#555f6a";
 const borderSectionColor = "#353b42";
-const smallScreen = "900px";
-const bigScreen = "1280px";
 
 export const StyledSessions = styled.div`
   width: 100%;
@@ -51,38 +49,11 @@ export const StyledSessions = styled.div`
   padding-left: 3%;
   padding-right: 3%;
 
-  &_count-0, &_count-1, &_count-2 {
-    justify-content: center;
-  }
-
-  &_count-3 {
-    @media screen and (max-width: ${bigScreen}) {
-      justify-content: flex-start;
-    }
-
-    @media screen and (min-width: ${bigScreen} + 1) {
-      justify-content: center;
-    }
-  }
-
   .session-container {
     flex: 0 0 auto;
     transition: all 0.5s;
-
-    @media screen and (max-width: ${smallScreen}) {
-      flex-basis: 100%;
+    flex-basis: 100%;
       max-width: 100%;
-    }
-
-    @media screen and (min-width: ${smallScreen} + 1) and (max-width: ${bigScreen}) {
-      flex-basis: 50%;
-      max-width: 50%;
-    }
-
-    @media screen and (min-width: ${bigScreen} + 1) {
-      flex-basis: 33.333%;
-      max-width: 33.333%;
-    }
 
     //TRANSITIONS
     &_state-enter {
@@ -113,6 +84,10 @@ export const StyledSessions = styled.div`
     margin: 5px;
     background-color: #222;
     min-width: 350px;
+    
+    &_manual {
+          border: 1px solid ${colorSessionName};
+    }
 
     .browser {
       display: flex;

@@ -13,12 +13,13 @@ import (
 
 // Caps - user capabilities
 type Caps struct {
-	Name             string `json:"browserName"`
-	Version          string `json:"version"`
-	ScreenResolution string `json:"screenResolution"`
-	VNC              bool   `json:"enableVNC"`
-	TestName         string `json:"name"`
-	TimeZone         string `json:"timeZone"`
+	Name             string            `json:"browserName"`
+	Version          string            `json:"version"`
+	ScreenResolution string            `json:"screenResolution"`
+	VNC              bool              `json:"enableVNC"`
+	TestName         string            `json:"name"`
+	TimeZone         string            `json:"timeZone"`
+	Labels           map[string]string `json:"labels,omitempty"`
 }
 
 // Session - session id and vnc flag

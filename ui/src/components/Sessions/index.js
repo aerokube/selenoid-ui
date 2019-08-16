@@ -13,13 +13,20 @@ const Sessions = ({ sessions = {} }) => {
             <div className="section-title">Sessions</div>
             <TransitionGroup className={`sessions__list sessions__list_count-${ids.length}`}>
                 {ids.length &&
-                    ids.map(id => {
-                        return (
-                            <CSSTransition key={id} timeout={500} classNames="session-container_state" unmountOnExit>
-                                <Session id={id} session={sessions[id]} />
-                            </CSSTransition>
-                        );
-                    })}
+                    ids
+                        .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1)) // can be moved to go actually
+                        .map(id => {
+                            return (
+                                <CSSTransition
+                                    key={id}
+                                    timeout={500}
+                                    classNames="session-container_state"
+                                    unmountOnExit
+                                >
+                                    <Session id={id} session={sessions[id]} />
+                                </CSSTransition>
+                            );
+                        })}
             </TransitionGroup>
             <CSSTransition
                 in={!ids.length}
@@ -59,7 +66,10 @@ const Session = ({ id, session: { caps } }) => {
 
     return (
         <div className="session-container">
-            <Link className="session-link" to={deleting ? `#` : `/sessions/${id}`}>
+            <Link
+                className={`session-link ${caps.labels && caps.labels.manual && "session-link_manual"}`}
+                to={deleting ? `#` : `/sessions/${id}`}
+            >
                 <div className="browser">
                     <span className="name">{caps.browserName}</span>
                     <span className="version">{caps.version}</span>
@@ -69,13 +79,19 @@ const Session = ({ id, session: { caps } }) => {
                         {caps.name}
                     </div>
                 )}
-                <button disabled={deleting} className="capability capability__session-delete" onClick={deleteSession}>
-                    {deleting ? (
-                        <BeatLoader size={2} color={"#fff"} />
-                    ) : (
-                        <span title="Delete" className="icon dripicons-power" />
-                    )}
-                </button>
+                {caps.labels && caps.labels.manual && (
+                    <button
+                        disabled={deleting}
+                        className="capability capability__session-delete"
+                        onClick={deleteSession}
+                    >
+                        {deleting ? (
+                            <BeatLoader size={2} color={"#fff"} />
+                        ) : (
+                            <span title="Delete" className="icon dripicons-power" />
+                        )}
+                    </button>
+                )}
 
                 {caps.enableVNC && (
                     <div className="capability capability__with-vnc">
