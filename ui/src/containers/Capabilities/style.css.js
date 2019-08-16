@@ -97,7 +97,6 @@ export const StyledCapabilities = styled.div`
   }
 
   .lang-selector {
-    height: 160px;
     margin-left: 50px;
     margin-top: 20px;
   }
@@ -146,7 +145,6 @@ pre.hljs, code.hljs {
 }
 
 .capabilities-langs {
-  border-left: 1px dashed ${borderLangsColor};
   height: 100%;
   display: flex;
   flex-wrap: wrap;

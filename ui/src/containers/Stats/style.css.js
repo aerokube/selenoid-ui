@@ -12,7 +12,6 @@ export const StyledStats = styled.div`
     justify-content: center;
     align-items: center;
     position: relative;
-    padding-top: 40px;
     flex-shrink: 0;
 
     .section-title {
