@@ -5,6 +5,7 @@ const borderSectionColor = "#353b42";
 const smallScreen = "900px";
 const bigScreen = "1280px";
 const inputTextInactive = "#7881A1";
+const colorAccent = "#59a781";
 
 export const StyledVideos = styled.div`
   width: 100%;
@@ -127,7 +128,7 @@ export const StyledVideos = styled.div`
       box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
       margin: -3px 5px 0;
       padding: 0 5px;
-
+     
       &__name {
         overflow: hidden;
         background-color: ${colorSessionName};
@@ -136,6 +137,33 @@ export const StyledVideos = styled.div`
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         font-size: 13px;
+      }
+       &__buttons{
+           padding:0;
+           margin:0;
+       }
+       &__download{
+        background-color: ${colorAccent};
+        padding: 5px 5px;
+        color: #FFF;
+        line-height: 30px;
+        text-align: center;
+       }
+       
+       &__delete{
+        height: 28px;
+        margin: 0;
+        padding: 0;
+        color: #fff;
+        width: 25px;
+        background: rgb(232, 120, 111);
+        border: none;
+        text-align: center;
+        cursor: pointer;
+        &:focus {
+          outline: none;
+        }
+      
       }
 
 
