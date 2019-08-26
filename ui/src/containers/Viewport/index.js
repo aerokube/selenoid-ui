@@ -1,22 +1,27 @@
 import React, { useState } from "react";
 import { HashRouter as Router, Route } from "react-router-dom";
-import { merge, Observable, timer, of } from "rxjs";
-import { delayWhen, flatMap, map, pluck, retryWhen, tap, catchError } from "rxjs/operators";
+import { merge, Observable, of, timer } from "rxjs";
+import { catchError, delayWhen, flatMap, map, pluck, retryWhen, tap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 
 import { useObservable } from "rxjs-hooks";
 
-import { GlobalStyle, StyledConnectionStatus, StyledTopBar, StyledViewport } from "./styles.css";
+import styled from "styled-components/macro";
+import { GlobalStyle, StyledTopBar, StyledViewport } from "./styles.css";
 
 import "event-source-polyfill";
 
 import Navigation from "../../components/Navigation";
 import Stats from "../../containers/Stats";
 import Capabilities from "../../containers/Capabilities";
-import Status from "../../components/Status";
+import Status from "../../components/Stats/Status";
 import Sessions from "../../components/Sessions";
 import Session from "../../components/Session";
 import Videos from "../../components/Videos";
+import Quota from "../../components/Stats/Quota";
+import Queue from "../../components/Stats/Queue";
+import Used from "../../components/Stats/Used";
+import Separator from "../../components/Stats/Separator";
 
 const links = videos => {
     return [
@@ -118,12 +123,22 @@ const Viewport = () => {
         <>
             <GlobalStyle />
             <Router>
+                <StatsBar>
+                    <Logo>&nbsp;</Logo>
+
+                    <Status status={sse} title="sse" />
+                    <Status status={status} title="selenoid" />
+
+                    <Separator>&nbsp;</Separator>
+
+                    <Used total={state.total} used={state.used} pending={state.pending} />
+                    <Separator>&nbsp;</Separator>
+                    <Queue queued={state.queued} />
+                    <Separator>&nbsp;</Separator>
+                    <Quota total={state.total} used={state.used} pending={state.pending} />
+                </StatsBar>
                 <StyledViewport>
                     <StyledTopBar>
-                        <StyledConnectionStatus>
-                            <Status status={sse} title="sse" />
-                            <Status status={status} title="selenoid" />
-                        </StyledConnectionStatus>
                         <Navigation links={links(state.videos)} />
                     </StyledTopBar>
 
@@ -167,3 +182,39 @@ const Viewport = () => {
 };
 
 export default Viewport;
+
+const StatsBar = styled.div`
+    height: 80px;
+    background-color: #272727;
+    box-shadow: inset 0 -5px 5px 0 rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+`;
+
+const aerokubeColor = "#4195d3";
+const aerokubeColorBright = "#00c6f4";
+
+const Logo = styled.div`
+    line-height: 30px;
+    transition: color 0.5s ease-out 0s;
+    color: ${aerokubeColorBright};
+    flex: 1;
+    margin-left: 55px;
+    position: relative;
+    font-weight: 400;
+    font-size: 16px;
+    min-width: 50px;
+
+    &:before {
+        content: "";
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        border-radius: 1px;
+        left: -30px;
+        top: 0;
+        box-shadow: 0 0 10px 5px ${aerokubeColor};
+        border: 5px solid #272727;
+        background-color: ${aerokubeColorBright};
+    }
+`;
