@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyledVideos } from "./style.css";
 import SearchResults from "react-filter-search";
+import { ajax } from "rxjs/ajax";
 
 export default class Videos extends Component {
     constructor(props) {
@@ -25,9 +26,26 @@ export default class Videos extends Component {
         this.setState({ value });
     };
 
+    deleteVideo = video => {
+        const comp = this;
+        ajax({
+            url: `/video/${video}`,
+            method: "DELETE",
+        }).subscribe(
+            () => {
+                const data = this.state.data.filter(i => i.name !== video);
+                comp.setState({ data });
+            },
+            error => {
+                console.error("Can't delete video", video, error);
+            }
+        );
+    };
+
     render() {
         const { data, value } = this.state;
         const preloadVal = data.length > 100 ? "none" : "auto";
+
         return (
             <StyledVideos>
                 <div className="section-title">Videos</div>
@@ -51,6 +69,25 @@ export default class Videos extends Component {
                                         <video controls preload={preloadVal}>
                                             <source src={"/video/" + el.name} type="video/mp4" />
                                         </video>
+                                        <div className="video-cap video-cap__buttons">
+                                            <a
+                                                className="video-cap video-cap__download"
+                                                href={"/video/" + el.name}
+                                                rel="noopener noreferrer"
+                                                target="_blank"
+                                                download
+                                            >
+                                                <span title="Download" className="icon dripicons-download" />
+                                            </a>
+                                            <button
+                                                className="video-cap video-cap__delete"
+                                                onClick={() => {
+                                                    this.deleteVideo(el.name);
+                                                }}
+                                            >
+                                                <span title="Delete" className="icon dripicons-trash" />
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
                         </div>
