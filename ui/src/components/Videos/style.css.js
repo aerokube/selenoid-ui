@@ -140,7 +140,7 @@ export const StyledVideos = styled.div`
       }
        &__buttons{
            padding:0;
-           margin:0;
+           margin-bottom: 10px;
        }
        &__download{
         background-color: ${colorAccent};
