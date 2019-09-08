@@ -82,8 +82,6 @@ const Session = ({ id, session: { quota, caps } }) => {
                         {caps.name}
                     </div>
                 )}
-
-                {/*<div className="footer"></div>*/}
             </Link>
 
             <Capabilities>

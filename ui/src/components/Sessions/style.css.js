@@ -115,14 +115,6 @@ export const StyledSessions = styled.div`
         -moz-osx-font-smoothing: grayscale;
         padding-left: 5px;
       }
-      
-      .footer {
-        flex: 1;
-        display: flex;
-        align-items: flex-end;
-        
-      }
-      
     }
     
     &_manual {
