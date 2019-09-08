@@ -16,7 +16,7 @@
         "react-select": "^3.0.4",
         "react-spinners": "^0.5.13",
         "react-transition-group": "^4.2.2",
-        "rxjs": "^6.5.2",
+        "rxjs": "^6.5.3",
         "rxjs-compat": "^6.5.2",
         "rxjs-hooks": "^0.5.1",
         "styled-components": "^5.0.0-beta.8",
