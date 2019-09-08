@@ -1,8 +1,10 @@
 import styled from "styled-components/macro";
 
 const colorAccent = "#59a781";
-const colorSessionName = "#555f6a";
+const colorBorder = "#555f6a";
 const borderSectionColor = "#353b42";
+const secondaryColor = "#aaa";
+const manualColor = "#F0A202";
 
 export const StyledSessions = styled.div`
   width: 100%;
@@ -43,17 +45,19 @@ export const StyledSessions = styled.div`
 
 .sessions__list {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: flex-start;
-  width: 94%;
-  padding-left: 3%;
-  padding-right: 3%;
+  padding: 0 50px;
 
-  .session-container {
-    flex: 0 0 auto;
+  .session {
     transition: all 0.5s;
-    flex-basis: 100%;
-      max-width: 100%;
+    max-width: 100%;
+    min-height: 65px;
+    display: flex;
+    min-width: 350px;
+    border-bottom: 1px dashed ${colorBorder};
+    color: #fff;
+    padding: 10px;
 
     //TRANSITIONS
     &_state-enter {
@@ -73,82 +77,79 @@ export const StyledSessions = styled.div`
       opacity: 0.01;
       transition: opacity 500ms ease-out;
     }
-  }
-
-  .session-link {
-    display: flex;
-    justify-content: space-between;
-    color: #fff;
-    text-decoration: none;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
-    margin: 5px;
-    background-color: #222;
-    min-width: 350px;
     
-    &_manual {
-          border: 1px solid ${colorSessionName};
-    }
-
-    .browser {
+    .identity {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      line-height: 60px;
+      flex-direction: column;
+      text-decoration: none;
+      color: #fff;
+      max-width: 50%;
+      flex: 0 0 50%;
+      padding-right: 15px;
+      
+      .browser {
+        display: flex;
 
-      .name {
-        text-transform: uppercase;
-        font-weight: 200;
-        margin-left: 20px;
-        margin-right: 10px;
+        .name {
+          text-transform: uppercase;
+          font-weight: 300;
+          line-height: 30px;
+        }
+        
+        .version {
+          font-weight: 300;
+          text-transform: lowercase;
+          font-size: 0.8em;
+          color: ${secondaryColor};
+          margin-left: 5px;
+        }
       }
-
-      .version {
-        font-weight: 300;
-        text-transform: lowercase;
-        font-size: 0.8em;
-        color: #999;
-      }
-    }
-
-    .capability {
-      height: 30px;
-      line-height: 30px;
-      box-shadow: 0 1px 6px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
-      margin: -3px 5px 0;
-      padding: 0 5px;
-
-      &__name {
+      
+      .session-name {
         overflow: hidden;
-        background-color: ${colorSessionName};
+        border-left: 2px solid ${colorBorder};
+        color: ${secondaryColor};
         font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
 
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        font-size: 13px;
+        padding-left: 5px;
       }
+      
+      .footer {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        
+      }
+      
+    }
+    
+    &_manual {
+    }
 
-      &__with-vnc {
-        background-color: ${colorAccent};
-        padding: 0 10px;
-        line-height: 30px;
-        width: 45px;
-        text-align: center;
+    
+
+    .capability {
+      padding: 2px 5px;
+      background-color: ${colorAccent};
+      margin: 3px;
+      border-radius: 2px;
+      font-weight: 300;
+      
+      &__manual {
+        background-color: ${manualColor};
+        color: ${borderSectionColor};
+      }
+      
+      &__resolution {
+        background: none;
+        color: ${secondaryColor};
       }
 
       &__session-delete {
-        margin-left: auto;
-        margin-right: 0;
-        color: #fff;
-        height: 30px;
-        width: 25px;
-        background: rgb(232, 120, 111);
-        border: none;
-        padding: 3px;
-        text-align: center;
+        background: none;
         cursor: pointer;
-        &:focus {
-          outline: none;
-        }
       }
     }
   }

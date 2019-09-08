@@ -5,16 +5,18 @@ import { ajax } from "rxjs/ajax";
 import { StyledSessions } from "./style.css";
 import BeatLoader from "react-spinners/BeatLoader";
 
+import styled from "styled-components/macro";
+
 const Sessions = ({ sessions = {} }) => {
     const ids = Object.keys(sessions);
 
     return (
         <StyledSessions>
             <div className="section-title">Sessions</div>
-            <TransitionGroup className={`sessions__list sessions__list_count-${ids.length}`}>
+            <TransitionGroup className="sessions__list">
                 {ids.length &&
                     ids
-                        .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1)) // can be moved to go actually
+                        .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1)) // can be moved to golang actually
                         .map(id => {
                             return (
                                 <CSSTransition
@@ -44,7 +46,7 @@ const Sessions = ({ sessions = {} }) => {
     );
 };
 
-const Session = ({ id, session: { caps } }) => {
+const Session = ({ id, session: { quota, caps } }) => {
     const [deleting, onDeleting] = useState(false);
 
     const deleteSession = e => {
@@ -65,44 +67,74 @@ const Session = ({ id, session: { caps } }) => {
     };
 
     return (
-        <div className="session-container">
-            <Link
-                className={`session-link ${caps.labels && caps.labels.manual && "session-link_manual"}`}
-                to={deleting ? `#` : `/sessions/${id}`}
-            >
+        <div className={`session ${caps.labels && caps.labels.manual && "session_manual"}`}>
+            <SessionId>
+                <span className="quota">{quota}</span> / <span className="id">{id.substring(0, 8)}</span>
+            </SessionId>
+            <Link className="identity" to={deleting ? `#` : `/sessions/${id}`}>
                 <div className="browser">
                     <span className="name">{caps.browserName}</span>
                     <span className="version">{caps.version}</span>
                 </div>
+
                 {caps.name && (
-                    <div className="capability capability__name" title={caps.name}>
+                    <div className="session-name" title={caps.name}>
                         {caps.name}
                     </div>
                 )}
+
+                {/*<div className="footer"></div>*/}
+            </Link>
+
+            <Capabilities>
+                {caps.labels && caps.labels.manual && <span className="capability capability__manual">Manual</span>}
+                {caps.enableVNC && <span className="capability">VNC</span>}
+                {caps.screenResolution && (
+                    <span className="capability  capability__resolution">{caps.screenResolution}</span>
+                )}
+            </Capabilities>
+            <Actions>
                 {caps.labels && caps.labels.manual && (
-                    <button
-                        disabled={deleting}
-                        className="capability capability__session-delete"
-                        onClick={deleteSession}
-                    >
+                    <div className="capability capability__session-delete" onClick={deleteSession}>
                         {deleting ? (
                             <BeatLoader size={2} color={"#fff"} />
                         ) : (
-                            <span title="Delete" className="icon dripicons-power" />
+                            <span title="Delete" className="icon dripicons-trash" />
                         )}
-                    </button>
-                )}
-
-                {caps.enableVNC && (
-                    <div className="capability capability__with-vnc">
-                        <span title="With VNC" className="icon dripicons-device-desktop" />
-                        &nbsp;
-                        <sup>VNC</sup>
                     </div>
                 )}
-            </Link>
+            </Actions>
         </div>
     );
 };
+
+const secondaryColor = "#aaa";
+
+const SessionId = styled.div`
+    display: flex;
+    align-items: center;
+    flex-basis: 140px;
+    padding-right: 5px;
+
+    .quota {
+        color: ${secondaryColor};
+        margin-right: 3px;
+    }
+
+    .id {
+        margin-left: 3px;
+    }
+`;
+
+const Capabilities = styled.div`
+    display: flex;
+    align-items: center;
+    flex: 1;
+`;
+
+const Actions = styled.div`
+    display: flex;
+    align-items: center;
+`;
 
 export default Sessions;

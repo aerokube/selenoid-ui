@@ -55,7 +55,7 @@ const Viewport = () => {
                         ),
 
                         new Observable(observer => {
-                            const sse = new EventSource("http://localhost:8080/events");
+                            const sse = new EventSource("/events");
 
                             sse.onmessage = x => observer.next(x.data);
                             sse.onerror = x => observer.error(x);
