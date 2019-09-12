@@ -20,7 +20,7 @@
         "rxjs-compat": "^6.5.3",
         "rxjs-hooks": "^0.5.1",
         "styled-components": "^5.0.0-beta.8",
-        "xterm": "^3.14.5"
+        "xterm": "^4.0.0"
     },
     "scripts": {
         "start": "react-scripts start",
