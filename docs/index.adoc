@@ -115,7 +115,7 @@ services:
 . Download Selenoid UI binary from https://github.com/aerokube/selenoid-ui/releases[releases] page.
 
 . Start it:
- 
+
     $ ./selenoid-ui --selenoid-uri http://<selenoid-host-or-ip>:4444
 
 == Features list:
@@ -168,7 +168,18 @@ You can see logs of docker container for each session even without vnc and name 
 .Logs
 image:img/logs.png[logs]
 
-include::contributing.adoc[]
+=== Using With Ggr or Moon
+
+By default Selenoid UI considers that the same daemon (Selenoid) is handles Selenium session creation and returns a list of already running sessions at `/status` API. However in more complicated cases like connecting Selenoid UI to a https://github.com/aerokube/ggr[Ggr] or https://github.com/aerokube/moon[Moon] cluster two separate daemons exist:
+
+* *In Ggr cluster:* Ggr daemon creates sessions and GgrUI daemon delivers `/status` API.
+* *In Moon cluster:* Moon daemon creates sessions and Moon API daemon delivers `/status` API.
+
+To use Selenoid UI in such complicated environment you have to separately specify where Webdriver API and status API are listening. This can be done as follows:
+
+    $ ./selenoid-ui --webdriver-uri http://<ggr-or-moon-host>:4444 --status-uri http://<ggr-ui-or-moon-api-host>:8888
+
+By default `--webdriver-uri` and `--status-uri` flags are set to `--selenoid-uri` value.
 
 === CLI Flags
 
@@ -183,10 +194,14 @@ The following flags are supported by `selenoid-ui` command:
     	data refresh period, e.g. 5s or 1m (default 5s)
   -selenoid-uri string
     	selenoid uri to fetch data from (default "http://localhost:4444")
+  -status-uri string
+    	status uri to fetch data from
   -timeout duration
     	response timeout, e.g. 5s or 1m (default 3s)
   -version
     	Show version and exit
+  -webdriver-uri string
+    	webdriver uri used to create new sessions
 ----
 
 For example:
@@ -203,3 +218,5 @@ When using Selenoid UI inside Docker container these flags are passed like the f
     aerokube/selenoid-ui:latest-release             \
     -allowed-origin "*" -period 100ms
 ----
+
+include::contributing.adoc[]
