@@ -16,6 +16,11 @@ var (
 	srv *httptest.Server
 )
 
+var _ = func() bool {
+	testing.Init()
+	return true
+}()
+
 func init() {
 	broker := sse.NewSseBroker()
 	srv = httptest.NewServer(mux(broker))
