@@ -19,12 +19,7 @@ const Sessions = ({ sessions = {} }) => {
                         .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1)) // can be moved to golang actually
                         .map(id => {
                             return (
-                                <CSSTransition
-                                    key={id}
-                                    timeout={500}
-                                    classNames="session-container_state"
-                                    unmountOnExit
-                                >
+                                <CSSTransition key={id} timeout={500} classNames="session_state" unmountOnExit>
                                     <Session id={id} session={sessions[id]} />
                                 </CSSTransition>
                             );
@@ -67,7 +62,7 @@ const Session = ({ id, session: { quota, caps } }) => {
     };
 
     return (
-        <div className={`session ${caps.labels && caps.labels.manual && "session_manual"}`}>
+        <div className={`session ${(caps.labels && caps.labels.manual && "session_manual") || ""}`}>
             <SessionId>
                 <span className="quota">{quota}</span> / <span className="id">{id.substring(0, 8)}</span>
             </SessionId>

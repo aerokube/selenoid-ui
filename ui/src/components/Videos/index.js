@@ -8,7 +8,6 @@ const Videos = ({ videos }) => {
     const preloadVal = list.length > 100 ? "none" : "auto";
     return (
         <StyledVideos>
-            <div className="section-title">Videos</div>
             <TransitionGroup className={`videos__list videos__list_count-${list.length}`}>
                 {list.length &&
                     list.map(video => {

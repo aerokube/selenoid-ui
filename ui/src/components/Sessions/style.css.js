@@ -52,12 +52,12 @@ export const StyledSessions = styled.div`
   .session {
     transition: all 0.5s;
     max-width: 100%;
-    min-height: 65px;
+    min-height: 60px;
     display: flex;
     min-width: 350px;
     border-bottom: 1px dashed ${colorBorder};
     color: #fff;
-    padding: 10px;
+    padding: 10px 0 0;
 
     //TRANSITIONS
     &_state-enter {

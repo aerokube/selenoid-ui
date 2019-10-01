@@ -49,6 +49,7 @@ export const StyledVideos = styled.div`
   width: 94%;
   padding-left: 3%;
   padding-right: 3%;
+  margin-top: 10px;
 
   &_count-0, &_count-1, &_count-2 {
     justify-content: center;
