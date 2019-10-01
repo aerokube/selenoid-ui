@@ -51,5 +51,8 @@
         "hooks": {
             "pre-commit": "pretty-quick --staged"
         }
+    },
+    "babelMacros": {
+        "styledComponents": {}
     }
 }

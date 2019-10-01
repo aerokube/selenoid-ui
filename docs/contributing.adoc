@@ -24,6 +24,13 @@ $ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build
 $ docker build -t selenoid-ui:latest .
 ----
 
+5) To run local development with hot reloads it's better to start Selenoid UI binary as `./selenoid-ui -allowed-origin="*"`
+as well as `cd ui && yarn start`
+
+NOTE: For some reason devserver can't proxy SSE properly and thus realtime updates can get stuck.
+As a workaround you can change the path in the `Viewport` container from `/events` to `http://localhost:8080/events`,
+but don't forget to ignore that change on commit!
+
 
 === Documentation
 
