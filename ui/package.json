@@ -14,7 +14,7 @@
         "react-router-dom": "^5.0.1",
         "react-scripts": "3.1.2",
         "react-select": "^3.0.5",
-        "react-spinners": "^0.5.13",
+        "react-spinners": "^0.6.1",
         "react-transition-group": "^4.3.0",
         "rxjs": "^6.5.3",
         "rxjs-compat": "^6.5.3",
