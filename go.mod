@@ -7,3 +7,5 @@ require (
 	github.com/koding/websocketproxy v0.0.0-20180716164433-0fa3f994f6e7
 	github.com/rakyll/statik v0.1.6
 )
+
+go 1.13

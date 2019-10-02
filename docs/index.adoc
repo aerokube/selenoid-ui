@@ -168,6 +168,10 @@ You can see logs of docker container for each session even without vnc and name 
 .Logs
 image:img/logs.png[logs]
 
+=== Videos
+
+You can view recorded videos, accessible on the selenoid, in case there are any on a separate tab.
+
 === Using With Ggr or Moon
 
 By default Selenoid UI considers that the same daemon (Selenoid) is handles Selenium session creation and returns a list of already running sessions at `/status` API. However in more complicated cases like connecting Selenoid UI to a https://github.com/aerokube/ggr[Ggr] or https://github.com/aerokube/moon[Moon] cluster two separate daemons exist:
