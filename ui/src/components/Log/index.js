@@ -29,7 +29,7 @@ export default class Log extends Component {
         this.props$ = new BehaviorSubject(props);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.props$.next(nextProps);
     }
 
