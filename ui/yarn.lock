@@ -8968,6 +8968,11 @@ react-error-overlay@^6.0.3:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.3.tgz#c378c4b0a21e88b2e159a3e62b2f531fd63bf60d"
   integrity sha512-bOUvMWFQVk5oz8Ded9Xb7WVdEi3QGLC8tH7HmYP0Fdp4Bn3qw0tRFmr5TW6mvahzvmrK4a6bqWGfCevBflP+Xw==
 
+react-filter-search@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-filter-search/-/react-filter-search-1.0.8.tgz#4ffb4ebfcfbd6ddcf36a3922d430f1cc0afdbf94"
+  integrity sha512-yhzdCO3wVPA+oz8Y82tBkU5XRJPX7QyJtxiX15Ecb1pADxjdzEp1HRhwRcTKvta0J3dWCDSiF6A1q5OWjJrQjA==
+
 react-highlight@^0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/react-highlight/-/react-highlight-0.12.0.tgz#34de986a0bfdf228904d0c269b69538d95b35802"
