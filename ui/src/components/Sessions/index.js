@@ -64,7 +64,10 @@ const Session = ({ id, session: { quota, caps } }) => {
     return (
         <div className={`session ${(caps.labels && caps.labels.manual && "session_manual") || ""}`}>
             <SessionId>
-                <span className="quota">{quota}</span> / <span className="id">{id.substring(0, 8)}</span>
+                <span className="quota">{quota}</span> /{" "}
+                <Link to={deleting ? `#` : `/sessions/${id}`} className="id">
+                    {id.substring(0, 8)}
+                </Link>
             </SessionId>
             <Link className="identity" to={deleting ? `#` : `/sessions/${id}`}>
                 <div className="browser">
@@ -80,7 +83,7 @@ const Session = ({ id, session: { quota, caps } }) => {
             </Link>
 
             <Capabilities>
-                {caps.labels && caps.labels.manual && <span className="capability capability__manual">Manual</span>}
+                {caps.labels && caps.labels.manual && <span className="capability capability__manual">MANUAL</span>}
                 {caps.enableVNC && <span className="capability">VNC</span>}
                 {caps.screenResolution && (
                     <span className="capability  capability__resolution">{caps.screenResolution}</span>
@@ -101,11 +104,13 @@ const Session = ({ id, session: { quota, caps } }) => {
     );
 };
 
+const primaryColor = "#fff";
 const secondaryColor = "#aaa";
 
 const SessionId = styled.div`
     display: flex;
     align-items: center;
+    flex-shrink: 0;
     flex-basis: 140px;
     padding-right: 5px;
 
@@ -116,6 +121,8 @@ const SessionId = styled.div`
 
     .id {
         margin-left: 3px;
+        text-decoration: none;
+        color: ${primaryColor};
     }
 `;
 
