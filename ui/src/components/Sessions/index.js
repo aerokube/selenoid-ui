@@ -7,8 +7,26 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 import styled from "styled-components/macro";
 
-const Sessions = ({ sessions = {} }) => {
+const Sessions = ({ sessions = {}, query = "" }) => {
     const ids = Object.keys(sessions);
+
+    function byQuery(query, sessions) {
+        return id => {
+            if (id.includes(query)) {
+                return true;
+            }
+
+            if (sessions[id].caps.name && sessions[id].caps.name.toLowerCase().includes(query.toLowerCase())) {
+                return true;
+            }
+
+            if (sessions[id].caps.browserName.toLowerCase().includes(query.toLowerCase())) {
+                return true;
+            }
+
+            return query === "";
+        };
+    }
 
     return (
         <StyledSessions>
@@ -16,6 +34,7 @@ const Sessions = ({ sessions = {} }) => {
             <TransitionGroup className="sessions__list">
                 {ids.length &&
                     ids
+                        .filter(byQuery(query, sessions))
                         .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1)) // can be moved to golang actually
                         .map(id => {
                             return (
