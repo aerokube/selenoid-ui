@@ -7,7 +7,7 @@
         "ansi-256-colors": "^1.1.0",
         "event-source-polyfill": "^1.0.9",
         "prop-types": "^15.7.2",
-        "react": "^16.8.6",
+        "react": "^16.11.0",
         "react-dom": "^16.8.6",
         "react-highlight": "^0.12.0",
         "react-is": "^16.8.6",
