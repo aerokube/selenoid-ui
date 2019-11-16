@@ -4,12 +4,11 @@ export const StyledBrowsers = styled.div`
     color: #fff;
     display: flex;
     flex-direction: column;
-    width: 30%;
-    min-width: 150px;
+    flex-basis: 30%;
+    min-width: 250px;
 `;
 
 export const StyledBrowser = styled.div`
-    width: 100%;
     overflow: hidden;
     display: inline-flex;
     line-height: 30px;

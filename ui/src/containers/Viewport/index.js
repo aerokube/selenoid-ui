@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { HashRouter as Router, Route } from "react-router-dom";
 import { merge, Observable, of, timer } from "rxjs";
 import { catchError, delayWhen, flatMap, map, pluck, retryWhen, tap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
+
+import AutosizeInput from "react-input-autosize";
 
 import { useObservable } from "rxjs-hooks";
 
@@ -36,6 +38,10 @@ const Viewport = () => {
         status: "unknown",
         sse: "unknown",
     });
+
+    const [query, onQuery] = useState("");
+
+    const select = useRef(null);
 
     // can be checked offline with simple
     // const {origin, sse, status, state, browsers = {}, sessions = {}} = require("../../sse-example.json");
@@ -126,6 +132,35 @@ const Viewport = () => {
                 <StatsBar>
                     <Logo>&nbsp;</Logo>
 
+                    <PanelFilter
+                        onClick={() => {
+                            if (select.current) {
+                                select.current.focus();
+                            }
+                        }}
+                    >
+                        <AutosizeInput
+                            ref={select}
+                            placeholder="Filter sessions..."
+                            value={query}
+                            inputStyle={{
+                                height: "30px",
+                                outline: "none",
+                                backgroundColor: statsBgColor,
+                                border: 0,
+                                padding: 0,
+                                fontSize: "1.2em",
+                                color: "#F2F4F3",
+                                marginLeft: "5px",
+                                fontWeight: 100,
+                            }}
+                            onChange={function(event) {
+                                // event.target.value contains the new value
+                                onQuery(event.target.value);
+                            }}
+                        />
+                    </PanelFilter>
+
                     <Status status={sse} title="sse" />
                     <Status status={status} title="selenoid" />
 
@@ -155,7 +190,7 @@ const Viewport = () => {
                         )}
                     />
 
-                    <Route exact={true} path="/" render={() => <Sessions sessions={sessions} />} />
+                    <Route exact={true} path="/" render={() => <Sessions sessions={sessions} query={query} />} />
 
                     <Route exact={true} path="/videos" render={() => <Videos videos={state.videos || []} />} />
 
@@ -183,27 +218,35 @@ const Viewport = () => {
 
 export default Viewport;
 
+const aerokubeColor = "#4195d3";
+const aerokubeColorBright = "#00c6f4";
+const statsBgColor = "#272727";
+
 const StatsBar = styled.div`
     height: 80px;
-    background-color: #272727;
+    background-color: ${statsBgColor};
     box-shadow: inset 0 -5px 5px 0 rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
+    overflow: auto;
 `;
 
-const aerokubeColor = "#4195d3";
-const aerokubeColorBright = "#00c6f4";
+const PanelFilter = styled.div`
+    flex: 1;
+    display: flex;
+    box-sizing: border-box;
+    min-width: 190px;
+`;
 
 const Logo = styled.div`
     line-height: 30px;
     transition: color 0.5s ease-out 0s;
     color: ${aerokubeColorBright};
-    flex: 1;
     margin-left: 55px;
     position: relative;
     font-weight: 400;
     font-size: 16px;
-    min-width: 50px;
+    min-width: 40px;
 
     &:before {
         content: "";

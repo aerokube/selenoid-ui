@@ -7,8 +7,26 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 import styled from "styled-components/macro";
 
-const Sessions = ({ sessions = {} }) => {
+const Sessions = ({ sessions = {}, query = "" }) => {
     const ids = Object.keys(sessions);
+
+    function withQuery(query, sessions) {
+        return id => {
+            if (id.includes(query)) {
+                return true;
+            }
+
+            if (sessions[id].caps.name && sessions[id].caps.name.toLowerCase().includes(query.toLowerCase())) {
+                return true;
+            }
+
+            if (sessions[id].caps.browserName.toLowerCase().includes(query.toLowerCase())) {
+                return true;
+            }
+
+            return query === "";
+        };
+    }
 
     return (
         <StyledSessions>
@@ -16,6 +34,7 @@ const Sessions = ({ sessions = {} }) => {
             <TransitionGroup className="sessions__list">
                 {ids.length &&
                     ids
+                        .filter(withQuery(query, sessions))
                         .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1)) // can be moved to golang actually
                         .map(id => {
                             return (
@@ -64,7 +83,10 @@ const Session = ({ id, session: { quota, caps } }) => {
     return (
         <div className={`session ${(caps.labels && caps.labels.manual && "session_manual") || ""}`}>
             <SessionId>
-                <span className="quota">{quota}</span> / <span className="id">{id.substring(0, 8)}</span>
+                <span className="quota">{quota}</span> /{" "}
+                <Link to={deleting ? `#` : `/sessions/${id}`} className="id">
+                    {id.substring(0, 8)}
+                </Link>
             </SessionId>
             <Link className="identity" to={deleting ? `#` : `/sessions/${id}`}>
                 <div className="browser">
@@ -80,7 +102,7 @@ const Session = ({ id, session: { quota, caps } }) => {
             </Link>
 
             <Capabilities>
-                {caps.labels && caps.labels.manual && <span className="capability capability__manual">Manual</span>}
+                {caps.labels && caps.labels.manual && <span className="capability capability__manual">MANUAL</span>}
                 {caps.enableVNC && <span className="capability">VNC</span>}
                 {caps.screenResolution && (
                     <span className="capability  capability__resolution">{caps.screenResolution}</span>
@@ -101,11 +123,13 @@ const Session = ({ id, session: { quota, caps } }) => {
     );
 };
 
+const primaryColor = "#fff";
 const secondaryColor = "#aaa";
 
 const SessionId = styled.div`
     display: flex;
     align-items: center;
+    flex-shrink: 0;
     flex-basis: 140px;
     padding-right: 5px;
 
@@ -116,6 +140,8 @@ const SessionId = styled.div`
 
     .id {
         margin-left: 3px;
+        text-decoration: none;
+        color: ${primaryColor};
     }
 `;
 

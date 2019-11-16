@@ -4,15 +4,13 @@ const borderStatsColor = "#3d444c";
 const borderSectionColor = "#353b42";
 
 export const StyledStats = styled.div`
-    min-height: 200px;
-    width: 100%;
-    min-width: 360px;
+    min-height: 100px;
+    min-width: 350px;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    position: relative;
     flex-shrink: 0;
+    overflow: auto;
 
     .section-title {
         color: #666;
