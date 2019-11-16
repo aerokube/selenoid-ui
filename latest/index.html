@@ -445,7 +445,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community</span><br>
 <span id="revnumber">version latest,</span>
-<span id="revdate">2019-11-06</span>
+<span id="revdate">2019-11-16</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -459,7 +459,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_features_list">2. Features list:</a>
 <ul class="sectlevel2">
-<li><a href="#_stats_and_sessions">2.1. Stats and sessions</a></li>
+<li><a href="#_stats_and_sessions">2.1. Stats and sessions</a>
+<ul class="sectlevel3">
+<li><a href="#_search">2.1.1. Search</a></li>
+</ul>
+</li>
 <li><a href="#_capabilities">2.2. Capabilities</a>
 <ul class="sectlevel3">
 <li><a href="#_manual_run">2.2.1. Manual run</a></li>
@@ -709,6 +713,15 @@ Each session on this screen can be closed.</p>
 <div class="title">Stats and sessions</div>
 <p><span class="image"><img src="img/stats-sessions.png" alt="ui"></span></p>
 </div>
+<div class="sect3">
+<h4 id="_search"><a class="anchor" href="#_search"></a>2.1.1. Search</h4>
+<div class="paragraph">
+<p>Sessions are searchable based on the <strong>id</strong>, <strong>browser</strong>, or <strong>test name</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/search.gif" alt="search"></span></p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_capabilities"><a class="anchor" href="#_capabilities"></a>2.2. Capabilities</h3>
@@ -723,7 +736,9 @@ an example of setup with right capabilities. Examples available for several lang
 <div class="sect3">
 <h4 id="_manual_run"><a class="anchor" href="#_manual_run"></a>2.2.1. Manual run</h4>
 <div class="paragraph">
-<p>With selection of the browser it could be launched manually right in the interface.</p>
+<p>With selection of the browser it could be launched manually right in the interface. Technically,
+that&#8217;s just a session start call with timeout of <strong>60m</strong> and special <a href="https://aerokube.com/selenoid/latest/#_container_labels_labels">label</a>
+<code>manual: "true"</code>. Based on that label, interface will highlight the session and add removal button.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -922,7 +937,7 @@ but don&#8217;t forget to ignore that change on commit!
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2019-11-06 23:05:00 UTC
+Last updated 2019-11-16 22:50:43 UTC
 </div>
 </div>
 <style>
