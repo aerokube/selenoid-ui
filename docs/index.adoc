@@ -130,6 +130,12 @@ Each session on this screen can be closed.
 .Stats and sessions
 image:img/stats-sessions.png[ui]
 
+==== Search
+
+Sessions are searchable based on the *id*, *browser*, or *test name*
+
+image:img/search.gif[search]
+
 === Capabilities
 
 You can choose browser from the available browser list and UI will provide
@@ -140,7 +146,9 @@ image:img/capabilities.png[ui]
 
 ==== Manual run
 
-With selection of the browser it could be launched manually right in the interface.
+With selection of the browser it could be launched manually right in the interface. Technically,
+that's just a session start call with timeout of *60m* and special https://aerokube.com/selenoid/latest/#_container_labels_labels[label]
+`manual: "true"`. Based on that label, interface will highlight the session and add removal button.
 
 NOTE: Protocol and the browser assumes that you will pass numerical value for the version.
 This way "latest" version won't work. Please setup your selenoid accordingly.

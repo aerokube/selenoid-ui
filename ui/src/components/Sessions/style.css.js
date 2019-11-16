@@ -130,17 +130,17 @@ export const StyledSessions = styled.div`
     
 
     .capability {
-    font-family: open sans,helvetica neue,Helvetica,Arial,sans-serif;
-    background-color: ${colorAccent};
-    margin: 0 .5em;
-    padding: .3em .4em .4em;
-    display: inline-block;
-    vertical-align: middle;
-    border-radius: 2px;
-    font-weight: 500;
-    font-size: 11px;
-    line-height: 1;
-    letter-spacing: .1px;
+      font-family: open sans,helvetica neue,Helvetica,Arial,sans-serif;
+      background-color: ${colorAccent};
+      margin: 0 .5em;
+      padding: .3em .4em .4em;
+      display: inline-block;
+      vertical-align: middle;
+      border-radius: 2px;
+      font-weight: 500;
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: .1px;
       
       &__manual {
         background-color: ${manualColor};

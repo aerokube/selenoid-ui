@@ -10,7 +10,7 @@ import styled from "styled-components/macro";
 const Sessions = ({ sessions = {}, query = "" }) => {
     const ids = Object.keys(sessions);
 
-    function byQuery(query, sessions) {
+    function withQuery(query, sessions) {
         return id => {
             if (id.includes(query)) {
                 return true;
@@ -34,7 +34,7 @@ const Sessions = ({ sessions = {}, query = "" }) => {
             <TransitionGroup className="sessions__list">
                 {ids.length &&
                     ids
-                        .filter(byQuery(query, sessions))
+                        .filter(withQuery(query, sessions))
                         .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1)) // can be moved to golang actually
                         .map(id => {
                             return (
