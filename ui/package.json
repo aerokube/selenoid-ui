@@ -19,7 +19,7 @@
         "react-transition-group": "^4.3.0",
         "rxjs": "^6.5.3",
         "rxjs-compat": "^6.5.3",
-        "rxjs-hooks": "^0.5.1",
+        "rxjs-hooks": "^0.5.2",
         "styled-components": "^5.0.0-beta.8",
         "xterm": "^3.14.5"
     },
