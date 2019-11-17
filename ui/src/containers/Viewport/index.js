@@ -192,7 +192,11 @@ const Viewport = () => {
 
                     <Route exact={true} path="/" render={() => <Sessions sessions={sessions} query={query} />} />
 
-                    <Route exact={true} path="/videos" render={() => <Videos videos={state.videos || []} />} />
+                    <Route
+                        exact={true}
+                        path="/videos"
+                        render={() => <Videos videos={state.videos || []} query={query} />}
+                    />
 
                     <Route
                         exact={true}
