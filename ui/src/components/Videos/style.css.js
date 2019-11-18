@@ -73,6 +73,27 @@ export const StyledVideos = styled.div`
         justify-content: center;
     }
 
+    .video__container {
+        //TRANSITIONS
+        &_state-enter {
+            opacity: 0.01;
+        }
+
+        &_state-enter-active {
+            opacity: 1;
+            transition: opacity 500ms ease-in;
+        }
+
+        &_state-exit {
+            opacity: 1;
+        }
+
+        &_state-exit-active {
+            opacity: 0.01;
+            transition: opacity 500ms ease-out;
+        }
+    }
+
     .no-any {
         color: #fff;
         display: flex;
@@ -86,6 +107,7 @@ export const StyledVideos = styled.div`
             margin: 10px;
         }
 
+        // don't show until all videos are gone
         &_state-enter-active {
             display: none;
         }

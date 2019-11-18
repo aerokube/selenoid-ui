@@ -3,36 +3,31 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import { StyledVideo, StyledVideos } from "./style.css";
 
-const Videos = ({ videos, query = "" }) => {
+const Videos = ({ videos = [], query = "" }) => {
     const preloadVal = videos.length > 100 ? "none" : "auto";
+    const filtered = videos.filter(fname => fname.includes(query));
+
     return (
         <StyledVideos>
             <TransitionGroup className={`videos__list`}>
-                {videos.length &&
-                    videos
-                        .filter(fname => fname.includes(query))
-                        .map(fname => {
-                            const src = `/video/${fname}`;
-                            const session = fname.split(".")[0];
+                {filtered.length &&
+                    filtered.map(fname => {
+                        const src = `/video/${fname}`;
+                        const session = fname.split(".")[0];
 
-                            return (
-                                <CSSTransition
-                                    key={fname}
-                                    timeout={500}
-                                    classNames="videos-container_state"
-                                    unmountOnExit
-                                >
-                                    <RecordedVideo src={src} session={session} file={fname} preload={preloadVal} />
-                                </CSSTransition>
-                            );
-                        })}
+                        return (
+                            <CSSTransition key={fname} timeout={500} classNames="video__container_state" unmountOnExit>
+                                <RecordedVideo src={src} session={session} file={fname} preload={preloadVal} />
+                            </CSSTransition>
+                        );
+                    })}
             </TransitionGroup>
 
             <CSSTransition
-                in={!videos.length}
+                in={!filtered.length}
                 timeout={500}
                 exit={false}
-                classNames="videos__no-any_state"
+                classNames="video__no-any_state"
                 unmountOnExit
             >
                 <div className="no-any">

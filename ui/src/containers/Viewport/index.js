@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { HashRouter as Router, Route } from "react-router-dom";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
 import { merge, Observable, of, timer } from "rxjs";
 import { catchError, delayWhen, flatMap, map, pluck, retryWhen, tap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
@@ -130,36 +130,11 @@ const Viewport = () => {
             <GlobalStyle />
             <Router>
                 <StatsBar>
-                    <Logo>&nbsp;</Logo>
+                    <Link to="/">
+                        <Logo>&nbsp;</Logo>
+                    </Link>
 
-                    <PanelFilter
-                        onClick={() => {
-                            if (select.current) {
-                                select.current.focus();
-                            }
-                        }}
-                    >
-                        <AutosizeInput
-                            ref={select}
-                            placeholder="Filter sessions..."
-                            value={query}
-                            inputStyle={{
-                                height: "30px",
-                                outline: "none",
-                                backgroundColor: statsBgColor,
-                                border: 0,
-                                padding: 0,
-                                fontSize: "1.2em",
-                                color: "#F2F4F3",
-                                marginLeft: "5px",
-                                fontWeight: 100,
-                            }}
-                            onChange={function(event) {
-                                // event.target.value contains the new value
-                                onQuery(event.target.value);
-                            }}
-                        />
-                    </PanelFilter>
+                    <PanelFilter {...{ select, query, onQuery }} />
 
                     <Status status={sse} title="sse" />
                     <Status status={status} title="selenoid" />
@@ -220,6 +195,53 @@ const Viewport = () => {
     );
 };
 
+const PanelFilter = ({ select, query, onQuery }) => (
+    <StyledPanelFilter
+        onClick={() => {
+            if (select.current) {
+                select.current.focus();
+            }
+        }}
+    >
+        <AutosizeInput
+            ref={select}
+            placeholder="Filter..."
+            value={query}
+            inputStyle={{
+                height: "30px",
+                outline: "none",
+                backgroundColor: statsBgColor,
+                border: 0,
+                padding: 0,
+                fontSize: "1.2em",
+                color: "#F2F4F3",
+                marginLeft: "5px",
+                fontWeight: 100,
+            }}
+            onChange={function(event) {
+                // event.target.value contains the new value
+                onQuery(event.target.value);
+            }}
+        />
+        <i
+            title="Clear"
+            className="icon dripicons-cross"
+            style={{ visibility: !query ? "hidden" : "visible" }}
+            onClick={() => onQuery("")}
+        />
+    </StyledPanelFilter>
+);
+
+const StyledPanelFilter = styled.div`
+    flex: 1;
+    display: flex;
+    box-sizing: border-box;
+    min-width: 190px;
+    height: 100%;
+    align-items: center;
+    color: #fff;
+`;
+
 export default Viewport;
 
 const aerokubeColor = "#4195d3";
@@ -233,13 +255,6 @@ const StatsBar = styled.div`
     display: flex;
     align-items: center;
     overflow: auto;
-`;
-
-const PanelFilter = styled.div`
-    flex: 1;
-    display: flex;
-    box-sizing: border-box;
-    min-width: 190px;
 `;
 
 const Logo = styled.div`
