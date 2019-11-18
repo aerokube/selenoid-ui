@@ -48,7 +48,9 @@ const RecordedVideo = ({ src, session, file, preload }) => {
             <div className="video">
                 <div className="controls">
                     <div className="control">
-                        <i title="Delete" className="icon dripicons-trash" />
+                        <a href={src}>
+                            <i title="Link" className="icon dripicons-link" />
+                        </a>
                     </div>
                 </div>
                 <div className="content">

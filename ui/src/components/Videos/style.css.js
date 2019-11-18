@@ -2,6 +2,7 @@ import styled from "styled-components/macro";
 
 const contentBgColor = "#131614";
 const colorBorder = "#555f6a";
+const colorAccent = "#59a781";
 
 export const StyledVideo = styled.div`
     display: flex;
@@ -14,16 +15,20 @@ export const StyledVideo = styled.div`
     &:hover {
         .video {
             .controls {
-                //visibility: visible; //todo enable
+                visibility: visible;
             }
         }
     }
 
     .name {
         color: #fff;
-        font-size: 1.2em;
+        font-size: 1.3em;
+        font-weight: 300;
         padding: 0 5px 10px 0;
         border-bottom: 1px dashed ${colorBorder};
+        overflow-y: scroll;
+        line-height: 30px;
+        height: 30px;
     }
 
     .video {
@@ -46,6 +51,17 @@ export const StyledVideo = styled.div`
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                width: 100%;
+                border-bottom: 1px dashed ${colorBorder};
+
+                a {
+                    text-decoration: none;
+                    color: #fff;
+
+                    &:hover {
+                        color: ${colorAccent};
+                    }
+                }
             }
         }
 
