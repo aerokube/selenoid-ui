@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { HashRouter as Router, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Link, Route } from "react-router-dom";
 import { merge, Observable, of, timer } from "rxjs";
 import { catchError, delayWhen, flatMap, map, pluck, retryWhen, tap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
@@ -46,7 +46,7 @@ const Viewport = () => {
     // can be checked offline with simple
     // const {origin, sse, status, state, browsers = {}, sessions = {}} = require("../../sse-example.json");
 
-    const { origin, state = {}, browsers = {}, sessions = {} } = useObservable(
+    const { origin, state = {}, browsers = {}, sessions = {}, version = "unknown" } = useObservable(
         in$ => {
             return in$.pipe(
                 flatMap(([pushStatus]) =>
@@ -136,8 +136,8 @@ const Viewport = () => {
 
                     <PanelFilter {...{ select, query, onQuery }} />
 
-                    <Status status={sse} title="sse" />
-                    <Status status={status} title="selenoid" />
+                    <Status status={sse} header="sse" version={version} />
+                    <Status status={status} header="selenoid" />
 
                     <Separator>&nbsp;</Separator>
 

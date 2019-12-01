@@ -103,14 +103,23 @@ func ping(w http.ResponseWriter, _ *http.Request) {
 	}{time.Since(startTime).String(), gitRevision})
 }
 
+type SSEError struct {
+	Msg string `json:"msg"`
+}
+
 func status(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 
-	status, err := selenoid.Status(req.Context(), statusURI)
+	v := gitRevision + "[" + buildStamp + "]"
+	status, err := selenoid.Status(req.Context(), statusURI, v)
 	if err != nil {
 		log.Printf("[ERROR] [Can't get status: %v]", err)
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
+		_ = json.NewEncoder(w).Encode(struct {
+			Errors  []SSEError `json:"errors"`
+			Version string     `json:"version"`
+		}{Errors: []SSEError{{Msg: "can't get status"}}, Version: v})
+
 		return
 	}
 
@@ -181,7 +190,7 @@ func main() {
 	go sse.Tick(broker, func(ctx context.Context, br sse.Broker) {
 		timedCtx, cancel := context.WithTimeout(ctx, timeout)
 		defer cancel()
-		status, err := selenoid.Status(timedCtx, statusURI)
+		status, err := selenoid.Status(timedCtx, statusURI, gitRevision+"["+buildStamp+"]")
 		if err != nil {
 			log.Printf("[ERROR] [Can't get status: %v]", err)
 			br.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))

@@ -74,6 +74,7 @@ type result struct {
 	Origin   string                 `json:"origin"`
 	Browsers map[string]int         `json:"browsers"`
 	Sessions map[string]sessionInfo `json:"sessions"`
+	Version  string                 `json:"version"`
 	Errors   []interface{}          `json:"errors"`
 }
 
@@ -101,7 +102,7 @@ const (
 	videosPath = "/video"
 )
 
-func Status(ctx context.Context, statusURI *url.URL) ([]byte, error) {
+func Status(ctx context.Context, statusURI *url.URL, version string) ([]byte, error) {
 	req, err := http.NewRequest("GET", statusURI.String()+statusPath, nil)
 	if err != nil {
 		return nil, err
@@ -135,10 +136,10 @@ func Status(ctx context.Context, statusURI *url.URL) ([]byte, error) {
 
 	state.Videos = videos
 
-	return json.Marshal(toUI(state, statusURI))
+	return json.Marshal(toUI(state, statusURI, version))
 }
 
-func toUI(state State, statusURI *url.URL) result {
+func toUI(state State, statusURI *url.URL, version string) result {
 	browsers := make(map[string]int)
 	sessions := make(map[string]sessionInfo)
 
@@ -165,6 +166,7 @@ func toUI(state State, statusURI *url.URL) result {
 		Origin:   statusURI.String(),
 		Browsers: browsers,
 		Sessions: sessions,
+		Version:  version,
 		Errors:   make([]interface{}, 0),
 	}
 }
