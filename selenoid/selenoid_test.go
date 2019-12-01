@@ -85,7 +85,7 @@ func selenoidState() State {
 
 func TestToUI(t *testing.T) {
 	statusURI, _ := url.Parse("http://localhost")
-	ui := toUI(selenoidState(), statusURI)
+	ui := toUI(selenoidState(), statusURI, "version")
 	data, err := json.MarshalIndent(ui, "", " ")
 	AssertThat(t, err, Is{nil})
 	AssertThat(t, data, Is{Not{nil}})
@@ -97,7 +97,7 @@ func TestToUI(t *testing.T) {
 func TestStatus(t *testing.T) {
 	srv := httptest.NewServer(selenoidApi())
 	statusURI, _ := url.Parse(srv.URL)
-	data, err := Status(context.Background(), statusURI)
+	data, err := Status(context.Background(), statusURI, "version")
 	AssertThat(t, err, Is{nil})
 	AssertThat(t, data, Not{nil})
 }

@@ -50,12 +50,14 @@ const state = status => {
     }
 };
 
-const Status = ({ status = "unknown", title }) => {
+const Status = ({ status = "unknown", header, version = "unknown" }) => {
     return (
         <StyledStatus>
             <div className={`indicator indicator_${status}`}>
-                <div className="title">{title}</div>
-                <div className="status">{state(status)}</div>
+                <div className="title">{header}</div>
+                <div className="status" title={`Version: ${version}`}>
+                    {state(status)}
+                </div>
             </div>
         </StyledStatus>
     );
