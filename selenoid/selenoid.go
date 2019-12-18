@@ -102,7 +102,7 @@ const (
 	videosPath = "/video"
 )
 
-func Status(ctx context.Context, statusURI *url.URL, version string) ([]byte, error) {
+func Status(ctx context.Context, webdriverURI *url.URL, statusURI *url.URL, version string) ([]byte, error) {
 	req, err := http.NewRequest("GET", statusURI.String()+statusPath, nil)
 	if err != nil {
 		return nil, err
@@ -121,7 +121,7 @@ func Status(ctx context.Context, statusURI *url.URL, version string) ([]byte, er
 		return nil, err
 	}
 
-	req, err = http.NewRequest("GET", statusURI.String()+videosPath+"?json", nil)
+	req, err = http.NewRequest("GET", webdriverURI.String()+videosPath+"?json", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -136,10 +136,10 @@ func Status(ctx context.Context, statusURI *url.URL, version string) ([]byte, er
 
 	state.Videos = videos
 
-	return json.Marshal(toUI(state, statusURI, version))
+	return json.Marshal(toUI(state, webdriverURI, version))
 }
 
-func toUI(state State, statusURI *url.URL, version string) result {
+func toUI(state State, webdriverURI *url.URL, version string) result {
 	browsers := make(map[string]int)
 	sessions := make(map[string]sessionInfo)
 
@@ -163,7 +163,7 @@ func toUI(state State, statusURI *url.URL, version string) result {
 
 	return result{
 		State:    state,
-		Origin:   statusURI.String(),
+		Origin:   webdriverURI.String(),
 		Browsers: browsers,
 		Sessions: sessions,
 		Version:  version,

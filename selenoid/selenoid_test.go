@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func selenoidApi() http.Handler {
+func mockStatusApi() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc(statusPath, mockStatus)
 	return mux
@@ -95,9 +95,10 @@ func TestToUI(t *testing.T) {
 }
 
 func TestStatus(t *testing.T) {
-	srv := httptest.NewServer(selenoidApi())
+	srv := httptest.NewServer(mockStatusApi())
 	statusURI, _ := url.Parse(srv.URL)
-	data, err := Status(context.Background(), statusURI, "version")
+	webdriverURI := statusURI // Any value will work for this test
+	data, err := Status(context.Background(), webdriverURI, statusURI, "version")
 	AssertThat(t, err, Is{nil})
 	AssertThat(t, data, Not{nil})
 }
