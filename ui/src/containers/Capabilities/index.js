@@ -23,7 +23,7 @@ version: "${version}"
 enableVNC: true
 enableVideo: false 
 `,
-        curl: `curl -X POST 'http://127.0.0.1:4444/wd/hub/session' -d '{ 
+        curl: `curl -X POST '${origin}/wd/hub/session' -d '{ 
             "desiredCapabilities":{
                 "browserName":"${browser}", 
                 "version": "${version}", 

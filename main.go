@@ -111,7 +111,7 @@ func status(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 
 	v := gitRevision + "[" + buildStamp + "]"
-	status, err := selenoid.Status(req.Context(), statusURI, v)
+	status, err := selenoid.Status(req.Context(), webdriverURI, statusURI, v)
 	if err != nil {
 		log.Printf("[ERROR] [Can't get status: %v]", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -190,7 +190,7 @@ func main() {
 	go sse.Tick(broker, func(ctx context.Context, br sse.Broker) {
 		timedCtx, cancel := context.WithTimeout(ctx, timeout)
 		defer cancel()
-		status, err := selenoid.Status(timedCtx, statusURI, gitRevision+"["+buildStamp+"]")
+		status, err := selenoid.Status(timedCtx, webdriverURI, statusURI, gitRevision+"["+buildStamp+"]")
 		if err != nil {
 			log.Printf("[ERROR] [Can't get status: %v]", err)
 			br.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
