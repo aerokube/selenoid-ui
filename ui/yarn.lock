@@ -10002,10 +10002,10 @@ react-select@^3.0.8:
     react-input-autosize "^2.2.2"
     react-transition-group "^2.2.1"
 
-react-spinners@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/react-spinners/-/react-spinners-0.6.1.tgz#c4f31a1d0e4c85cdb1785a8bdbe17311cf269b0a"
-  integrity sha512-bMCOvwAlzuIDC6Zh69E1EbyKUbvWSl4sMzLXOgnsF4Q/kkAnCNaonWyskMFytbaJSYxBCCOiaeCH2moDJ5y5Pg==
+react-spinners@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/react-spinners/-/react-spinners-0.7.1.tgz#5d659391bf3ba722750171bb02a3130034cad15d"
+  integrity sha512-yNXk5WUHcuc+qLShDdueGMlqSdV9H0QvgNlnsSFPjbHQVCfQZFrnnkPUIX+ZfUKIesRoIdnO/GAqr4Fwu8EPxQ==
   dependencies:
     "@emotion/core" "^10.0.15"
 
