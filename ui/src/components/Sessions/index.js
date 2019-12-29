@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { ajax } from "rxjs/ajax";
 import { StyledSessions } from "./style.css";
 import BeatLoader from "react-spinners/BeatLoader";
 
 import styled from "styled-components/macro";
+import { useSessionDelete } from "./service";
 
 const Sessions = ({ sessions = {}, query = "" }) => {
     const ids = Object.keys(sessions);
@@ -61,24 +61,7 @@ const Sessions = ({ sessions = {}, query = "" }) => {
 };
 
 const Session = ({ id, session: { quota, caps } }) => {
-    const [deleting, onDeleting] = useState(false);
-
-    const deleteSession = e => {
-        e.preventDefault();
-        e.stopPropagation();
-        onDeleting(true);
-
-        ajax({
-            url: `/wd/hub/session/${id}`,
-            method: "DELETE",
-        }).subscribe(
-            () => {},
-            error => {
-                console.error("Can't delete session", id, error);
-                onDeleting(false);
-            }
-        );
-    };
+    const [deleting, deleteSession] = useSessionDelete(id);
 
     return (
         <div className={`session ${(caps.labels && caps.labels.manual && "session_manual") || ""}`}>
