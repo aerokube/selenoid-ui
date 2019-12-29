@@ -21,6 +21,11 @@ export const StyledSessions = styled.div`
     font-size: 10px;
     line-height: 20px;
     margin-bottom: 20px;
+    
+    &_hidden-true {
+      display: none;
+    }
+    
   }
 
   .no-any {

@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { ajax } from "rxjs/ajax";
 import { StyledSessions } from "./style.css";
 import BeatLoader from "react-spinners/BeatLoader";
 
 import styled from "styled-components/macro";
+import { useSessionDelete } from "./service";
 
 const Sessions = ({ sessions = {}, query = "" }) => {
-    const ids = Object.keys(sessions);
-
     function withQuery(query, sessions) {
         return id => {
             if (id.includes(query)) {
@@ -28,21 +26,23 @@ const Sessions = ({ sessions = {}, query = "" }) => {
         };
     }
 
+    const ids = Object.keys(sessions)
+        .filter(withQuery(query, sessions))
+        // moving manual on top
+        // can be moved to golang actually
+        .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1));
+
     return (
         <StyledSessions>
-            <div className="section-title">Sessions</div>
+            <div className={`section-title section-title_hidden-${!!query}`}>Sessions</div>
             <TransitionGroup className="sessions__list">
-                {ids.length &&
-                    ids
-                        .filter(withQuery(query, sessions))
-                        .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1)) // can be moved to golang actually
-                        .map(id => {
-                            return (
-                                <CSSTransition key={id} timeout={500} classNames="session_state" unmountOnExit>
-                                    <Session id={id} session={sessions[id]} />
-                                </CSSTransition>
-                            );
-                        })}
+                {ids.map(id => {
+                    return (
+                        <CSSTransition key={id} timeout={500} classNames="session_state" unmountOnExit>
+                            <Session id={id} session={sessions[id]} />
+                        </CSSTransition>
+                    );
+                })}
             </TransitionGroup>
             <CSSTransition
                 in={!ids.length}
@@ -61,24 +61,7 @@ const Sessions = ({ sessions = {}, query = "" }) => {
 };
 
 const Session = ({ id, session: { quota, caps } }) => {
-    const [deleting, onDeleting] = useState(false);
-
-    const deleteSession = e => {
-        e.preventDefault();
-        e.stopPropagation();
-        onDeleting(true);
-
-        ajax({
-            url: `/wd/hub/session/${id}`,
-            method: "DELETE",
-        }).subscribe(
-            () => {},
-            error => {
-                console.error("Can't delete session", id, error);
-                onDeleting(false);
-            }
-        );
-    };
+    const [deleting, deleteSession] = useSessionDelete(id);
 
     return (
         <div className={`session ${(caps.labels && caps.labels.manual && "session_manual") || ""}`}>

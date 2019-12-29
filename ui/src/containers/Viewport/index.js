@@ -148,14 +148,19 @@ const Viewport = () => {
                     <Route
                         exact={true}
                         path="/"
-                        render={() => (
-                            <Stats
-                                {...{
-                                    state,
-                                    browsers,
-                                }}
-                            />
-                        )}
+                        render={() => {
+                            if (query) {
+                                return null;
+                            }
+                            return (
+                                <Stats
+                                    {...{
+                                        state,
+                                        browsers,
+                                    }}
+                                />
+                            );
+                        }}
                     />
 
                     <Route exact={true} path="/" render={() => <Sessions sessions={sessions} query={query} />} />
