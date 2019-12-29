@@ -79,7 +79,7 @@ const Viewport = () => {
                                 }
 
                                 if (event.errors && event.errors.length) {
-                                    pushStatus({ status: "error" });
+                                    pushStatus({ status: "error", sse: "ok" });
                                     return event;
                                 }
 
@@ -113,14 +113,7 @@ const Viewport = () => {
             );
         },
         {
-            state: {
-                total: 0,
-                used: 0,
-                queued: 0,
-                pending: 0,
-                videos: [],
-                browsers: {},
-            },
+            state: {},
         },
         [onStatus]
     );
@@ -176,7 +169,7 @@ const Viewport = () => {
                     <Route
                         exact={true}
                         path="/capabilities"
-                        render={() => <Capabilities state={state} origin={origin} />}
+                        render={() => <Capabilities browsers={state.browsers} origin={origin} />}
                     />
 
                     <Route
