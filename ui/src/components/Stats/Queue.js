@@ -13,7 +13,7 @@ const StyledQueue = styled(StatsElement)`
     }
 `;
 
-const Queue = ({ queued }) => {
+const Queue = ({ queued = "?" }) => {
     return (
         <StyledQueue>
             <div className="title">QUEUED</div>

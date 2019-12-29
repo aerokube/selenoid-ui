@@ -18,7 +18,7 @@ const StyledQueue = styled(StatsElement)`
 `;
 
 const Used = ({ used, pending, total }) => {
-    const perc = total > 0 ? (((used + pending) / total) * 100).toFixed() : 0;
+    const perc = total > 0 ? (((used + pending) / total) * 100).toFixed() : "?";
 
     return (
         <StyledQueue>

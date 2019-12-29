@@ -14,6 +14,10 @@ function descendingCount(browsers) {
 }
 
 const Browsers = ({ totalUsed, browsers }) => {
+    if (totalUsed === undefined) {
+        return null;
+    }
+
     return (
         <StyledBrowsers>
             {descendingCount(browsers).map(browser => (
@@ -24,7 +28,7 @@ const Browsers = ({ totalUsed, browsers }) => {
 };
 
 Browsers.propTypes = {
-    totalUsed: PropTypes.number.isRequired,
+    totalUsed: PropTypes.number,
     browsers: PropTypes.object.isRequired,
 };
 

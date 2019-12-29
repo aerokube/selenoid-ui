@@ -101,13 +101,13 @@ export const sessionIdFrom = ({ response }) => {
     return response.sessionId || (response.value && response.value.sessionId) || "";
 };
 
-const Capabilities = ({ state = { browsers: {} }, origin, history }) => {
+const Capabilities = ({ browsers = {}, origin, history }) => {
     const [browser, onBrowserChange] = useState({});
     const [lang, onLanguageChange] = useState("yaml");
 
-    const browsers = [].concat(
-        ...Object.keys(state.browsers).map(name =>
-            Object.keys(state.browsers[name]).map(version => {
+    const available = [].concat(
+        ...Object.keys(browsers).map(name =>
+            Object.keys(browsers[name]).map(version => {
                 return {
                     value: `${name}_${version}`,
                     label: `${name}: ${version}`,
@@ -128,8 +128,8 @@ const Capabilities = ({ state = { browsers: {} }, origin, history }) => {
                 <Select
                     className="capabilities-browser-select"
                     name="browsers"
-                    value={browsers.find(item => item.value === value)}
-                    options={browsers}
+                    value={available.find(item => item.value === value)}
+                    options={available}
                     onChange={browser => onBrowserChange(browser)}
                     placeholder="Select browser..."
                     isLoading={!origin}
@@ -226,7 +226,7 @@ const Launch = ({ browser: { name, version }, history }) => {
 };
 
 Capabilities.propTypes = {
-    state: PropTypes.object,
+    browsers: PropTypes.object,
     origin: PropTypes.string,
 };
 

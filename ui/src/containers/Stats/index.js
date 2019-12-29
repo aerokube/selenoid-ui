@@ -13,7 +13,9 @@ const Stats = ({ state, browsers }) => {
 };
 
 Stats.propTypes = {
-    state: PropTypes.object,
+    state: PropTypes.shape({
+        used: PropTypes.number,
+    }),
     browsers: PropTypes.object,
 };
 

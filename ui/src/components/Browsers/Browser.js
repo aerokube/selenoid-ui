@@ -1,5 +1,6 @@
 import React from "react";
 import { StyledBrowser } from "./style.css";
+import PropTypes from "prop-types";
 
 /**
  * Color depending on percentage
@@ -59,6 +60,12 @@ const Browser = ({ name, used, totalUsed }) => {
             />
         </StyledBrowser>
     );
+};
+
+Browser.propTypes = {
+    name: PropTypes.string.isRequired,
+    used: PropTypes.number.isRequired,
+    totalUsed: PropTypes.number.isRequired,
 };
 
 export default Browser;

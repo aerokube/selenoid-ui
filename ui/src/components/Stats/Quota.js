@@ -19,12 +19,16 @@ const StyledQuota = styled(StatsElement)`
     }
 `;
 
-const Quota = ({ used, pending, total }) => {
+const Quota = ({ used = "?", pending = "?", total = "?" }) => {
     return (
         <StyledQuota>
             <div className="title">QUOTA</div>
             <div className="numbers">
-                {used} <span className="pending">+ {pending}</span> / {total}
+                <span title="Used">{used}</span>{" "}
+                <span className="pending" title="Pending (Starting...)">
+                    + {pending}
+                </span>{" "}
+                / <span title="Total">{total}</span>
             </div>
         </StyledQuota>
     );
