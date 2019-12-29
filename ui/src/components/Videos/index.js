@@ -2,6 +2,8 @@ import React from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import { StyledVideo, StyledVideos } from "./style.css";
+import { useDeleteVideo } from "./service";
+import BeatLoader from "react-spinners/BeatLoader";
 
 const Videos = ({ videos = [], query = "" }) => {
     const preloadVal = videos.length > 100 ? "none" : "auto";
@@ -40,6 +42,8 @@ const Videos = ({ videos = [], query = "" }) => {
 };
 
 const RecordedVideo = ({ src, session, file, preload }) => {
+    const [deleting, deleteVideo] = useDeleteVideo(file);
+
     return (
         <StyledVideo>
             <div className="name" title={file}>
@@ -51,6 +55,15 @@ const RecordedVideo = ({ src, session, file, preload }) => {
                         <a href={src}>
                             <i title="Link" className="icon dripicons-link" />
                         </a>
+                    </div>
+                    <div className="control">
+                        {deleting ? (
+                            <BeatLoader size={2} color={"#fff"} />
+                        ) : (
+                            <span className="delete" onClick={deleteVideo}>
+                                <i title="Delete" className="icon dripicons-trash" />
+                            </span>
+                        )}
                     </div>
                 </div>
                 <div className="content">

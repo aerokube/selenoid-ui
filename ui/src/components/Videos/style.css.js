@@ -3,6 +3,7 @@ import styled from "styled-components/macro";
 const contentBgColor = "#131614";
 const colorBorder = "#555f6a";
 const colorAccent = "#59a781";
+const colorDelete = "#ff6e59";
 
 export const StyledVideo = styled.div`
     display: flex;
@@ -60,6 +61,13 @@ export const StyledVideo = styled.div`
 
                     &:hover {
                         color: ${colorAccent};
+                    }
+                }
+
+                .delete {
+                    cursor: pointer;
+                    &:hover {
+                        color: ${colorDelete};
                     }
                 }
             }
