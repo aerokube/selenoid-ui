@@ -8,8 +8,6 @@ import styled from "styled-components/macro";
 import { useSessionDelete } from "./service";
 
 const Sessions = ({ sessions = {}, query = "" }) => {
-    const ids = Object.keys(sessions);
-
     function withQuery(query, sessions) {
         return id => {
             if (id.includes(query)) {
@@ -28,21 +26,23 @@ const Sessions = ({ sessions = {}, query = "" }) => {
         };
     }
 
+    const ids = Object.keys(sessions)
+        .filter(withQuery(query, sessions))
+        // moving manual on top
+        // can be moved to golang actually
+        .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1));
+
     return (
         <StyledSessions>
-            <div className="section-title">Sessions</div>
+            <div className={`section-title section-title_hidden-${!!query}`}>Sessions</div>
             <TransitionGroup className="sessions__list">
-                {ids.length &&
-                    ids
-                        .filter(withQuery(query, sessions))
-                        .sort(a => (sessions[a].caps.labels && sessions[a].caps.labels.manual ? -1 : 1)) // can be moved to golang actually
-                        .map(id => {
-                            return (
-                                <CSSTransition key={id} timeout={500} classNames="session_state" unmountOnExit>
-                                    <Session id={id} session={sessions[id]} />
-                                </CSSTransition>
-                            );
-                        })}
+                {ids.map(id => {
+                    return (
+                        <CSSTransition key={id} timeout={500} classNames="session_state" unmountOnExit>
+                            <Session id={id} session={sessions[id]} />
+                        </CSSTransition>
+                    );
+                })}
             </TransitionGroup>
             <CSSTransition
                 in={!ids.length}
