@@ -132,6 +132,34 @@ export const StyledCapabilities = styled.div`
       color: ${errorColor};
     }
   }
+  
+  .new-session-more-capabilities {
+    background: none;
+    border: none;
+    color: ${grayColor};
+    text-align: left;
+    padding: 0;
+  }
+  
+  textarea.more-capabilities {
+    border: 1px solid ${unselectedColor};
+    border-radius: 3px;
+    background-color: ${borderSectionColor};
+    color: ${selectedColor};
+    font-size: 13px;
+    font-family: "Source Code Pro",Menlo,Monaco,Consolas,"Courier New",monospace;
+    outline: none;
+    padding: 5px;
+    resize: vertical;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
+    
+    &.error-true {
+      border-color: ${errorColor};
+      color: ${errorColor};
+    }
+  }
 
 }
 

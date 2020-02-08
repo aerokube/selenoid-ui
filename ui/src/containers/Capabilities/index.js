@@ -158,8 +158,13 @@ const Capabilities = ({ browsers = {}, origin, history }) => {
 };
 
 const Launch = ({ browser: { name, version }, history }) => {
+    const defaultAdditionalCaps = { operaOptions: { binary: "/usr/bin/opera" } };
+
     const [loading, onLoading] = useState(false);
     const [error, onError] = useState("");
+    const [useMoreCaps, toggleMoreCaps] = useState(false);
+    const [moreCapsError, onMoreCapsError] = useState(false);
+    const [moreCaps, setMoreCaps] = useState(JSON.stringify(defaultAdditionalCaps));
 
     const [createSession] = useEventCallback(
         (event$, inputs$) =>
@@ -168,7 +173,27 @@ const Launch = ({ browser: { name, version }, history }) => {
                     onError("");
                     onLoading(true);
                 }),
-                flatMap(([_, [name, version, history]]) => {
+                flatMap(([_, [name, version, history, useMoreCaps, moreCapsError, moreCaps]]) => {
+                    let desiredCapabilities = {
+                        browserName: `${name}`,
+                        version: `${version}`,
+                        enableVNC: true,
+                        labels: { manual: "true" },
+                        sessionTimeout: "60m",
+                        name: "Manual session",
+                    };
+                    let selenoidOptions = {
+                        enableVNC: true,
+                        sessionTimeout: "60m",
+                        labels: { manual: "true" },
+                    };
+
+                    if (useMoreCaps && !moreCapsError) {
+                        const additionalCaps = JSON.parse(moreCaps);
+                        desiredCapabilities = Object.assign(desiredCapabilities, additionalCaps);
+                        selenoidOptions = Object.assign(selenoidOptions, additionalCaps);
+                    }
+
                     return ajax({
                         url: "/wd/hub/session",
                         method: "POST",
@@ -176,23 +201,12 @@ const Launch = ({ browser: { name, version }, history }) => {
                             "Content-Type": "application/json",
                         },
                         body: {
-                            desiredCapabilities: {
-                                browserName: `${name}`,
-                                version: `${version}`,
-                                enableVNC: true,
-                                labels: { manual: "true" },
-                                sessionTimeout: "60m",
-                                name: "Manual session",
-                            },
+                            desiredCapabilities,
                             capabilities: {
                                 alwaysMatch: {
                                     browserName: `${name}`,
                                     browserVersion: `${version}`,
-                                    "selenoid:options": {
-                                        enableVNC: true,
-                                        sessionTimeout: "60m",
-                                        labels: { manual: "true" },
-                                    },
+                                    "selenoid:options": selenoidOptions,
                                 },
                             },
                         },
@@ -209,19 +223,45 @@ const Launch = ({ browser: { name, version }, history }) => {
                 })
             ),
         [name, version, history],
-        [name, version, history]
+        [name, version, history, useMoreCaps, moreCapsError, moreCaps]
     );
 
+    const onTextareaUpdate = e => {
+        setMoreCaps(e.target.value);
+        try {
+            JSON.parse(e.target.value);
+            onMoreCapsError(false);
+        } catch (e) {
+            onMoreCapsError(e);
+        }
+    };
+
     return (
-        <button
-            onClick={createSession}
-            disabled={!name || loading}
-            className={`new-session disabled-${!name || loading} error-${!!error}`}
-            onMouseLeave={() => onError("")}
-            title={error}
-        >
-            {loading ? <BeatLoader size={3} color={"#fff"} /> : `Create Session`}
-        </button>
+        <div>
+            <button
+                onClick={createSession}
+                disabled={!name || loading}
+                className={`new-session disabled-${!name || loading} error-${!!error}`}
+                onMouseLeave={() => onError("")}
+                title={error}
+            >
+                {loading ? <BeatLoader size={3} color={"#fff"} /> : `Create Session`}
+            </button>
+            {!name || loading ? null : (
+                <button onClick={() => toggleMoreCaps(!useMoreCaps)} className={"new-session-more-capabilities"}>
+                    More capabilities
+                </button>
+            )}
+            {!useMoreCaps ? null : (
+                <textarea
+                    spellCheck={false}
+                    rows={7}
+                    onChange={onTextareaUpdate}
+                    className={`more-capabilities error-${!!moreCapsError}`}
+                    defaultValue={JSON.stringify(defaultAdditionalCaps, null, 2)}
+                />
+            )}
+        </div>
     );
 };
 
