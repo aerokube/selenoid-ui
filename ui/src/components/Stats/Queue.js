@@ -15,7 +15,7 @@ const StyledQueue = styled(StatsElement)`
 
 const Queue = ({ queued = "?" }) => {
     return (
-        <StyledQueue>
+        <StyledQueue title="How many requests on top of quota are waiting for a slot to be free">
             <div className="title">QUEUED</div>
             <div className="queued">{queued}</div>
         </StyledQueue>
