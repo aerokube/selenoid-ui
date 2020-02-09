@@ -24,11 +24,11 @@ const Quota = ({ used = "?", pending = "?", total = "?" }) => {
         <StyledQuota>
             <div className="title">QUOTA</div>
             <div className="numbers">
-                <span title="Used">{used}</span>{" "}
+                <span title="Used - how many containers run in parallel right now">{used}</span>{" "}
                 <span className="pending" title="Pending (Starting...)">
                     + {pending}
                 </span>{" "}
-                / <span title="Total">{total}</span>
+                / <span title="Total - how many containers can run in parallel">{total}</span>
             </div>
         </StyledQuota>
     );
