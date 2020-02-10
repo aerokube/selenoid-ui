@@ -231,4 +231,35 @@ When using Selenoid UI inside Docker container these flags are passed like the f
     -allowed-origin "*" -period 100ms
 ----
 
+=== Docker healthcheck
+
+When Selenoid UI is launched inside of container, the `/health-check` command would run every 30s inside of a container
+to check if everything is still okay. To adjust the command in a custom extended container, you could supply it with arg
+`-uri http://localhost:8080/ping` in an overridden `HEALTHCHECK` directive.
+
+In case the status is unhealthy, you can get more insights with `docker inspect --format "{{json .State.Health}}" <container_id>` command,
+that would give something like
+
+[source,json,subs="attributes+"]
+----
+{
+  "Status": "healthy",
+  "FailingStreak": 0,
+  "Log": [
+    {
+      "Start": "2020-02-10T00:21:57.7672821Z",
+      "End": "2020-02-10T00:21:57.9054291Z",
+      "ExitCode": 0,
+      "Output": "2020/02/10 00:21:57 OK\n"
+    },
+    {
+      "Start": "2020-02-10T00:22:27.8795685Z",
+      "End": "2020-02-10T00:22:28.0146071Z",
+      "ExitCode": 0,
+      "Output": "2020/02/10 00:22:27 OK\n"
+    }
+  ]
+}
+----
+
 include::contributing.adoc[]
