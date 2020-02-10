@@ -445,7 +445,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community</span><br>
 <span id="revnumber">version latest,</span>
-<span id="revdate">2020-02-09</span>
+<span id="revdate">2020-02-10</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -477,6 +477,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_videos">2.4. Videos</a></li>
 <li><a href="#_using_with_ggr_or_moon">2.5. Using With Ggr or Moon</a></li>
 <li><a href="#_cli_flags">2.6. CLI Flags</a></li>
+<li><a href="#_docker_healthcheck">2.7. Docker healthcheck</a></li>
 </ul>
 </li>
 <li><a href="#_contributing_development">3. Contributing &amp; Development</a>
@@ -867,6 +868,40 @@ This way "latest" version won&#8217;t work. Please setup your selenoid according
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_docker_healthcheck"><a class="anchor" href="#_docker_healthcheck"></a>2.7. Docker healthcheck</h3>
+<div class="paragraph">
+<p>When Selenoid UI is launched inside of container, the <code>/health-check</code> command would run every 30s inside of a container
+to check if everything is still okay. To adjust the command in a custom extended container, you could supply it with arg
+<code>-uri <a href="http://localhost:8080/ping" class="bare">http://localhost:8080/ping</a></code> in an overridden <code>HEALTHCHECK</code> directive.</p>
+</div>
+<div class="paragraph">
+<p>In case the status is unhealthy, you can get more insights with <code>docker inspect --format "{{json .State.Health}}" &lt;container_id&gt;</code> command,
+that would give something like</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">Status</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">healthy</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">FailingStreak</span><span class="delimiter">&quot;</span></span>: <span class="integer">0</span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">Log</span><span class="delimiter">&quot;</span></span>: [
+    {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">Start</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2020-02-10T00:21:57.7672821Z</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">End</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2020-02-10T00:21:57.9054291Z</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">ExitCode</span><span class="delimiter">&quot;</span></span>: <span class="integer">0</span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">Output</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2020/02/10 00:21:57 OK</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+    },
+    {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">Start</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2020-02-10T00:22:27.8795685Z</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">End</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2020-02-10T00:22:28.0146071Z</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">ExitCode</span><span class="delimiter">&quot;</span></span>: <span class="integer">0</span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">Output</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2020/02/10 00:22:27 OK</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -937,7 +972,7 @@ but don&#8217;t forget to ignore that change on commit!
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2020-02-09 23:38:51 UTC
+Last updated 2020-02-10 12:09:31 UTC
 </div>
 </div>
 <style>
