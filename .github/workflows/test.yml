@@ -23,8 +23,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
+      - name: Install generator
+        run: go get -u github.com/rakyll/statik
+
+      - name: Generate bundle
+        run: go generate ./ui ./...
+
       - name: Test
-        run: go test ./...
+        run: go test -race -v -coverprofile=coverage.txt -covermode=atomic ./...
 
       - uses: codecov/codecov-action@v1
         with:
