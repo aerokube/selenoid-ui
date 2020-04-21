@@ -163,7 +163,11 @@ const Viewport = () => {
                         }}
                     />
 
-                    <Route exact={true} path="/" render={() => <Sessions sessions={sessions} query={query} />} />
+                    <Route
+                        exact={true}
+                        path="/"
+                        render={() => <Sessions sessions={sessions} query={query} origin={origin} />}
+                    />
 
                     <Route
                         exact={true}

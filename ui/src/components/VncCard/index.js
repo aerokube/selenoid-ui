@@ -34,7 +34,6 @@ export default class VncCard extends Component {
             <StyledVNC className={`${className} ${fullscreen && "fullscreen"}`}>
                 <div className={`vnc-card ${!connected && "vnc-card_small"} ${fullscreen && "vnc-card_fullscreen"}`}>
                     <div className="vnc-card__controls">
-                        <Back />
                         <Connection connection={connection} />
                         {connected && <Lock locked={!unlocked} handleLock={this.handleLock} />}
                         {connected && <Fullscreen handleFullscreen={this.handleFullscreen} fullscreen={fullscreen} />}
@@ -58,14 +57,6 @@ export default class VncCard extends Component {
             </StyledVNC>
         );
     }
-}
-
-function Back() {
-    return (
-        <Link className="control control_back" to="/">
-            <div title="Back">X</div>
-        </Link>
-    );
 }
 
 function Connection(props) {
@@ -94,7 +85,7 @@ function Fullscreen(props) {
     const { handleFullscreen, fullscreen } = props;
     return (
         <div className="control control_fullscreen" onClick={handleFullscreen}>
-            <div title="Fullscreen" className={"icon dripicons-" + (fullscreen ? "chevron-down" : "chevron-up")} />
+            <div title="Fullscreen" className={"icon dripicons-" + (fullscreen ? "chevron-down" : "expand")} />
         </div>
     );
 }

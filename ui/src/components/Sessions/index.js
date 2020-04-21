@@ -6,8 +6,10 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 import styled from "styled-components/macro";
 import { useSessionDelete } from "./service";
+import Log from "../Log";
+import VncCard from "../VncCard";
 
-const Sessions = ({ sessions = {}, query = "" }) => {
+const Sessions = ({ sessions = {}, query = "", origin }) => {
     function withQuery(query, sessions) {
         return id => {
             if (id.includes(query)) {
@@ -43,6 +45,24 @@ const Sessions = ({ sessions = {}, query = "" }) => {
                         </CSSTransition>
                     );
                 })}
+                <IfOnlyOne ids={ids}>
+                    <VncCard
+                        {...{
+                            origin,
+                        }}
+                        session={ids[0]}
+                        browser={sessions[ids[0]]}
+                        onVNCFullscreenChange={() => {}}
+                    />
+                    <Log
+                        {...{
+                            origin,
+                        }}
+                        browser={sessions[ids[0]]}
+                        session={ids[0]}
+                        hidden={false}
+                    />
+                </IfOnlyOne>
             </TransitionGroup>
             <CSSTransition
                 in={!ids.length}
@@ -58,6 +78,13 @@ const Sessions = ({ sessions = {}, query = "" }) => {
             </CSSTransition>
         </StyledSessions>
     );
+};
+
+const IfOnlyOne = props => {
+    if (props.ids.length === 1) {
+        return <>{props.children}</>;
+    }
+    return null;
 };
 
 const Session = ({ id, session: { quota, caps } }) => {

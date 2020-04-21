@@ -16,6 +16,7 @@ export const StyledLog = styled.div`
     .log-card {
         height: 450px;
         width: 100%;
+        padding-left: 50px;
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;

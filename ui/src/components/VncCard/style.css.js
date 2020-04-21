@@ -57,13 +57,12 @@ export const StyledVNC = styled.div`
         height: 450px;
         width: 100%;
         display: flex;
-        flex-direction: column;
-        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.12);
 
         &_fullscreen {
             height: 100%;
             width: 100%;
             z-index: 2;
+            background-color: ${backgroundColorLighter};
         }
 
         &_small {
@@ -72,53 +71,29 @@ export const StyledVNC = styled.div`
         }
 
         &__controls {
-            height: 30px;
-            width: 100%;
+            height: 100%;
+            width: 50px;
             display: flex;
             align-items: center;
-            background-color: ${backgroundColorLighter};
+            justify-content: flex-start;
+            flex-direction: column;
 
             .control {
-                width: 15px;
-                height: 15px;
-                line-height: 15px;
-                border-radius: 50%;
-                background-color: ${colorDisconnected};
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
                 text-align: center;
                 text-decoration: none;
-                margin-left: 10px;
-                font-size: 10px;
+                font-size: 25px;
                 color: #fff;
                 transition: background-color 0.5s ease-out 0s;
 
                 &_fullscreen {
                     cursor: pointer;
-                    background-color: ${colorFullscreen};
-                    color: ${colorFullscreen};
-
-                    &:hover {
-                        color: #fff;
-                    }
-                }
-
-                &_back {
-                    cursor: pointer;
-                    background-color: ${colorDisconnected};
-                    color: ${colorDisconnected};
-
-                    &:hover {
-                        color: #fff;
-                    }
                 }
 
                 &_lock {
                     cursor: pointer;
-                    background-color: ${colorConnecting};
-                    color: ${colorConnecting};
-
-                    &:hover {
-                        color: #fff;
-                    }
                 }
 
                 &_disconnected {
@@ -150,8 +125,8 @@ export const StyledVNC = styled.div`
         }
 
         &__content {
-            width: 100%;
-            height: calc(100% - 30px);
+            width: calc(100% - 50px);
+            height: 100%;
             display: flex;
             flex-direction: column;
             background-color: #000;
