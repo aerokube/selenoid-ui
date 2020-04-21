@@ -14,8 +14,8 @@ script:
   - yarn --cwd ui test
   - mkdir -p licenses
   - yarn --cwd ui licenses generate-disclaimer > licenses/ui-licenses
-  - gox -os "linux darwin windows" -arch "amd64" -osarch="windows/386"  -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`"
-  - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build  -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`" # for docker
+  - gox -os "linux darwin windows" -arch "amd64" -osarch="windows/386" -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`"
+  - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags "-X main.buildStamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.gitRevision=`git describe --tags || git rev-parse HEAD`" # for docker
   - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o health-check healthcheck/main.go
   - cd $GOPATH/pkg/mod
   - find . -name 'LICENSE*' -exec cp --parents \{\} $WD/licenses \;
@@ -36,10 +36,6 @@ install:
   - go get -u github.com/rakyll/statik
   - go get -u github.com/mitchellh/gox # cross compile
   - npm install cross-env
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash) -F go
-  - bash <(curl -s https://codecov.io/bash) -f ./ui/coverage/coverage-final.json -F ui
 
 deploy:
   - provider: releases
