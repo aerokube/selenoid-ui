@@ -5,10 +5,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/aerokube/selenoid-ui/selenoid"
-	"github.com/aerokube/util/sse"
-	"github.com/koding/websocketproxy"
-	"github.com/rakyll/statik/fs"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -18,6 +14,11 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/aerokube/selenoid-ui/selenoid"
+	"github.com/aerokube/util/sse"
+	"github.com/koding/websocketproxy"
+	"github.com/rakyll/statik/fs"
 
 	_ "github.com/aerokube/selenoid-ui/statik"
 )
@@ -52,6 +53,9 @@ func mux(sse *sse.SseBroker) http.Handler {
 	mux.HandleFunc("/ping", ping)
 	mux.HandleFunc("/status", status)
 	mux.HandleFunc("/video/", func(w http.ResponseWriter, r *http.Request) {
+		reverseProxy(statusURI).ServeHTTP(w, r)
+	})
+	mux.HandleFunc("/videos", func(w http.ResponseWriter, r *http.Request) {
 		reverseProxy(statusURI).ServeHTTP(w, r)
 	})
 	mux.HandleFunc("/wd/hub/", func(w http.ResponseWriter, r *http.Request) {

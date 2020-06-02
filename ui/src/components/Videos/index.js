@@ -1,19 +1,30 @@
 import React from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-import { StyledVideo, StyledVideos } from "./style.css";
-import { useDeleteVideo } from "./service";
+import { StyledVideo, StyledVideos, DeleteAll } from "./style.css";
+import { useDeleteVideo, useDeleteAllVideos } from "./service";
 import BeatLoader from "react-spinners/BeatLoader";
 
 const Videos = ({ videos = [], query = "" }) => {
     const preloadVal = videos.length > 100 ? "none" : "auto";
-    const filtered = videos.filter(fname => fname.includes(query));
+    const filtered = videos.filter((fname) => fname.includes(query));
+    const [deleting, deleteAllVideos] = useDeleteAllVideos();
 
     return (
         <StyledVideos>
+            <DeleteAll>
+                <button
+                    onClick={deleteAllVideos}
+                    disabled={!videos || deleting}
+                    title="Delete All"
+                    className="delete-all dripicons-trash"
+                >
+                    Delete All
+                </button>
+            </DeleteAll>
             <TransitionGroup className={`videos__list`}>
                 {filtered.length &&
-                    filtered.map(fname => {
+                    filtered.map((fname) => {
                         const src = `/video/${fname}`;
                         const session = fname.split(".")[0];
 
