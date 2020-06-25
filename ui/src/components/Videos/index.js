@@ -15,7 +15,7 @@ const Videos = ({ videos = [], query = "" }) => {
                 {filtered.length &&
                     filtered.map(fname => {
                         const src = `/video/${fname}`;
-                        const session = fname.split(".")[0];
+                        const session = fname.match(/.*(?=\.)/)[0];
 
                         return (
                             <CSSTransition key={fname} timeout={500} classNames="video__container_state" unmountOnExit>
