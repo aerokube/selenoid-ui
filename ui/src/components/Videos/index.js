@@ -1,7 +1,7 @@
 import React from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-import { StyledVideo, StyledVideos } from "./style.css";
+import { StyledVideo, StyledVideos, DeleteAll } from "./style.css";
 import { useDeleteVideo } from "./service";
 import BeatLoader from "react-spinners/BeatLoader";
 import Log from "../Log";
@@ -11,6 +11,16 @@ const Videos = ({ videos = [], query = "" }) => {
 
     return (
         <StyledVideos>
+            <DeleteAll>
+                <button
+                    onClick={deleteAllVideos}
+                    disabled={!videos || deleting}
+                    title="Delete All"
+                    className="delete-all dripicons-trash"
+                >
+                    Delete All
+                </button>
+            </DeleteAll>
             <TransitionGroup className={`videos__list`}>
                 {filtered.length &&
                     filtered.map((fname) => {

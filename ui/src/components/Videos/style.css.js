@@ -5,6 +5,12 @@ const colorBorder = "#555f6a";
 const colorAccent = "#59a781";
 const colorDelete = "#ff6e59";
 
+const borderLangsColor = "#3d444c";
+const borderSectionColor = "#353b42";
+const selectedColor = "#dd6d6d";
+const errorColor = "#ff6e59";
+const grayColor = "#666";
+
 export const StyledVideo = styled.div`
     display: flex;
     flex-direction: column;
@@ -134,6 +140,32 @@ export const StyledVideos = styled.div`
         // don't show until all videos are gone
         &_state-enter-active {
             display: none;
+        }
+    }
+`;
+
+export const DeleteAll = styled.div`
+    padding: 10px 20px;
+    .delete-all {
+        height: 2rem;
+        border: 1px solid ${selectedColor};
+        border-radius: 3px;
+        background-color: ${borderSectionColor};
+        color: ${selectedColor};
+        text-transform: uppercase;
+        font-size: 1.1em;
+        outline: none;
+        cursor: pointer;
+
+        &:disabled {
+            border-color: ${grayColor};
+            background-color: ${grayColor};
+            color: ${grayColor};
+        }
+
+        &.error-true {
+            border-color: ${errorColor};
+            color: ${errorColor};
         }
     }
 `;
