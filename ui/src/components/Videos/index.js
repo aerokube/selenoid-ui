@@ -4,23 +4,33 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { StyledVideo, StyledVideos } from "./style.css";
 import { useDeleteVideo } from "./service";
 import BeatLoader from "react-spinners/BeatLoader";
-
+import Log from "../Log";
 const Videos = ({ videos = [], query = "" }) => {
     const preloadVal = videos.length > 100 ? "none" : "auto";
-    const filtered = videos.filter(fname => fname.includes(query));
+    const filtered = videos.filter((fname) => fname.includes(query));
 
     return (
         <StyledVideos>
             <TransitionGroup className={`videos__list`}>
                 {filtered.length &&
-                    filtered.map(fname => {
+                    filtered.map((fname) => {
                         const src = `/video/${fname}`;
                         const session = fname.match(/.*(?=\.)/)[0];
 
                         return (
-                            <CSSTransition key={fname} timeout={500} classNames="video__container_state" unmountOnExit>
-                                <RecordedVideo src={src} session={session} file={fname} preload={preloadVal} />
-                            </CSSTransition>
+                            <div>
+                                <CSSTransition
+                                    key={fname}
+                                    timeout={500}
+                                    classNames="video__container_state"
+                                    unmountOnExit
+                                >
+                                    <RecordedVideo src={src} session={session} file={fname} preload={preloadVal} />
+                                </CSSTransition>
+                                <div className="session-interactive-card">
+                                    <Log session={session} browser="" hidden={false} />
+                                </div>
+                            </div>
                         );
                     })}
             </TransitionGroup>

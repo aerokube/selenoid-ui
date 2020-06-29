@@ -47,24 +47,24 @@ export default class Log extends Component {
 
         this.subscription = this.props$
             .pipe(
-                filter(it => it && it.session && it.origin && it.browser),
+                // filter(it => it && it.session && it.origin && it.browser),
                 distinctUntilChanged((prev, { origin }) => prev.origin === origin),
                 map(({ session }) => {
                     const wsProxyUrl = urlTo(window.location.href);
                     return `${isSecure(wsProxyUrl) ? "wss" : "ws"}://${wsProxyUrl.host}/ws/logs/${session}`;
                 }),
-                switchMap(ws => {
+                switchMap((ws) => {
                     return defer(() => {
                         this.term.clear();
 
-                        return new Observable(observer => {
+                        return new Observable((observer) => {
                             observer.next(`Connecting to ${ws}...\n\r`);
 
                             const socket = new WebSocket(ws);
                             const decoder = new TextDecoder("utf8");
 
                             socket.binaryType = "arraybuffer";
-                            socket.onmessage = event => {
+                            socket.onmessage = (event) => {
                                 if (event) {
                                     observer.next(decoder.decode(event.data) + "\r");
                                 }
@@ -85,7 +85,7 @@ export default class Log extends Component {
                     });
                 })
             )
-            .subscribe(msg => this.term.write(msg));
+            .subscribe((msg) => this.term.write(msg));
     }
 
     componentWillUnmount() {
@@ -103,7 +103,7 @@ export default class Log extends Component {
                     <div className="log-card__content">
                         <div
                             className="term"
-                            ref={term => {
+                            ref={(term) => {
                                 this.termel = term;
                             }}
                         />
