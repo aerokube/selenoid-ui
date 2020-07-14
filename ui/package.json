@@ -20,7 +20,7 @@
         "rxjs": "^6.5.5",
         "rxjs-compat": "^6.5.4",
         "rxjs-hooks": "^0.5.2",
-        "styled-components": "^5.0.1",
+        "styled-components": "^5.1.1",
         "xterm": "^3.14.5"
     },
     "scripts": {
