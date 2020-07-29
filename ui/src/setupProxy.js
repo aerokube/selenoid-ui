@@ -1,4 +1,4 @@
-const proxy = require("http-proxy-middleware");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const http = require("http");
 const agent = new http.Agent({
@@ -7,27 +7,27 @@ const agent = new http.Agent({
     keepAliveMsecs: 1000,
 });
 
-module.exports = function(app) {
+module.exports = function (app) {
     app.use(
-        proxy("/events", {
+        createProxyMiddleware("/events", {
             target: "http://localhost:8080",
             headers: { Connection: "keep-alive" },
             agent: agent,
         })
     );
-    app.use(proxy("/status", { target: "http://localhost:8080" }));
-    app.use(proxy("/video/", { target: "http://localhost:8080" }));
-    app.use(proxy("/wd/hub/", { target: "http://localhost:8080" }));
-    app.use(proxy("/ws", { target: "http://localhost:8080/", ws: true }));
+    app.use(createProxyMiddleware("/status", { target: "http://localhost:8080" }));
+    app.use(createProxyMiddleware("/video/", { target: "http://localhost:8080" }));
+    app.use(createProxyMiddleware("/wd/hub/", { target: "http://localhost:8080" }));
+    app.use(createProxyMiddleware("/ws", { target: "http://localhost:8080/", ws: true }));
     app.use(
-        proxy("/vnc/", {
+        createProxyMiddleware("/vnc/", {
             target: "http://localhost:3000/",
             pathRewrite: { "^/vnc/": "" },
             ws: true,
         })
     );
     app.use(
-        proxy("/log/", {
+        createProxyMiddleware("/log/", {
             target: "http://localhost:3000/",
             pathRewrite: { "^/log/": "" },
             ws: true,
