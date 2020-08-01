@@ -18,7 +18,7 @@
         "react-spinners": "^0.6.1",
         "react-transition-group": "^4.3.0",
         "rxjs": "^6.5.5",
-        "rxjs-compat": "^6.5.4",
+        "rxjs-compat": "^6.6.2",
         "rxjs-hooks": "^0.5.2",
         "styled-components": "^5.0.1",
         "xterm": "^3.14.5"
