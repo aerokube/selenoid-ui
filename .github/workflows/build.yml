@@ -1,7 +1,9 @@
-name: test
+name: build
 
 on:
-  pull_request:
+  push:
+    branches:
+      - master
 
 jobs:
   selenoid-ui:
@@ -39,11 +41,16 @@ jobs:
       - name: Test
         run: ci/test.sh
 
-      - uses: codecov/codecov-action@v1
-        with:
-          flags: go
+      - name: Build
+        run: ci/build.sh
 
-      - uses: codecov/codecov-action@v1
-        with:
-          file: ./ui/coverage/coverage-final.json
-          flags: ui
+      - name: Latest image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: ci/docker-push.sh latest
+
+      - name: Latest docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ci/docs.sh latest ${{ secrets.GITHUB_TOKEN }}
