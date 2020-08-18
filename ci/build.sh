@@ -10,7 +10,6 @@ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o health-check healthcheck/main.
 
 mkdir -p licenses
 yarn --cwd ui licenses generate-disclaimer > licenses/ui-licenses
-export GOPATH=${GITHUB_WORKSPACE}/go
-cd ${GOPATH}/pkg/mod
+cd $(go env GOPATH)/pkg/mod
 find . -name 'LICENSE*' -exec cp --parents \{\} ${GITHUB_WORKSPACE}/licenses \;
 cd ${GITHUB_WORKSPACE}
