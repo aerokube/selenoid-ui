@@ -14,47 +14,57 @@ import { StyledCapabilities } from "./style.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useEventCallback } from "rxjs-hooks";
 
+import Url from "url-parse";
+
 const code = (browser = "UNKNOWN", version = "", origin = "http://selenoid-uri:4444") => {
+    const url = new Url(origin);
     return {
         yaml: `# selenium: "${origin}"
 # please note that real accessible selenoid uri can be different        
 browserName: "${browser}"
-version: "${version}"
+browserVersion: "${version}"
 enableVNC: true
 enableVideo: false 
 `,
         curl: `curl -X POST '${origin}/wd/hub/session' -d '{ 
             "desiredCapabilities":{
                 "browserName":"${browser}", 
-                "version": "${version}", 
-                "platform":"ANY",
-                "enableVNC": true,
-                "name": "this.test.is.launched.by.curl",
-                "sessionTimeout": "120s"
+                "browserVersion": "${version}", 
+                "platformName":"ANY",
+                "selenoid:options": {
+                    "enableVNC": true,
+                    "name": "this.test.is.launched.by.curl",
+                    "sessionTimeout": "120s"
+                }
             }
         }'
 `,
         java: `DesiredCapabilities capabilities = new DesiredCapabilities();
-capabilities.setBrowserName("${browser}");
-capabilities.setVersion("${version}");
-capabilities.setCapability("enableVNC", true);
-capabilities.setCapability("enableVideo", false);
-
+capabilities.setCapability("browserName", "${browser}");
+capabilities.setCapability("browserVersion", "${version}");
+capabilities.setCapability("selenoid:options", Map.<String, Object>of(
+    "enableVNC", true,
+    "enableVideo", true
+));
 RemoteWebDriver driver = new RemoteWebDriver(
     URI.create("${origin}/wd/hub").toURL(), 
     capabilities
 );
 `,
-        "C#": `var capabilities = new DesiredCapabilities("${browser}", "${version}", new Platform(PlatformType.Any));
+        "C#": `var capabilities = new DesiredCapabilities();
+capabilities.SetCapability(CapabilityType.BrowserName, "${browser}");
+capabilities.SetCapability(CapabilityType.BrowserVersion, "${version}");
 var driver = new RemoteWebDriver(new Uri("${origin}/wd/hub"), capabilities);
 `,
         python: `from selenium import webdriver
         
 capabilities = {
     "browserName": "${browser}",
-    "version": "${version}",
-    "enableVNC": True,
-    "enableVideo": False
+    "browserVersion": "${version}",
+    "selenoid:options": {
+        "enableVNC": True,
+        "enableVideo": False
+    }
 }
 
 driver = webdriver.Remote(
@@ -64,30 +74,33 @@ driver = webdriver.Remote(
         javascript: `var webdriverio = require('webdriverio');
         
 var options = { 
-    host: '${origin}',
-    desiredCapabilities: { 
+    hostname: '${url.host}',
+    port: ${url.port},
+    capabilities: { 
         browserName: '${browser}', 
-        version: '${version}',
-        enableVNC: true,
-        enableVideo: false 
+        browserVersion: '${version}',
+        'selenoid:options': {
+            enableVNC: true,
+            enableVideo: false 
+        }      
     } 
 };
 var client = webdriverio.remote(options);
 `,
         PHP: `$web_driver = RemoteWebDriver::create("${origin}/wd/hub",
-array("version"=>"${version}", "browserName"=>"${browser}")
+array("browserName"=>"${browser}", "browserVersion"=>"${version}")
 );
 `,
         ruby: `caps = Selenium::WebDriver::Remote::Capabilities.new
 caps["browserName"] = "${browser}"
-caps["version"] = "${version}"
+caps["browserVersion"] = "${version}"
 
 driver = Selenium::WebDriver.for(:remote,
   :url => "${origin}/wd/hub",
   :desired_capabilities => caps)
 `,
         go: `// "github.com/tebeka/selenium"
-caps := selenium.Capabilities{"browserName": "${browser}", "version": "${version}"}
+caps := selenium.Capabilities{"browserName": "${browser}", "browserVersion": "${version}"}
 driver, err := selenium.NewRemote(caps, "${origin}/wd/hub")
 if err != nil {
 	panic("create selenium session: %v\n", err)
