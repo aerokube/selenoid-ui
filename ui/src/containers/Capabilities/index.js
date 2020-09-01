@@ -213,6 +213,7 @@ const Launch = ({ browser: { name, version }, history }) => {
                         headers: {
                             "Content-Type": "application/json",
                         },
+                        timeout: 300000,
                         body: {
                             desiredCapabilities,
                             capabilities: {
