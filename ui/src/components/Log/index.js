@@ -1,21 +1,20 @@
 import React, { Component } from "react";
 import { Terminal } from "xterm";
+import { FitAddon } from "xterm-addon-fit";
 import urlTo from "../../util/urlTo";
 import isSecure from "../../util/isSecure";
 
-import "xterm/dist/xterm.css";
+import "xterm/css/xterm.css";
 import { StyledLog } from "./style.css";
 import colors from "ansi-256-colors";
 import { BehaviorSubject, defer, fromEvent, Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, tap } from "rxjs/operators";
-import * as fit from "xterm/lib/addons/fit/fit";
 
 export default class Log extends Component {
     constructor(props) {
         super(props);
 
-        Terminal.applyAddon(fit);
-        this.term = new Terminal({
+        const terminal = new Terminal({
             cursorBlink: false,
             tabStopWidth: 4,
             disableStdin: true,
@@ -26,6 +25,10 @@ export default class Log extends Component {
                 background: "#151515",
             },
         });
+        const fitAddon = new FitAddon();
+        terminal.loadAddon(fitAddon);
+        this.term = terminal;
+        this.fitAddon = fitAddon;
         this.props$ = new BehaviorSubject(props);
     }
 
@@ -35,6 +38,7 @@ export default class Log extends Component {
 
     componentDidMount() {
         this.term.open(this.termel);
+        this.fitAddon.fit();
         this.term.writeln(colors.fg.getRgb(2, 3, 4) + "Initialize...\n\r" + colors.reset);
 
         this.resize = fromEvent(window, "resize")
