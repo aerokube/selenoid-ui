@@ -445,7 +445,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community</span><br>
 <span id="revnumber">version latest,</span>
-<span id="revdate">2020-09-18</span>
+<span id="revdate">2020-09-22</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -915,7 +915,9 @@ that would give something like</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">$ go generate ./ui ./...</code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">$ yarn --cwd ui install
+$ yarn --cwd ui build
+$ go generate github.com/aerokube/selenoid-ui</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -936,8 +938,13 @@ $ docker build -t selenoid-ui:latest .</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>5) To run local development with hot reloads it&#8217;s better to start Selenoid UI binary as <code>./selenoid-ui -allowed-origin="*"</code>
-as well as <code>cd ui &amp;&amp; yarn start</code></p>
+<p>5) To run local development with hot reloads:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">$ ./selenoid-ui -allowed-origin=&quot;*&quot;
+$ yarn --cwd ui start</code></pre>
+</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -946,9 +953,8 @@ as well as <code>cd ui &amp;&amp; yarn start</code></p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-For some reason devserver can&#8217;t proxy SSE properly and thus realtime updates can get stuck.
-As a workaround you can change the path in the <code>Viewport</code> container from <code>/events</code> to <code><a href="http://localhost:8080/events" class="bare">http://localhost:8080/events</a></code>,
-but don&#8217;t forget to ignore that change on commit!
+For some reason development server can&#8217;t proxy SSE properly and thus realtime updates can get stuck.
+As a workaround you can temporarily change the path in the <code>Viewport</code> container from <code>/events</code> to <code><a href="http://localhost:8080/events" class="bare">http://localhost:8080/events</a></code>.
 </td>
 </tr>
 </table>
@@ -972,7 +978,7 @@ but don&#8217;t forget to ignore that change on commit!
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2020-09-18 11:29:18 UTC
+Last updated 2020-09-22 04:03:42 UTC
 </div>
 </div>
 <style>
