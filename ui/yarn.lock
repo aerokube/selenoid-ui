@@ -10828,10 +10828,10 @@ rxjs-compat@^6.6.3:
   resolved "https://registry.yarnpkg.com/rxjs-compat/-/rxjs-compat-6.6.3.tgz#141405fcee11f48718d428b99c8f01826f594e5c"
   integrity sha512-y+wUqq7bS2dG+7rH2fNMoxsDiJ32RQzFxZQE/JdtpnmEZmwLQrb1tCiItyHxdXJHXjmHnnzFscn3b6PEmORGKw==
 
-rxjs-hooks@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/rxjs-hooks/-/rxjs-hooks-0.6.2.tgz#08428ea10739a8da50a9b45724faf7f81156e4cf"
-  integrity sha512-oFyjJhhZ4D8bWVNT36J9iCr7p+qVCO7Y6T3XzypXqJf2qxCuURJaCAmARy0mAKbckNQv/0R78mhQxfTcGgECjQ==
+rxjs-hooks@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/rxjs-hooks/-/rxjs-hooks-0.5.2.tgz#2b4f287d8d0c2b108e7a6f4eee628528c1d974f6"
+  integrity sha512-sm2FMw1CbcYM7x4CRQ9OLiDtwpgQaiG8owURC2rB/iw7txpGSMU3BN25/wm19cMctezZsTM2EeH7jiyBqSfuSw==
   dependencies:
     tslib "^1.10.0"
     use-constant "^1.0.0"

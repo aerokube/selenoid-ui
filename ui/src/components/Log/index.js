@@ -45,7 +45,7 @@ export default class Log extends Component {
             .pipe(
                 debounceTime(100),
                 startWith({}),
-                tap(() => this.term.fit())
+                tap(() => this.fitAddon.fit())
             )
             .subscribe();
 
