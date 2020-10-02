@@ -210,6 +210,8 @@ The following flags are supported by `selenoid-ui` command:
     	status uri to fetch data from
   -timeout duration
     	response timeout, e.g. 5s or 1m (default 3s)
+  -users string
+    	users file path
   -version
     	Show version and exit
   -webdriver-uri string

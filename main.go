@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	auth "github.com/abbot/go-http-auth"
 	"github.com/aerokube/selenoid-ui/selenoid"
 	"github.com/aerokube/util/sse"
 	"github.com/koding/websocketproxy"
@@ -30,6 +31,7 @@ var (
 	webdriverUriString string
 	statusUriString    string
 	allowedOrigin      string
+	users              string
 	timeout            time.Duration
 	period             time.Duration
 
@@ -146,10 +148,16 @@ func init() {
 	flag.StringVar(&webdriverUriString, "webdriver-uri", "", "webdriver uri used to create new sessions")
 	flag.StringVar(&statusUriString, "status-uri", "", "status uri to fetch data from")
 	flag.StringVar(&allowedOrigin, "allowed-origin", "", "comma separated list of allowed Origin headers (use * to allow all)")
+	flag.StringVar(&users, "users", "", "users file path")
 	flag.DurationVar(&timeout, "timeout", 3*time.Second, "response timeout, e.g. 5s or 1m")
 	flag.DurationVar(&period, "period", 5*time.Second, "data refresh period, e.g. 5s or 1m")
 	flag.BoolVar(&version, "version", false, "Show version and exit")
 	flag.Parse()
+
+	if version {
+		showVersion()
+		os.Exit(0)
+	}
 
 	if webdriverUriString == "" {
 		webdriverUriString = selenoidUri
@@ -176,9 +184,8 @@ func init() {
 	}
 	webdriverURI = wu
 
-	if version {
-		showVersion()
-		os.Exit(0)
+	if _, err := os.Stat(users); users != "" && err != nil {
+		log.Fatalf("[INIT] [Invalid users file: %v]", err)
 	}
 }
 
@@ -199,6 +206,15 @@ func main() {
 		br.Notify(status)
 	}, period, stop)
 
+	mux := mux(broker)
+	if users != "" {
+		authenticator := auth.NewBasicAuthenticator(
+			"Selenoid UI",
+			auth.HtpasswdFileProvider(users),
+		)
+		mux = auth.JustCheck(authenticator, mux.ServeHTTP)
+	}
+
 	log.Printf("[INIT] [Listening on %s]", listen)
-	log.Fatal(http.ListenAndServe(listen, mux(broker)))
+	log.Fatal(http.ListenAndServe(listen, mux))
 }
