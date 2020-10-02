@@ -445,7 +445,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Kirill Merkushev, Ivan Krutov, Alexander Andryashin and the Aerokube community</span><br>
 <span id="revnumber">version latest,</span>
-<span id="revdate">2020-09-22</span>
+<span id="revdate">2020-10-02</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -475,9 +475,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#_videos">2.4. Videos</a></li>
-<li><a href="#_using_with_ggr_or_moon">2.5. Using With Ggr or Moon</a></li>
-<li><a href="#_cli_flags">2.6. CLI Flags</a></li>
-<li><a href="#_docker_healthcheck">2.7. Docker healthcheck</a></li>
+<li><a href="#_restricting_access">2.5. Restricting Access</a></li>
+<li><a href="#_using_with_ggr_or_moon">2.6. Using With Ggr or Moon</a></li>
+<li><a href="#_cli_flags">2.7. CLI Flags</a></li>
+<li><a href="#_docker_healthcheck">2.8. Docker healthcheck</a></li>
 </ul>
 </li>
 <li><a href="#_contributing_development">3. Contributing &amp; Development</a>
@@ -796,7 +797,33 @@ This way "latest" version won&#8217;t work. Please setup your selenoid according
 </div>
 </div>
 <div class="sect2">
-<h3 id="_using_with_ggr_or_moon"><a class="anchor" href="#_using_with_ggr_or_moon"></a>2.5. Using With Ggr or Moon</h3>
+<h3 id="_restricting_access"><a class="anchor" href="#_restricting_access"></a>2.5. Restricting Access</h3>
+<div class="paragraph">
+<p>You can restrict access to Selenoid UI with a <a href="https://en.wikipedia.org/wiki/.htpasswd">htpasswd</a> file as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a file with user <code>test</code> and password <code>test-password</code>:</p>
+<div class="literalblock">
+<div class="content">
+<pre>$ htpasswd -bc /path/to/users.htpasswd test test-password</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run Selenoid UI with <code>-users</code> flag pointing to this file:</p>
+<div class="literalblock">
+<div class="content">
+<pre>$ ./selenoid-ui -users /path/to/users.htpasswd</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_with_ggr_or_moon"><a class="anchor" href="#_using_with_ggr_or_moon"></a>2.6. Using With Ggr or Moon</h3>
 <div class="paragraph">
 <p>By default Selenoid UI considers that the same daemon (Selenoid) is handles Selenium session creation and returns a list of already running sessions at <code>/status</code> API. However in more complicated cases like connecting Selenoid UI to a <a href="https://github.com/aerokube/ggr">Ggr</a> or <a href="https://github.com/aerokube/moon">Moon</a> cluster two separate daemons exist:</p>
 </div>
@@ -823,7 +850,7 @@ This way "latest" version won&#8217;t work. Please setup your selenoid according
 </div>
 </div>
 <div class="sect2">
-<h3 id="_cli_flags"><a class="anchor" href="#_cli_flags"></a>2.6. CLI Flags</h3>
+<h3 id="_cli_flags"><a class="anchor" href="#_cli_flags"></a>2.7. CLI Flags</h3>
 <div class="paragraph">
 <p>The following flags are supported by <code>selenoid-ui</code> command:</p>
 </div>
@@ -841,6 +868,8 @@ This way "latest" version won&#8217;t work. Please setup your selenoid according
     	status uri to fetch data from
   -timeout duration
     	response timeout, e.g. 5s or 1m (default 3s)
+  -users string
+    	users file path
   -version
     	Show version and exit
   -webdriver-uri string
@@ -869,7 +898,7 @@ This way "latest" version won&#8217;t work. Please setup your selenoid according
 </div>
 </div>
 <div class="sect2">
-<h3 id="_docker_healthcheck"><a class="anchor" href="#_docker_healthcheck"></a>2.7. Docker healthcheck</h3>
+<h3 id="_docker_healthcheck"><a class="anchor" href="#_docker_healthcheck"></a>2.8. Docker healthcheck</h3>
 <div class="paragraph">
 <p>When Selenoid UI is launched inside of container, the <code>/health-check</code> command would run every 30s inside of a container
 to check if everything is still okay. To adjust the command in a custom extended container, you could supply it with arg
@@ -978,7 +1007,7 @@ As a workaround you can temporarily change the path in the <code>Viewport</code>
 <div id="footer">
 <div id="footer-text">
 Version latest<br>
-Last updated 2020-09-22 04:03:42 UTC
+Last updated 2020-10-02 16:37:55 UTC
 </div>
 </div>
 <style>
