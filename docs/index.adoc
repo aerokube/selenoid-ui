@@ -180,6 +180,18 @@ image:img/logs.png[logs]
 
 You can view recorded videos, accessible on the selenoid, in case there are any on a separate tab.
 
+=== Restricting Access
+
+You can restrict access to Selenoid UI with a https://en.wikipedia.org/wiki/.htpasswd[htpasswd] file as follows:
+
+. Create a file with user `test` and password `test-password`:
++
+    $ htpasswd -bc /path/to/users.htpasswd test test-password
+
+. Run Selenoid UI with `-users` flag pointing to this file:
++
+    $ ./selenoid-ui -users /path/to/users.htpasswd
+
 === Using With Ggr or Moon
 
 By default Selenoid UI considers that the same daemon (Selenoid) is handles Selenium session creation and returns a list of already running sessions at `/status` API. However in more complicated cases like connecting Selenoid UI to a https://github.com/aerokube/ggr[Ggr] or https://github.com/aerokube/moon[Moon] cluster two separate daemons exist:

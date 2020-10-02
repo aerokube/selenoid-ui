@@ -148,7 +148,7 @@ func init() {
 	flag.StringVar(&webdriverUriString, "webdriver-uri", "", "webdriver uri used to create new sessions")
 	flag.StringVar(&statusUriString, "status-uri", "", "status uri to fetch data from")
 	flag.StringVar(&allowedOrigin, "allowed-origin", "", "comma separated list of allowed Origin headers (use * to allow all)")
-	flag.StringVar(&users, "users", "", "users file path")
+	flag.StringVar(&users, "users", "", "htpasswd file path containing users information")
 	flag.DurationVar(&timeout, "timeout", 3*time.Second, "response timeout, e.g. 5s or 1m")
 	flag.DurationVar(&period, "period", 5*time.Second, "data refresh period, e.g. 5s or 1m")
 	flag.BoolVar(&version, "version", false, "Show version and exit")
@@ -208,6 +208,7 @@ func main() {
 
 	mux := mux(broker)
 	if users != "" {
+		log.Printf("[INIT] [Reading users from %s]", users)
 		authenticator := auth.NewBasicAuthenticator(
 			"Selenoid UI",
 			auth.HtpasswdFileProvider(users),
