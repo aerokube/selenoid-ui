@@ -46,7 +46,7 @@
         "http-proxy-middleware": "^1.0.6",
         "husky": "^4.3.6",
         "mutationobserver-shim": "^0.3.5",
-        "prettier": "2.0.5",
+        "prettier": "2.2.1",
         "pretty-quick": "^2.0.1"
     },
     "husky": {
