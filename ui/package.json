@@ -45,7 +45,7 @@
         "eventsourcemock": "^2.0.0",
         "http-proxy-middleware": "^1.0.6",
         "husky": "^4.3.6",
-        "mutationobserver-shim": "^0.3.5",
+        "mutationobserver-shim": "^0.3.7",
         "prettier": "2.0.5",
         "pretty-quick": "^2.0.1"
     },
