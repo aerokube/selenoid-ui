@@ -222,6 +222,7 @@ const Launch = ({ browser: { name, version }, history }) => {
                                     browserVersion: `${version}`,
                                     "selenoid:options": selenoidOptions,
                                 },
+                                firstMatch: [{}],
                             },
                         },
                     }).pipe(
