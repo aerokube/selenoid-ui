@@ -41,7 +41,7 @@
         "not op_mini all"
     ],
     "devDependencies": {
-        "eslint-plugin-prettier": "^3.1.4",
+        "eslint-plugin-prettier": "^3.4.0",
         "eventsourcemock": "^2.0.0",
         "http-proxy-middleware": "^1.0.6",
         "husky": "^4.3.6",
