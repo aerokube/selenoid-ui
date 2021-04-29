@@ -10842,10 +10842,10 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   dependencies:
     aproba "^1.1.1"
 
-rxjs-compat@^6.6.3:
-  version "6.6.3"
-  resolved "https://registry.yarnpkg.com/rxjs-compat/-/rxjs-compat-6.6.3.tgz#141405fcee11f48718d428b99c8f01826f594e5c"
-  integrity sha512-y+wUqq7bS2dG+7rH2fNMoxsDiJ32RQzFxZQE/JdtpnmEZmwLQrb1tCiItyHxdXJHXjmHnnzFscn3b6PEmORGKw==
+rxjs-compat@^6.6.7:
+  version "6.6.7"
+  resolved "https://registry.yarnpkg.com/rxjs-compat/-/rxjs-compat-6.6.7.tgz#6eb4ef75c0a58ea672854a701ccc8d49f41e69cb"
+  integrity sha512-szN4fK+TqBPOFBcBcsR0g2cmTTUF/vaFEOZNuSdfU8/pGFnNmmn2u8SystYXG1QMrjOPBc6XTKHMVfENDf6hHw==
 
 rxjs-hooks@^0.5.2:
   version "0.5.2"
