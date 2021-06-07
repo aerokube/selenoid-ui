@@ -3,22 +3,21 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
-	auth "github.com/abbot/go-http-auth"
-	"github.com/aerokube/selenoid-ui/selenoid"
-	"github.com/aerokube/util/sse"
-	"github.com/koding/websocketproxy"
-	"github.com/rakyll/statik/fs"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
-	"os/signal"
 	"strings"
-	"syscall"
 	"time"
+
+	auth "github.com/abbot/go-http-auth"
+	"github.com/aerokube/selenoid-ui/selenoid"
+	"github.com/koding/websocketproxy"
+	"github.com/rakyll/statik/fs"
 
 	_ "github.com/aerokube/selenoid-ui/statik"
 )
@@ -46,10 +45,10 @@ var (
 	buildStamp  = "unknown"
 )
 
-func mux(sse *sse.SseBroker) http.Handler {
+func mux() http.Handler {
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(statik))
-	mux.Handle("/events", sse)
+	mux.HandleFunc("/events", sse)
 	mux.HandleFunc("/ws/", ws)
 	mux.HandleFunc("/ping", ping)
 	mux.HandleFunc("/status", status)
@@ -109,11 +108,12 @@ type SSEError struct {
 	Msg string `json:"msg"`
 }
 
-func status(w http.ResponseWriter, req *http.Request) {
+func status(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 
+	user, pass, _ := r.BasicAuth()
 	v := gitRevision + "[" + buildStamp + "]"
-	status, err := selenoid.Status(req.Context(), webdriverURI, statusURI, v)
+	status, err := selenoid.Status(r.Context(), user, pass, webdriverURI, statusURI, v)
 	if err != nil {
 		log.Printf("[ERROR] [Can't get status: %v]", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -126,6 +126,51 @@ func status(w http.ResponseWriter, req *http.Request) {
 	}
 
 	w.Write(status)
+}
+
+func sse(w http.ResponseWriter, r *http.Request) {
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	user, pass, _ := r.BasicAuth()
+	v := gitRevision + "[" + buildStamp + "]"
+
+	for {
+		select {
+		case <-r.Context().Done():
+			return
+		case <-time.After(period):
+			status, err := selenoid.Status(r.Context(), user, pass, webdriverURI, statusURI, v)
+			if err != nil {
+				if errors.Is(err, context.Canceled) {
+					return
+				}
+				log.Printf("[STATUS_ERROR] [get status: %v]", err)
+				fmt.Fprint(w, []byte(`{ "errors": [{"msg": "can't get status"}] }`))
+				return
+			}
+			if err != nil {
+				log.Printf("[STATUS_ERROR] [marshal status: %v]", err)
+				fmt.Fprint(w, []byte(`{ "errors": [{"msg": "can't marshal status"}] }`))
+				return
+			}
+			_, err = fmt.Fprintf(w, "data: %s\n\n", status)
+			if err != nil {
+				log.Printf("[STATUS_ERROR] [write status: %v]", err)
+				fmt.Fprint(w, []byte(`{ "errors": [{"msg": "can't marshal status"}] }`))
+				return
+			}
+			flusher.Flush()
+		}
+	}
 }
 
 func reverseProxy(u *url.URL) http.Handler {
@@ -190,23 +235,7 @@ func init() {
 }
 
 func main() {
-	broker := sse.NewSseBroker()
-	stop := make(chan os.Signal)
-	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
-
-	go sse.Tick(broker, func(ctx context.Context, br sse.Broker) {
-		timedCtx, cancel := context.WithTimeout(ctx, timeout)
-		defer cancel()
-		status, err := selenoid.Status(timedCtx, webdriverURI, statusURI, gitRevision+"["+buildStamp+"]")
-		if err != nil {
-			log.Printf("[ERROR] [Can't get status: %v]", err)
-			br.Notify([]byte(`{ "errors": [{"msg": "can't get status"}] }`))
-			return
-		}
-		br.Notify(status)
-	}, period, stop)
-
-	mux := mux(broker)
+	mux := mux()
 	if users != "" {
 		log.Printf("[INIT] [Reading users from %s]", users)
 		authenticator := auth.NewBasicAuthenticator(
@@ -215,7 +244,6 @@ func main() {
 		)
 		mux = auth.JustCheck(authenticator, mux.ServeHTTP)
 	}
-
 	log.Printf("[INIT] [Listening on %s]", listen)
 	log.Fatal(http.ListenAndServe(listen, mux))
 }

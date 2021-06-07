@@ -102,10 +102,13 @@ const (
 	videosPath = "/video"
 )
 
-func Status(ctx context.Context, webdriverURI *url.URL, statusURI *url.URL, version string) ([]byte, error) {
+func Status(ctx context.Context, user, pass string, webdriverURI, statusURI *url.URL, version string) ([]byte, error) {
 	req, err := http.NewRequest("GET", statusURI.String()+statusPath, nil)
 	if err != nil {
 		return nil, err
+	}
+	if user != "" {
+		req.SetBasicAuth(user, pass)
 	}
 
 	var state State

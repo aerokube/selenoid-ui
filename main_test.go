@@ -2,14 +2,14 @@ package main
 
 import (
 	"encoding/json"
-	. "github.com/aandryashin/matchers"
-	. "github.com/aandryashin/matchers/httpresp"
-	"github.com/aerokube/util/sse"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
+
+	. "github.com/aandryashin/matchers"
+	. "github.com/aandryashin/matchers/httpresp"
 )
 
 var (
@@ -22,8 +22,7 @@ var _ = func() bool {
 }()
 
 func init() {
-	broker := sse.NewSseBroker()
-	srv = httptest.NewServer(mux(broker))
+	srv = httptest.NewServer(mux())
 	gitRevision = "test-revision"
 }
 
