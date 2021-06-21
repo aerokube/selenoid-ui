@@ -199,6 +199,7 @@ const Launch = ({ browser: { name, version }, history }) => {
                         enableVNC: true,
                         sessionTimeout: "60m",
                         labels: { manual: "true" },
+                        name: "Manual session",
                     };
 
                     if (useMoreCaps && !moreCapsError) {
