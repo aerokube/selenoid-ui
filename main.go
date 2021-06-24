@@ -16,7 +16,6 @@ import (
 
 	auth "github.com/abbot/go-http-auth"
 	"github.com/aerokube/selenoid-ui/selenoid"
-	"github.com/koding/websocketproxy"
 	"github.com/rakyll/statik/fs"
 
 	_ "github.com/aerokube/selenoid-ui/statik"
@@ -49,7 +48,10 @@ func mux() http.Handler {
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(statik))
 	mux.HandleFunc("/events", sse)
-	mux.HandleFunc("/ws/", ws)
+	mux.HandleFunc("/ws/", func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = strings.TrimPrefix(r.URL.Path, "/ws")
+		reverseProxy(webdriverURI).ServeHTTP(w, r)
+	})
 	mux.HandleFunc("/ping", ping)
 	mux.HandleFunc("/status", status)
 	mux.HandleFunc("/video/", func(w http.ResponseWriter, r *http.Request) {
@@ -59,20 +61,6 @@ func mux() http.Handler {
 		reverseProxy(webdriverURI).ServeHTTP(w, r)
 	})
 	return mux
-}
-
-func ws(w http.ResponseWriter, r *http.Request) {
-	r.URL.Path = strings.TrimPrefix(r.URL.Path, "/ws")
-	ws := &url.URL{Scheme: "ws", Host: statusURI.Host, Path: r.URL.Path}
-	log.Printf("[WS_PROXY] [/ws%s] [%s]", r.URL.Path, ws)
-	wsProxy := websocketproxy.NewProxy(ws)
-
-	if allowedOrigin != "" {
-		upgrader := websocketproxy.DefaultUpgrader
-		upgrader.CheckOrigin = checkOrigin(allowedOrigin)
-	}
-	wsProxy.ServeHTTP(w, r)
-	log.Printf("[WS_PROXY] [%s] [CLOSED]", r.URL.Path)
 }
 
 func checkOrigin(allowedOrigins string) func(r *http.Request) bool {
@@ -111,8 +99,8 @@ type SSEError struct {
 func status(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 
-	user, pass, _ := r.BasicAuth()
 	v := gitRevision + "[" + buildStamp + "]"
+	user, pass, _ := r.BasicAuth()
 	status, err := selenoid.Status(r.Context(), user, pass, webdriverURI, statusURI, v)
 	if err != nil {
 		log.Printf("[ERROR] [Can't get status: %v]", err)
