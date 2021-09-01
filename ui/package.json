@@ -5,7 +5,7 @@
     "dependencies": {
         "@novnc/novnc": "^1.1.0",
         "ansi-256-colors": "^1.1.0",
-        "event-source-polyfill": "^1.0.17",
+        "event-source-polyfill": "^1.0.25",
         "prop-types": "^15.7.2",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
