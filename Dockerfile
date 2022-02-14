@@ -1,5 +1,5 @@
 FROM scratch
-MAINTAINER Kirill Merkushev <lanwen@yandex.ru>
+#MAINTAINER Kirill Merkushev <lanwen@yandex.ru>
 
 COPY selenoid-ui /
 #COPY health-check /

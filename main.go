@@ -100,8 +100,7 @@ func status(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 
 	v := gitRevision + "[" + buildStamp + "]"
-	user, pass, _ := r.BasicAuth()
-	status, err := selenoid.Status(r.Context(), user, pass, webdriverURI, statusURI, v)
+	status, err := selenoid.Status(r.Context(), r.Header, webdriverURI, statusURI, v)
 	if err != nil {
 		log.Printf("[ERROR] [Can't get status: %v]", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -128,7 +127,6 @@ func sse(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	user, pass, _ := r.BasicAuth()
 	v := gitRevision + "[" + buildStamp + "]"
 
 	for {
@@ -136,7 +134,7 @@ func sse(w http.ResponseWriter, r *http.Request) {
 		case <-r.Context().Done():
 			return
 		case <-time.After(period):
-			status, err := selenoid.Status(r.Context(), user, pass, webdriverURI, statusURI, v)
+			status, err := selenoid.Status(r.Context(), r.Header, webdriverURI, statusURI, v)
 			if err != nil {
 				if errors.Is(err, context.Canceled) {
 					return
