@@ -18,6 +18,7 @@ import Url from "url-parse";
 
 const code = (browser = "UNKNOWN", version = "", origin = "http://selenoid-uri:4444") => {
     const url = new Url(origin);
+    origin = window.location.protocol + "//" + window.location.hostname + (window.location.port == "" ? "" : ":4444");
     return {
         yaml: `# selenium: "${origin}"
 # please note that real accessible selenoid uri can be different        
@@ -74,8 +75,8 @@ driver = webdriver.Remote(
         javascript: `var webdriverio = require('webdriverio');
         
 var options = { 
-    hostname: '${url.host}',
-    port: ${url.port},
+    hostname: '${window.location.hostname}',
+    port: 4444,
     capabilities: { 
         browserName: '${browser}', 
         browserVersion: '${version}',
