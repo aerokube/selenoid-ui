@@ -77,6 +77,7 @@ driver = webdriver.Remote(
 var options = { 
     hostname: '${window.location.hostname}',
     port: 4444,
+    protocol: '${window.location.protocol == "https:" ? "https" : "http"}',
     capabilities: { 
         browserName: '${browser}', 
         browserVersion: '${version}',
