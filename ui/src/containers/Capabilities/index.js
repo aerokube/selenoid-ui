@@ -19,51 +19,123 @@ import Url from "url-parse";
 const code = (browser = "UNKNOWN", version = "", origin = "http://selenoid-uri:4444") => {
     const url = new Url(origin);
     origin = window.location.protocol + "//" + window.location.hostname + (window.location.port == "" ? "" : ":4444");
+    let optionsClass = "SpecificBrowserOptions";
+    switch (browser) {
+        case "UNKNOWN":
+        case "chrome":
+            optionsClass = "ChromeOptions";
+            break;
+        case "firefox":
+            optionsClass = "FirefoxOptions";
+            break;
+        case "safari":
+            optionsClass = "SafariOptions";
+            break;
+        case "MicrosoftEdge":
+            optionsClass = "EdgeOptions";
+            break;
+    }
     return {
-        yaml: `# selenium: "${origin}"
-# please note that real accessible selenoid uri can be different        
-browserName: "${browser}"
-browserVersion: "${version}"
-enableVNC: true
-enableVideo: false 
-`,
-        curl: `curl -X POST '${origin}/wd/hub/session' -d '{ 
-            "desiredCapabilities":{
-                "browserName":"${browser}", 
-                "browserVersion": "${version}", 
-                "platformName":"ANY",
-                "selenoid:options": {
-                    "enableVNC": true,
-                    "name": "this.test.is.launched.by.curl",
-                    "sessionTimeout": "120s"
-                }
+        curl: `curl -H'Content-Type: application/json' ${origin}/wd/hub/session -d'{
+    "capabilities": {
+        "alwaysMatch": {
+            "browserName": "${browser != "UNKNOWN" ? browser : "chrome"}",
+            ${version == "" ? "" : "\"browserVersion\": \"" + version + "\","}
+            "moon:options": {
+                "name": "Session started using curl command...",
+                "sessionTimeout": "1m"
             }
-        }'
+        }
+    }
+}'
 `,
-        java: `DesiredCapabilities capabilities = new DesiredCapabilities();
-capabilities.setCapability("browserName", "${browser}");
-capabilities.setCapability("browserVersion", "${version}");
-capabilities.setCapability("selenoid:options", Map.<String, Object>of(
-    "enableVNC", true,
-    "enableVideo", true
-));
-RemoteWebDriver driver = new RemoteWebDriver(
-    URI.create("${origin}/wd/hub").toURL(), 
-    capabilities
-);
+        java: `${optionsClass} options = new ${optionsClass}();
+${version != "" ? "options.setCapability(\"browserVersion\", \"" + version + "\");" : ""}
+options.setCapability("moon:options", new HashMap<String, Object>() {{
+    /* How to add test badge */
+    put("name", "Test badge...");
+
+    /* How to set session timeout */
+    put("sessionTimeout", "15m");
+
+    /* How to set timezone */
+    put("env", new ArrayList<String>() {{
+        add("TZ=UTC");
+    }});
+
+    /* How to add "trash" button */
+    put("labels", new HashMap<String, Object>() {{
+        put("manual", "true");
+    }});
+
+    /* How to enable video recording */
+    put("enableVideo", true);
+}});
+RemoteWebDriver driver = new RemoteWebDriver(new URL("${origin}/wd/hub"), options);
 `,
-        "C#": `var capabilities = new DesiredCapabilities();
-capabilities.SetCapability(CapabilityType.BrowserName, "${browser}");
-capabilities.SetCapability(CapabilityType.BrowserVersion, "${version}");
-var driver = new RemoteWebDriver(new Uri("${origin}/wd/hub"), capabilities);
+        go: `// import "github.com/tebeka/selenium"
+
+caps := selenium.Capabilities{
+        "browserName":    "${browser != "UNKNOWN" ? browser : "chrome"}",
+		"browserVersion": "${version}",
+		"moon:options": map[string]interface{}{
+                /* How to add test badge */
+                "name": "Test badge...",
+
+                /* How to set session timeout */
+                "sessionTimeout": "5m",
+
+                /* How to set timezone */
+                "env": []string{
+                        "TZ=UTC",
+                },
+
+                /* How to add "trash" button */
+                "labels": map[string]interface{}{
+                        "manual": "true",
+                },
+
+                /* How to enable video recording */
+                "enableVideo": true,
+        },
+}
+
+driver, err := selenium.NewRemote(caps, "http://moon.aerokube.local/wd/hub")
+if err != nil {
+        t.Errorf("starting browser: %v", err)
+}
+defer driver.Quit()
+`,
+        "C#": `${optionsClass} options = new ${optionsClass}();
+${version != "" ? "options.BrowserVersion = \"" + version + "\";" : ""}
+options.AddAdditionalOption("moon:options", new Dictionary<string, object> {
+    /* How to add test badge */
+    ["name"] = "Test badge...",
+
+    /* How to set session timeout */
+    ["sessionTimeout"] = "15m",
+
+    /* How to set timezone */
+    ["env"] = new List<string>() {
+        "TZ=UTC"
+    },
+
+    /* How to add "trash" button */
+    ["labels"] = new Dictionary<string, object> {
+        ["manual"] = "true"
+    },
+
+    /* How to enable video recording */
+    ["enableVideo"] = true
+});
+IWebDriver driver = new RemoteWebDriver(new Uri("http://moon.aerokube.local/wd/hub"), options);
 `,
         python: `from selenium import webdriver
         
 capabilities = {
-    "browserName": "${browser}",
+    "browserName": "${browser != "UNKNOWN" ? browser : "chrome"}",
     "browserVersion": "${version}",
-    "selenoid:options": {
-        "enableVNC": True,
+    "moon:options": {
         "enableVideo": False
     }
 }
@@ -79,10 +151,9 @@ var options = {
     port: 4444,
     protocol: '${window.location.protocol == "https:" ? "https" : "http"}',
     capabilities: { 
-        browserName: '${browser}', 
+        browserName: '${browser != "UNKNOWN" ? browser : "chrome"}',
         browserVersion: '${version}',
-        'selenoid:options': {
-            enableVNC: true,
+        'moon:options': {
             enableVideo: false 
         }      
     } 
@@ -90,24 +161,16 @@ var options = {
 var client = webdriverio.remote(options);
 `,
         PHP: `$web_driver = RemoteWebDriver::create("${origin}/wd/hub",
-array("browserName"=>"${browser}", "browserVersion"=>"${version}")
+array("browserName"=>"${browser != "UNKNOWN" ? browser : "chrome"}", "browserVersion"=>"${version}")
 );
 `,
         ruby: `caps = Selenium::WebDriver::Remote::Capabilities.new
-caps["browserName"] = "${browser}"
+browserName: '${browser != "UNKNOWN" ? browser : "chrome"}',
 caps["browserVersion"] = "${version}"
 
 driver = Selenium::WebDriver.for(:remote,
   :url => "${origin}/wd/hub",
   :desired_capabilities => caps)
-`,
-        go: `// "github.com/tebeka/selenium"
-caps := selenium.Capabilities{"browserName": "${browser}", "browserVersion": "${version}"}
-driver, err := selenium.NewRemote(caps, "${origin}/wd/hub")
-if err != nil {
-	panic("create selenium session: %v\n", err)
-}
-defer driver.Quit()
 `,
     };
 };
@@ -118,7 +181,7 @@ export const sessionIdFrom = ({ response }) => {
 
 const Capabilities = ({ browsers = {}, origin, history }) => {
     const [browser, onBrowserChange] = useState({});
-    const [lang, onLanguageChange] = useState("yaml");
+    const [lang, onLanguageChange] = useState("curl");
 
     const available = [].concat(
         ...Object.keys(browsers).map(name =>
@@ -223,7 +286,7 @@ const Launch = ({ browser: { name, version }, history }) => {
                                 alwaysMatch: {
                                     browserName: `${name}`,
                                     browserVersion: `${version}`,
-                                    "selenoid:options": selenoidOptions,
+                                    "moon:options": selenoidOptions,
                                 },
                                 firstMatch: [{}],
                             },

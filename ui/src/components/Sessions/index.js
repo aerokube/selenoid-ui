@@ -68,7 +68,7 @@ const Session = ({ id, session: { quota, caps } }) => {
             <SessionId>
                 <span className="quota">{quota}</span> /{" "}
                 <Link to={deleting ? `#` : `/sessions/${id}`} className="id">
-                    {id.substring(0, 8)}
+                    {id.substring(0, id.indexOf("-"))}
                 </Link>
             </SessionId>
             <Link className="identity" to={deleting ? `#` : `/sessions/${id}`}>
