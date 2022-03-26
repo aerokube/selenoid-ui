@@ -31,7 +31,7 @@ export const StyledCapabilities = styled.div`
   }
 
   .setup {
-    width: 200px;
+    width: 250px;
     margin-right: 30px;
 
     button {
