@@ -236,7 +236,7 @@ const Capabilities = ({ browsers = {}, origin, history }) => {
 };
 
 const Launch = ({ browser: { name, version }, history }) => {
-    const defaultAdditionalCaps = { operaOptions: { binary: "/usr/bin/opera" } };
+    const defaultAdditionalCaps = { "capabilities": { "alwaysMatch": { "goog:chromeOptions":{ "excludeSwitches": ["enable-automation"] }}} };
 
     const [loading, onLoading] = useState(false);
     const [error, onError] = useState("");
@@ -252,25 +252,55 @@ const Launch = ({ browser: { name, version }, history }) => {
                     onLoading(true);
                 }),
                 flatMap(([_, [name, version, history, useMoreCaps, moreCapsError, moreCaps]]) => {
-                    let desiredCapabilities = {
-                        browserName: `${name}`,
-                        version: `${version}`,
-                        enableVNC: true,
-                        labels: { manual: "true" },
-                        sessionTimeout: "60m",
-                        name: "Manual session",
-                    };
-                    let selenoidOptions = {
+                    let rootCaps;
+                    let moonOptions = {
                         enableVNC: true,
                         sessionTimeout: "60m",
                         labels: { manual: "true" },
                         name: "Manual session",
+                        additionalFonts: true
                     };
 
                     if (useMoreCaps && !moreCapsError) {
-                        const additionalCaps = JSON.parse(moreCaps);
-                        desiredCapabilities = Object.assign(desiredCapabilities, additionalCaps);
-                        selenoidOptions = Object.assign(selenoidOptions, additionalCaps);
+                        rootCaps = JSON.parse(moreCaps);
+                        const alwaysMatch = {};
+                        if (rootCaps.hasOwnProperty('capabilities')) {
+                            if (rootCaps.capabilities.hasOwnProperty('alwaysMatch')) {
+                                if (!rootCaps.capabilities.alwaysMatch.hasOwnProperty('browserName')) {
+                                    rootCaps.capabilities.alwaysMatch.browserName = `${name}`
+                                }
+                                if (!rootCaps.capabilities.alwaysMatch.hasOwnProperty('browserVersion')) {
+                                    rootCaps.capabilities.alwaysMatch.browserVersion = `${version}`
+                                }
+                                if (!rootCaps.capabilities.alwaysMatch.hasOwnProperty('moon:options')) {
+                                    rootCaps.capabilities.alwaysMatch['moon:options'] = moonOptions
+                                }
+                            } else {
+                                rootCaps.capabilities.alwaysMatch = {
+                                    browserName: `${name}`,
+                                    browserVersion: `${version}`,
+                                    "moon:options": moonOptions,
+                                }
+                            }
+                        } else {
+                            rootCaps.capabilities = {
+                                alwaysMatch: {
+                                    browserName: `${name}`,
+                                    browserVersion: `${version}`,
+                                    "moon:options": moonOptions,
+                                }
+                            }
+                        }
+                    } else {
+                        rootCaps = {
+                            capabilities: {
+                                alwaysMatch: {
+                                    browserName: `${name}`,
+                                    browserVersion: `${version}`,
+                                    "moon:options": moonOptions,
+                                }
+                            }
+                        }
                     }
 
                     return ajax({
@@ -280,17 +310,7 @@ const Launch = ({ browser: { name, version }, history }) => {
                             "Content-Type": "application/json",
                         },
                         timeout: 300000,
-                        body: {
-                            desiredCapabilities,
-                            capabilities: {
-                                alwaysMatch: {
-                                    browserName: `${name}`,
-                                    browserVersion: `${version}`,
-                                    "moon:options": selenoidOptions,
-                                },
-                                firstMatch: [{}],
-                            },
-                        },
+                        body: rootCaps
                     }).pipe(
                         filter(({ status }) => status === 200),
                         tap(res => history.push(`/sessions/${sessionIdFrom(res)}`))
@@ -330,7 +350,7 @@ const Launch = ({ browser: { name, version }, history }) => {
             </button>
             {!name || loading ? null : (
                 <button onClick={() => toggleMoreCaps(!useMoreCaps)} className={"new-session-more-capabilities"}>
-                    More capabilities
+                    custom capabilities
                 </button>
             )}
             {!useMoreCaps ? null : (
