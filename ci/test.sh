@@ -5,6 +5,6 @@ yarn --cwd ui build
 yarn --cwd ui test
 
 export GO111MODULE="on"
-go get -u github.com/rakyll/statik
+go install github.com/rakyll/statik@latest
 go generate github.com/aerokube/selenoid-ui
 go test -race -v -coverprofile=coverage.txt -covermode=atomic ./...
