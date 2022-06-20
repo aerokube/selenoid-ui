@@ -100,7 +100,7 @@ caps := selenium.Capabilities{
         },
 }
 
-driver, err := selenium.NewRemote(caps, "http://moon.aerokube.local/wd/hub")
+driver, err := selenium.NewRemote(caps, "${origin}/wd/hub")
 if err != nil {
         t.Errorf("starting browser: %v", err)
 }
@@ -128,7 +128,7 @@ options.AddAdditionalOption("selenoid:options", new Dictionary<string, object> {
     /* How to enable video recording */
     ["enableVideo"] = true
 });
-IWebDriver driver = new RemoteWebDriver(new Uri("http://moon.aerokube.local/wd/hub"), options);
+IWebDriver driver = new RemoteWebDriver(new Uri("${origin}/wd/hub"), options);
 `,
         python: `from selenium import webdriver
         
