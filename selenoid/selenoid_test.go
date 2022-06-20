@@ -99,7 +99,7 @@ func TestStatus(t *testing.T) {
 	srv := httptest.NewServer(mockStatusApi())
 	statusURI, _ := url.Parse(srv.URL)
 	webdriverURI := statusURI // Any value will work for this test
-	data, err := Status(context.Background(), "", "", webdriverURI, statusURI, "version")
+	data, err := Status(context.Background(), http.Header{}, webdriverURI, statusURI, "version")
 	AssertThat(t, err, Is{nil})
 	AssertThat(t, data, Not{nil})
 }

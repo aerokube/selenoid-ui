@@ -7,7 +7,7 @@ require (
 	github.com/abbot/go-http-auth v0.4.0
 	github.com/aerokube/util v0.0.0-20181001032247-3a9b3f70da09
 	github.com/gorilla/websocket v1.4.0 // indirect
-	github.com/hashicorp/go-version v1.2.1 // indirect
+	github.com/hashicorp/go-version v1.5.0 // indirect
 	github.com/koding/websocketproxy v0.0.0-20180716164433-0fa3f994f6e7
 	github.com/mitchellh/gox v1.0.1 // indirect
 	github.com/rakyll/statik v0.1.7
