@@ -41,7 +41,7 @@ const code = (browser = "UNKNOWN", version = "", origin = "http://selenoid-uri:4
         "alwaysMatch": {
             "browserName": "${browser != "UNKNOWN" ? browser : "chrome"}",
             ${version == "" ? "" : "\"browserVersion\": \"" + version + "\","}
-            "moon:options": {
+            "selenoid:options": {
                 "name": "Session started using curl command...",
                 "sessionTimeout": "1m"
             }
@@ -51,7 +51,7 @@ const code = (browser = "UNKNOWN", version = "", origin = "http://selenoid-uri:4
 `,
         java: `${optionsClass} options = new ${optionsClass}();
 ${version != "" ? "options.setCapability(\"browserVersion\", \"" + version + "\");" : ""}
-options.setCapability("moon:options", new HashMap<String, Object>() {{
+options.setCapability("selenoid:options", new HashMap<String, Object>() {{
     /* How to add test badge */
     put("name", "Test badge...");
 
@@ -78,7 +78,7 @@ RemoteWebDriver driver = new RemoteWebDriver(new URL("${origin}/wd/hub"), option
 caps := selenium.Capabilities{
         "browserName":    "${browser != "UNKNOWN" ? browser : "chrome"}",
 		"browserVersion": "${version}",
-		"moon:options": map[string]interface{}{
+		"selenoid:options": map[string]interface{}{
                 /* How to add test badge */
                 "name": "Test badge...",
 
@@ -108,7 +108,7 @@ defer driver.Quit()
 `,
         "C#": `${optionsClass} options = new ${optionsClass}();
 ${version != "" ? "options.BrowserVersion = \"" + version + "\";" : ""}
-options.AddAdditionalOption("moon:options", new Dictionary<string, object> {
+options.AddAdditionalOption("selenoid:options", new Dictionary<string, object> {
     /* How to add test badge */
     ["name"] = "Test badge...",
 
@@ -135,7 +135,7 @@ IWebDriver driver = new RemoteWebDriver(new Uri("http://moon.aerokube.local/wd/h
 capabilities = {
     "browserName": "${browser != "UNKNOWN" ? browser : "chrome"}",
     "browserVersion": "${version}",
-    "moon:options": {
+    "selenoid:options": {
         "enableVideo": False
     }
 }
@@ -153,7 +153,7 @@ var options = {
     capabilities: { 
         browserName: '${browser != "UNKNOWN" ? browser : "chrome"}',
         browserVersion: '${version}',
-        'moon:options': {
+        'selenoid:options': {
             enableVideo: false 
         }      
     } 
@@ -285,7 +285,7 @@ const Launch = ({ browser: { name, version }, history }) => {
                                 alwaysMatch: {
                                     browserName: `${name}`,
                                     browserVersion: `${version}`,
-                                    "moon:options": selenoidOptions,
+                                    "selenoid:options": selenoidOptions,
                                 },
                                 firstMatch: [{}],
                             },
