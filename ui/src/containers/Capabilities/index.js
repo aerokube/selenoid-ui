@@ -23,6 +23,7 @@ const code = (browser = "UNKNOWN", version = "", origin = "http://selenoid-uri:4
     switch (browser) {
         case "UNKNOWN":
         case "chrome":
+        case "opera":
             optionsClass = "ChromeOptions";
             break;
         case "firefox":
@@ -50,6 +51,7 @@ const code = (browser = "UNKNOWN", version = "", origin = "http://selenoid-uri:4
 }'
 `,
         java: `${optionsClass} options = new ${optionsClass}();
+${browser == "opera" ? "options.setCapability(\"browserName\", \"opera\");" : ""}
 ${version != "" ? "options.setCapability(\"browserVersion\", \"" + version + "\");" : ""}
 options.setCapability("moon:options", new HashMap<String, Object>() {{
     /* How to add test badge */
@@ -302,6 +304,8 @@ const Launch = ({ browser: { name, version }, history }) => {
                             }
                         }
                     }
+
+                    rootCaps.desiredCapabilities = rootCaps.capabilities.alwaysMatch
 
                     return ajax({
                         url: "/wd/hub/session",
