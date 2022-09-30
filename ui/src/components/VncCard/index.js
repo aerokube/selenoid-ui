@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import VncScreen from "./VncScreen";
 import { StyledVNC } from "./style.css";
+import {ajax} from "rxjs/ajax";
 
 export default class VncCard extends Component {
     state = { connection: "connecting" };
@@ -38,6 +39,8 @@ export default class VncCard extends Component {
                         <Connection connection={connection} />
                         {connected && <Lock locked={!unlocked} handleLock={this.handleLock} />}
                         {connected && <Fullscreen handleFullscreen={this.handleFullscreen} fullscreen={fullscreen} />}
+                        {connected && <Clipboard upload={copyFromDocker} session={session} title={"copyFromSelenoid"} operator = {"copy"}/>}
+                        {connected && <Clipboard upload={pasteToDocker} session={session} title={"pasteToSelenoid"} operator = {"upload"}/>}
                     </div>
 
                     <div className="vnc-card__content">
@@ -59,6 +62,39 @@ export default class VncCard extends Component {
         );
     }
 }
+
+function copyFromDocker(sessionId) {
+    const request = {
+        url: "/clipboard/" + sessionId,
+        method: "GET",
+        async: false,
+        responseType: "text"
+    }
+    ajax(request).subscribe(x => {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(x.response);
+        }
+    });
+
+}
+
+function pasteToDocker(sessionId) {
+    if (navigator.clipboard) {
+        navigator.clipboard.readText().then(text => {
+            let request = {
+                url: "/clipboard/" + sessionId,
+                method: "POST",
+                body: text,
+                async: false,
+                headers: {"Content-Type": "application/x-www-form-urlencoded"}
+            }
+            ajax(request).subscribe(msg => msg)
+        });
+    }
+
+
+}
+
 
 function Back() {
     return (
@@ -96,6 +132,17 @@ function Fullscreen(props) {
         <div className="control control_fullscreen" onClick={handleFullscreen}>
             <div title="Fullscreen" className={"icon dripicons-" + (fullscreen ? "chevron-down" : "chevron-up")} />
         </div>
+    );
+}
+
+function Clipboard(props) {
+    const {upload, session, title, operator} = props;
+    return (
+        <div className="control control_fullscreen">
+            <div title={title} className={"icon dripicons-" + operator} onClick={() => upload(session)}>
+            </div>
+        </div>
+
     );
 }
 
