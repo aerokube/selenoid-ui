@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 
 import VncScreen from "./VncScreen";
 import { StyledVNC } from "./style.css";
-import {ajax} from "rxjs/ajax";
+import { ajax } from "rxjs/ajax";
 
 export default class VncCard extends Component {
     state = { connection: "connecting" };
 
-    connection = connection => {
+    connection = (connection) => {
         this.setState({ connection: connection });
     };
 
@@ -39,18 +39,32 @@ export default class VncCard extends Component {
                         <Connection connection={connection} />
                         {connected && <Lock locked={!unlocked} handleLock={this.handleLock} />}
                         {connected && <Fullscreen handleFullscreen={this.handleFullscreen} fullscreen={fullscreen} />}
-                        {connected && <Clipboard upload={copyFromDocker} session={session} title={"copyFromSelenoid"} operator = {"copy"}/>}
-                        {connected && <Clipboard upload={pasteToDocker} session={session} title={"pasteToSelenoid"} operator = {"upload"}/>}
+                        {connected && (
+                            <Clipboard
+                                upload={copyFromDocker}
+                                session={session}
+                                title={"copyFromSelenoid"}
+                                operator={"copy"}
+                            />
+                        )}
+                        {connected && (
+                            <Clipboard
+                                upload={pasteToDocker}
+                                session={session}
+                                title={"pasteToSelenoid"}
+                                operator={"upload"}
+                            />
+                        )}
                     </div>
 
                     <div className="vnc-card__content">
                         <VncScreen
-                            ref={instance => {
+                            ref={(instance) => {
                                 this.screen = instance;
                             }}
                             session={session}
                             origin={origin}
-                            onUpdateState={state => this.connection(state)}
+                            onUpdateState={(state) => this.connection(state)}
                         />
                     </div>
                 </div>
@@ -62,39 +76,35 @@ export default class VncCard extends Component {
         );
     }
 }
-
+let origin = window.location.protocol + "//" + window.location.hostname + ":4444";
 function copyFromDocker(sessionId) {
     const request = {
-        url: "/clipboard/" + sessionId,
+        url: origin + "/clipboard/" + sessionId,
         method: "GET",
         async: false,
-        responseType: "text"
-    }
-    ajax(request).subscribe(x => {
+        responseType: "text",
+    };
+    ajax(request).subscribe((x) => {
         if (navigator.clipboard) {
             navigator.clipboard.writeText(x.response);
         }
     });
-
 }
 
 function pasteToDocker(sessionId) {
     if (navigator.clipboard) {
-        navigator.clipboard.readText().then(text => {
+        navigator.clipboard.readText().then((text) => {
             let request = {
-                url: "/clipboard/" + sessionId,
+                url: origin + "/clipboard/" + sessionId,
                 method: "POST",
                 body: text,
                 async: false,
-                headers: {"Content-Type": "application/x-www-form-urlencoded"}
-            }
-            ajax(request).subscribe(msg => msg)
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            };
+            ajax(request).subscribe((msg) => msg);
         });
     }
-
-
 }
-
 
 function Back() {
     return (
@@ -106,7 +116,7 @@ function Back() {
 
 function Connection(props) {
     const { connection } = props;
-    const icon = function(connection) {
+    const icon = function (connection) {
         switch (connection) {
             default:
             case "disconnected": {
@@ -136,13 +146,11 @@ function Fullscreen(props) {
 }
 
 function Clipboard(props) {
-    const {upload, session, title, operator} = props;
+    const { upload, session, title, operator } = props;
     return (
         <div className="control control_fullscreen">
-            <div title={title} className={"icon dripicons-" + operator} onClick={() => upload(session)}>
-            </div>
+            <div title={title} className={"icon dripicons-" + operator} onClick={() => upload(session)}></div>
         </div>
-
     );
 }
 
