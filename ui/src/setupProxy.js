@@ -15,11 +15,7 @@ module.exports = function (app) {
             agent: agent,
         })
     );
-    app.use(
-        createProxyMiddleware("/clipboard", {
-            target: window.location.protocol + "//" + window.location.hostname + ":4444",
-        })
-    );
+    app.use(createProxyMiddleware("/clipboard", { target: "http://localhost:4444" }));
     app.use(createProxyMiddleware("/status", { target: "http://localhost:8080" }));
     app.use(createProxyMiddleware("/video/", { target: "http://localhost:8080" }));
     app.use(createProxyMiddleware("/wd/hub/", { target: "http://localhost:8080" }));
