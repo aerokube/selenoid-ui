@@ -76,10 +76,9 @@ export default class VncCard extends Component {
         );
     }
 }
-let origin = window.location.protocol + "//" + window.location.hostname + ":4444";
 function copyFromDocker(sessionId) {
     const request = {
-        url: origin + "/clipboard/" + sessionId,
+        url: "/clipboard/" + sessionId,
         method: "GET",
         async: false,
         responseType: "text",
@@ -95,7 +94,7 @@ function pasteToDocker(sessionId) {
     if (navigator.clipboard) {
         navigator.clipboard.readText().then((text) => {
             let request = {
-                url: origin + "/clipboard/" + sessionId,
+                url: "/clipboard/" + sessionId,
                 method: "POST",
                 body: text,
                 async: false,
