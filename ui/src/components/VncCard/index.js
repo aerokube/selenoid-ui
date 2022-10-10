@@ -147,7 +147,7 @@ function Fullscreen(props) {
 function Clipboard(props) {
     const { upload, session, title, operator } = props;
     return (
-        <div className="control control_fullscreen">
+        <div className={`control control_${operator}`}>
             <div title={title} className={"icon dripicons-" + operator} onClick={() => upload(session)}></div>
         </div>
     );

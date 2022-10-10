@@ -5,6 +5,7 @@ const colorConnecting = "#6883d3";
 const colorDisconnecting = " #ca9eff";
 const colorFullscreen = "#59a781";
 const backgroundColorLighter = "#3d444c";
+const copyAndPaste = "#405048";
 
 export const StyledVNC = styled.div`
     display: flex;
@@ -145,6 +146,28 @@ export const StyledVNC = styled.div`
 
                 &_disconnecting {
                     background-color: ${colorDisconnecting};
+                }
+
+                &_copy {
+                    cursor: pointer;
+                    background-color: ${copyAndPaste};
+                    color: ${colorFullscreen};
+                    margin-left: auto;
+
+                    &:hover {
+                        color: #fff;
+                    }
+                }
+
+                &_upload {
+                    cursor: pointer;
+                    background-color: ${copyAndPaste};
+                    color: ${colorFullscreen};
+                    margin-right: 10px;
+
+                    &:hover {
+                        color: #fff;
+                    }
                 }
             }
         }
