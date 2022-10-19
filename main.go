@@ -59,6 +59,9 @@ func mux(sse *sse.SseBroker) http.Handler {
 	mux.HandleFunc("/wd/hub/", func(w http.ResponseWriter, r *http.Request) {
 		reverseProxy(webdriverURI).ServeHTTP(w, r)
 	})
+	mux.HandleFunc("/clipboard/", func(w http.ResponseWriter, r *http.Request) {
+		reverseProxy(webdriverURI).ServeHTTP(w, r)
+	})
 	return mux
 }
 
