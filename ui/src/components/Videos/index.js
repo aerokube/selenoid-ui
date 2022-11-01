@@ -7,13 +7,13 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 const Videos = ({ videos = [], query = "" }) => {
     const preloadVal = videos.length > 100 ? "none" : "auto";
-    const filtered = videos.filter(fname => fname.includes(query));
+    const filtered = videos.filter((fname) => fname.includes(query)).reverse();
 
     return (
         <StyledVideos>
             <TransitionGroup className={`videos__list`}>
                 {filtered.length &&
-                    filtered.map(fname => {
+                    filtered.map((fname) => {
                         const src = `/video/${fname}`;
                         const session = fname.match(/.*(?=\.)/)[0];
 
