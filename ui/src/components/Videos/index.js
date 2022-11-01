@@ -7,7 +7,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 const Videos = ({ videos = [], query = "" }) => {
     const preloadVal = videos.length > 100 ? "none" : "auto";
-    const filtered = videos.filter((fname) => fname.includes(query)).reverse();
+    const filtered = videos.filter((fname) => fname.includes(query) && fname.includes(".")).reverse();
 
     return (
         <StyledVideos>
