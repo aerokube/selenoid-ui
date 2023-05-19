@@ -13,10 +13,10 @@
     }
   },
   "chrome": {
-    "default": "66.0",
+    "default": "112.0",
     "versions": {
-      "66.0": {
-        "image": "selenoid/chrome:66.0",
+      "112.0": {
+        "image": "selenoid/chrome:112.0",
         "port": "4444",
         "path": "/",
         "tmpfs": {
