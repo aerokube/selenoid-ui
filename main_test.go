@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -79,7 +79,7 @@ func TestPing(t *testing.T) {
 	AssertThat(t, rsp.Body, Is{Not{nil}})
 
 	var data map[string]interface{}
-	bt, readErr := ioutil.ReadAll(rsp.Body)
+	bt, readErr := io.ReadAll(rsp.Body)
 	AssertThat(t, readErr, Is{nil})
 	jsonErr := json.Unmarshal(bt, &data)
 	AssertThat(t, jsonErr, Is{nil})
