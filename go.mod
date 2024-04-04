@@ -1,6 +1,6 @@
 module github.com/aerokube/selenoid-ui
 
-go 1.20
+go 1.22
 
 require (
 	github.com/aandryashin/matchers v0.0.0-20161126170413-435295ea180e
@@ -9,6 +9,6 @@ require (
 )
 
 require (
-	golang.org/x/crypto v0.10.0 // indirect
-	golang.org/x/net v0.11.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 )
