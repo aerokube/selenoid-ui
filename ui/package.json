@@ -43,7 +43,7 @@
     "devDependencies": {
         "eslint-plugin-prettier": "^4.2.1",
         "eventsourcemock": "^2.0.0",
-        "http-proxy-middleware": "^1.0.6",
+        "http-proxy-middleware": "^3.0.3",
         "husky": "^4.3.6",
         "mutationobserver-shim": "^0.3.5",
         "prettier": "2.0.5",
