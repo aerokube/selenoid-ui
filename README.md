@@ -4,6 +4,8 @@
 [![Release](https://img.shields.io/github/release/aerokube/selenoid-ui.svg)](https://github.com/aerokube/selenoid-ui/releases/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/aerokube/selenoid-ui.svg)](https://hub.docker.com/r/aerokube/selenoid-ui)
 
+**UNMAINTAINED**. Consider https://aerokube.com/moon/latest as alternative.
+
 Simple status page with UI updates by SSE,
 backed by constant polling of status handle
 of [selenoid](https://github.com/aerokube/selenoid) on small go backend.
